@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Petoma — Smart Shift Scheduling for Modern Teams</title>
+  <meta name="description" content="Petoma is the all-in-one shift scheduling app. Auto-generate schedules, manage swaps, track time off, and communicate with your team — all from one place.">
+  <meta name="theme-color" content="#0D7C66">
+  <link rel="icon" href="petoma_logo.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ========== NAVBAR ========== -->
+  <nav class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="#" class="nav-brand">
+        <img src="petoma_logo.png" alt="Petoma logo" class="nav-logo">
+        <span class="nav-wordmark">Petoma</span>
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+        <span class="hamburger"></span>
+      </button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#features" data-nav>Features</a></li>
+        <li><a href="#how-it-works" data-nav>How It Works</a></li>
+        <li><a href="#spotlight" data-nav>In Action</a></li>
+        <li><a href="#for-teams" data-nav>For Teams</a></li>
+        <li><a href="#faq" data-nav>FAQ</a></li>
+        <li><a href="#download" class="nav-cta">Download</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ========== HERO ========== -->
+  <section class="hero" id="hero">
+    <div class="hero-bg-shapes">
+      <div class="shape shape-1"></div>
+      <div class="shape shape-2"></div>
+      <div class="shape shape-3"></div>
+      <div class="shape shape-4"></div>
+      <div class="shape shape-5"></div>
+    </div>
+    <div class="hero-container">
+      <div class="hero-content">
+        <div class="hero-badge">Shift Scheduling, Reimagined</div>
+        <h1 class="hero-title">
+          <span class="hero-title-line">Smart Shift</span>
+          <span class="hero-title-line hero-title-accent">Scheduling</span>
+        </h1>
+        <p class="hero-subtitle">Create fair schedules in seconds, manage your team in real time, and keep daily operations running smoothly — all from one beautiful app.</p>
+        <div class="hero-actions">
+          <a href="#download" class="btn btn-hero-primary">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download for Android
+          </a>
+          <a href="#features" class="btn btn-hero-secondary">
+            See Features
+            <svg class="btn-icon-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </a>
+        </div>
+        <div class="hero-note">Available on Android &middot; iOS coming soon</div>
+      </div>
+      <div class="hero-visual">
+        <div class="phone-float">
+          <div class="phone-mockup hero-phone">
+            <div class="phone-frame">
+              <div class="phone-notch"></div>
+              <div class="phone-screen">
+                <div class="mock-status-bar">
+                  <span>9:41</span>
+                  <div class="mock-status-icons">
+                    <div class="mock-signal"></div>
+                    <div class="mock-wifi"></div>
+                    <div class="mock-battery"></div>
+                  </div>
+                </div>
+                <div class="mock-app-bar">
+                  <svg class="mock-menu-icon" viewBox="0 0 24 24" fill="none" stroke="#3C3C3C" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                  <span class="mock-app-title">My Schedule</span>
+                  <svg class="mock-bell-icon" viewBox="0 0 24 24" fill="none" stroke="#3C3C3C" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+                </div>
+                <div class="mock-week-nav">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+                  <span>Feb 23 &ndash; Mar 1</span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                </div>
+                <div class="mock-schedule">
+                  <div class="mock-day"><span class="mock-day-label">Mon<br><span class="mock-day-num">23</span></span><div class="mock-shift morning"><span class="mock-shift-name">Morning</span><span class="mock-shift-time">06:00 – 14:00</span></div></div>
+                  <div class="mock-day"><span class="mock-day-label">Tue<br><span class="mock-day-num">24</span></span><div class="mock-shift morning"><span class="mock-shift-name">Morning</span><span class="mock-shift-time">06:00 – 14:00</span></div></div>
+                  <div class="mock-day"><span class="mock-day-label">Wed<br><span class="mock-day-num">25</span></span><div class="mock-shift afternoon"><span class="mock-shift-name">Afternoon</span><span class="mock-shift-time">14:00 – 22:00</span></div></div>
+                  <div class="mock-day"><span class="mock-day-label">Thu<br><span class="mock-day-num">26</span></span><div class="mock-shift night"><span class="mock-shift-name">Night</span><span class="mock-shift-time">22:00 – 06:00</span></div></div>
+                  <div class="mock-day"><span class="mock-day-label">Fri<br><span class="mock-day-num">27</span></span><div class="mock-shift afternoon"><span class="mock-shift-name">Afternoon</span><span class="mock-shift-time">14:00 – 22:00</span></div></div>
+                  <div class="mock-day"><span class="mock-day-label">Sat<br><span class="mock-day-num">28</span></span><div class="mock-shift off"><span class="mock-shift-name">Day Off</span><span class="mock-shift-time">&nbsp;</span></div></div>
+                  <div class="mock-day"><span class="mock-day-label">Sun<br><span class="mock-day-num">1</span></span><div class="mock-shift off"><span class="mock-shift-name">Day Off</span><span class="mock-shift-time">&nbsp;</span></div></div>
+                </div>
+                <div class="mock-bottom-nav">
+                  <div class="mock-nav-item active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/></svg><span>Schedule</span></div>
+                  <div class="mock-nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/></svg><span>Team</span></div>
+                  <div class="mock-nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><span>Chat</span></div>
+                  <div class="mock-nav-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33"/></svg><span>Settings</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-wave">
+      <svg viewBox="0 0 1440 120" preserveAspectRatio="none">
+        <path d="M0,64 C360,120 720,0 1080,64 C1260,96 1380,80 1440,64 L1440,120 L0,120 Z" fill="#1a1a1a"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ========== STATS BAR ========== -->
+  <section class="stats-bar">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat fade-in">
+          <span class="stat-number" data-target="50000">0</span><span class="stat-suffix">+</span>
+          <span class="stat-label">Shifts Scheduled</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat fade-in">
+          <span class="stat-number" data-target="500">0</span><span class="stat-suffix">+</span>
+          <span class="stat-label">Teams Using Petoma</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat fade-in">
+          <span class="stat-number" data-target="12">0</span><span class="stat-suffix">hrs</span>
+          <span class="stat-label">Saved Per Manager / Month</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat fade-in">
+          <span class="stat-number" data-target="98">0</span><span class="stat-suffix">%</span>
+          <span class="stat-label">Schedule Fairness Rating</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FEATURES CAROUSEL ========== -->
+  <section class="features" id="features">
+    <div class="section-bg-shapes">
+      <div class="shape sh-1"></div>
+      <div class="shape sh-2"></div>
+      <div class="shape sh-3"></div>
+      <div class="shape sh-4"></div>
+      <div class="shape sh-5"></div>
+      <div class="shape sh-6"></div>
+    </div>
+    <div class="container">
+      <div class="section-header light fade-in">
+        <span class="section-label light">Features</span>
+        <h2 class="section-title">Everything you need to run your team</h2>
+        <p class="section-subtitle">Powerful tools designed for shift-based businesses. From schedule generation to team communication, Petoma handles it all.</p>
+      </div>
+
+      <!-- Pill navigation -->
+      <div class="feature-nav-wrap fade-in">
+        <div class="feature-nav" id="featureNav">
+          <button class="feature-pill active" data-slide="0">Auto-Scheduling</button>
+          <button class="feature-pill" data-slide="1">Custom Shifts</button>
+          <button class="feature-pill" data-slide="2">Roles</button>
+          <button class="feature-pill" data-slide="3">Shift Swaps</button>
+          <button class="feature-pill" data-slide="4">Time Off</button>
+          <button class="feature-pill" data-slide="5">Chat</button>
+          <button class="feature-pill" data-slide="6">Export</button>
+          <button class="feature-pill" data-slide="7">Attendance</button>
+          <button class="feature-pill" data-slide="8">Calendar</button>
+          <button class="feature-pill" data-slide="9">Analytics</button>
+        </div>
+      </div>
+
+      <!-- Showcase card -->
+      <div class="feature-showcase fade-in" id="featureShowcase">
+
+        <!-- Slide 0: Auto-Scheduling -->
+        <div class="feature-slide active" data-slide="0">
+          <div class="fs-text">
+            <span class="fs-tag">Core</span>
+            <h3>Auto-Scheduling</h3>
+            <p>Our algorithm generates balanced, fair schedules in seconds. It respects vacations, mandatory rest hours between shifts, role requirements, and worker preferences &mdash; so you don't have to juggle it all manually.</p>
+            <ul class="fs-points">
+              <li>Respects vacations, sick days, and rest hours</li>
+              <li>Distributes shifts fairly across the team</li>
+              <li>One tap to generate a complete week</li>
+              <li>Fine-tune any assignment after generation</li>
+            </ul>
+          </div>
+          <div class="fs-visual">
+            <div class="fv-card">
+              <div class="fv-dot fv-dot-1"></div>
+              <div class="fv-dot fv-dot-2"></div>
+              <div class="fv-gen-btn"><svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14"><path d="M4 2l8 6-8 6V2z"/></svg> Generate Schedule</div>
+              <div class="fv-mini-grid">
+                <div class="fv-grid-head"><span></span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span></div>
+                <div class="fv-grid-row"><span>Alice</span><span class="fv-c m"></span><span class="fv-c m"></span><span class="fv-c a"></span><span class="fv-c off"></span><span class="fv-c m"></span></div>
+                <div class="fv-grid-row"><span>Bob</span><span class="fv-c a"></span><span class="fv-c n"></span><span class="fv-c n"></span><span class="fv-c m"></span><span class="fv-c off"></span></div>
+                <div class="fv-grid-row"><span>Carol</span><span class="fv-c n"></span><span class="fv-c off"></span><span class="fv-c m"></span><span class="fv-c a"></span><span class="fv-c a"></span></div>
+                <div class="fv-grid-row"><span>Dan</span><span class="fv-c off"></span><span class="fv-c m"></span><span class="fv-c off"></span><span class="fv-c n"></span><span class="fv-c n"></span></div>
+              </div>
+              <div class="fv-badge">&#10003; All constraints satisfied</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 1: Custom Shifts -->
+        <div class="feature-slide" data-slide="1">
+          <div class="fs-text">
+            <span class="fs-tag">Customization</span>
+            <h3>Custom Shifts</h3>
+            <p>Define morning, afternoon, night, or any custom shift type. Set exact start and end times, choose distinct colors, and assign icons so your schedule is always clear at a glance.</p>
+            <ul class="fs-points">
+              <li>Create unlimited shift types with custom names</li>
+              <li>Set exact start and end times for each shift</li>
+              <li>Pick colors for instant visual recognition</li>
+              <li>Works with the auto-scheduler automatically</li>
+            </ul>
+          </div>
+          <div class="fs-visual">
+            <div class="fv-card">
+              <div class="fv-dot fv-dot-1"></div>
+              <div class="fv-dot fv-dot-3"></div>
+              <div class="fv-shift-stack">
+                <div class="fv-shift-type" style="--sc: #FF9800">
+                  <div class="fv-shift-color" style="background:#FF9800"></div>
+                  <div class="fv-shift-info"><strong>Morning</strong><span>06:00 &ndash; 14:00</span></div>
+                </div>
+                <div class="fv-shift-type" style="--sc: #1E88E5">
+                  <div class="fv-shift-color" style="background:#1E88E5"></div>
+                  <div class="fv-shift-info"><strong>Afternoon</strong><span>14:00 &ndash; 22:00</span></div>
+                </div>
+                <div class="fv-shift-type" style="--sc: #5C6BC0">
+                  <div class="fv-shift-color" style="background:#5C6BC0"></div>
+                  <div class="fv-shift-info"><strong>Night</strong><span>22:00 &ndash; 06:00</span></div>
+                </div>
+                <div class="fv-shift-type" style="--sc: #00897B">
+                  <div class="fv-shift-color" style="background:#00897B"></div>
+                  <div class="fv-shift-info"><strong>Rotating</strong><span>Custom hours</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 2: Roles & Requirements -->
+        <div class="feature-slide" data-slide="2">
+          <div class="fs-text">
+            <span class="fs-tag">Team Management</span>
+            <h3>Roles &amp; Requirements</h3>
+            <p>Create roles like "Cashier," "Floor Manager," or "Kitchen" and set minimum staffing per shift. The scheduler ensures every shift has the right people in the right positions.</p>
+            <ul class="fs-points">
+              <li>Create any number of custom roles</li>
+              <li>Set minimum required staff per shift per role</li>
+              <li>Assign workers to one or more roles</li>
+              <li>Auto-scheduler respects all requirements</li>
+            </ul>
+          </div>
+          <div class="fs-visual">
+            <div class="fv-card">
+              <div class="fv-dot fv-dot-2"></div>
+              <div class="fv-dot fv-dot-3"></div>
+              <div class="fv-roles">
+                <div class="fv-role"><div class="fv-role-icon" style="background:rgba(13,124,102,0.15);color:#0D7C66">C</div><div class="fv-role-info"><strong>Cashier</strong><span>Min. 2 per shift</span></div><div class="fv-role-count">4 assigned</div></div>
+                <div class="fv-role"><div class="fv-role-icon" style="background:rgba(25,118,210,0.15);color:#1976D2">F</div><div class="fv-role-info"><strong>Floor Manager</strong><span>Min. 1 per shift</span></div><div class="fv-role-count">2 assigned</div></div>
+                <div class="fv-role"><div class="fv-role-icon" style="background:rgba(255,152,0,0.15);color:#FF9800">K</div><div class="fv-role-info"><strong>Kitchen</strong><span>Min. 3 per shift</span></div><div class="fv-role-count">5 assigned</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 3: Shift Swaps -->
+        <div class="feature-slide" data-slide="3">
+          <div class="fs-text">
+            <span class="fs-tag">Collaboration</span>
+            <h3>Shift Swaps</h3>
+            <p>Workers can propose shift swaps directly with coworkers. Both parties approve, then the manager confirms &mdash; keeping everyone in the loop with zero confusion.</p>
+            <ul class="fs-points">
+              <li>Request a swap in two taps</li>
+              <li>Both workers must approve first</li>
+              <li>Manager gives final confirmation</li>
+              <li>Schedule updates automatically</li>
+            </ul>
+          </div>
+          <div class="fs-visual">
+            <div class="fv-card">
+              <div class="fv-dot fv-dot-1"></div>
+              <div class="fv-dot fv-dot-2"></div>
+              <div class="fv-swap">
+                <div class="fv-swap-person">
+                  <div class="fv-swap-avatar" style="background:#FF9800">A</div>
+                  <strong>Alice</strong>
+                  <div class="fv-swap-shift" style="background:#FF9800">Wed &middot; Morning</div>
+                </div>
+                <div class="fv-swap-arrows">
+                  <svg viewBox="0 0 48 24" fill="none" stroke="#0D7C66" stroke-width="2.5"><path d="M4 8h32l-6-6M44 16H12l6 6"/></svg>
+                </div>
+                <div class="fv-swap-person">
+                  <div class="fv-swap-avatar" style="background:#1E88E5">B</div>
+                  <strong>Bob</strong>
+                  <div class="fv-swap-shift" style="background:#1E88E5">Wed &middot; Afternoon</div>
+                </div>
+              </div>
+              <div class="fv-badge green">Pending approval</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 4: Time Off -->
+        <div class="feature-slide" data-slide="4">
+          <div class="fs-text">
+            <span class="fs-tag">Attendance</span>
+            <h3>Time Off &amp; Sick Days</h3>
+            <p>Submit vacation or sick day requests in a few taps. Managers see requests instantly, approve or deny with a reason, and the schedule updates automatically.</p>
+            <ul class="fs-points">
+              <li>Submit vacation, sick, or personal days</li>
+              <li>Pick date ranges from a calendar</li>
+              <li>Track approval status in real time</li>
+              <li>See remaining balance at a glance</li>
+            </ul>
+          </div>
+          <div class="fs-visual">
+            <div class="fv-card">
+              <div class="fv-dot fv-dot-2"></div>
+              <div class="fv-dot fv-dot-1"></div>
+              <div class="fv-timeoff">
+                <div class="fv-to-req"><span class="fv-to-badge approved">Approved</span><div><strong>Vacation</strong><span>Feb 15 &ndash; 18 &middot; 4 days</span></div></div>
+                <div class="fv-to-req"><span class="fv-to-badge pending">Pending</span><div><strong>Vacation</strong><span>Mar 10 &ndash; 12 &middot; 3 days</span></div></div>
+                <div class="fv-to-req"><span class="fv-to-badge approved">Approved</span><div><strong>Sick Day</strong><span>Jan 22 &middot; 1 day</span></div></div>
+                <div class="fv-to-bar-wrap">
+                  <div class="fv-to-bar-label"><span>Vacation used</span><span>7 / 21</span></div>
+                  <div class="fv-to-bar"><div class="fv-to-bar-fill" style="width:33%"></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 5: Chat -->
+        <div class="feature-slide" data-slide="5">
+          <div class="fs-text">
+            <span class="fs-tag">Communication</span>
+            <h3>Real-Time Chat</h3>
+            <p>Built-in messaging between any team members. Send swap requests in conversations, get read receipts, and keep all work communication in one place.</p>
+            <ul class="fs-points">
+              <li>Direct messages between any team members</li>
+              <li>Shift swap requests embedded in chat</li>
+              <li>Read receipts (check / double-check)</li>
+              <li>No more scattered WhatsApp groups</li>
+            </ul>
+          </div>
+          <div class="fs-visual">
+            <div class="fv-card">
+              <div class="fv-dot fv-dot-3"></div>
+              <div class="fv-dot fv-dot-1"></div>
+              <div class="fv-chat">
+                <div class="fv-bubble received">Hey, could you swap Wed afternoon for my Thu morning?<span class="fv-time">10:24 AM</span></div>
+                <div class="fv-bubble sent">Let me check... Yeah that works!<span class="fv-time">10:26 AM &#10003;&#10003;</span></div>
+                <div class="fv-bubble received">Sent the swap request. Check it!<span class="fv-time">10:27 AM</span></div>
+                <div class="fv-typing"><span></span><span></span><span></span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 6: Export -->
+        <div class="feature-slide" data-slide="6">
+          <div class="fs-text">
+            <span class="fs-tag">Export</span>
+            <h3>PDF &amp; Excel Export</h3>
+            <p>Generate professional-looking schedule PDFs or Excel spreadsheets with one tap. Perfect for printing, emailing to staff, or keeping records for compliance and payroll.</p>
+            <ul class="fs-points">
+              <li>One-tap PDF generation</li>
+              <li>Excel export for payroll integration</li>
+              <li>Clean, professional formatting</li>
+              <li>Print or email to staff</li>
+            </ul>
+          </div>
+          <div class="fs-visual">
+            <div class="fv-card">
+              <div class="fv-dot fv-dot-2"></div>
+              <div class="fv-dot fv-dot-3"></div>
+              <div class="fv-export">
+                <div class="fv-doc">
+                  <div class="fv-doc-icon pdf">PDF</div>
+                  <div class="fv-doc-lines"><div></div><div></div><div></div><div style="width:60%"></div></div>
+                  <div class="fv-doc-label">Schedule_Week9.pdf</div>
+                </div>
+                <div class="fv-doc">
+                  <div class="fv-doc-icon xls">XLS</div>
+                  <div class="fv-doc-lines"><div></div><div></div><div></div><div style="width:60%"></div></div>
+                  <div class="fv-doc-label">Schedule_Week9.xlsx</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 7: Attendance -->
+        <div class="feature-slide" data-slide="7">
+          <div class="fs-text">
+            <span class="fs-tag">Tracking</span>
+            <h3>Attendance Tracking</h3>
+            <p>Mark who showed up and who didn't. Track hours worked per day, week, or month. Spot patterns, manage overtime, and build a reliable record over time.</p>
+            <ul class="fs-points">
+              <li>One-tap attendance marking</li>
+              <li>Track hours per day, week, or month</li>
+              <li>Overtime warnings and alerts</li>
+              <li>Historical records for payroll</li>
+            </ul>
+          </div>
+          <div class="fs-visual">
+            <div class="fv-card">
+              <div class="fv-dot fv-dot-1"></div>
+              <div class="fv-dot fv-dot-2"></div>
+              <div class="fv-attendance">
+                <div class="fv-att-row"><span class="fv-att-name">Alice K.</span><span class="fv-att-status present">Present</span><span class="fv-att-hrs">8.0h</span></div>
+                <div class="fv-att-row"><span class="fv-att-name">Bob M.</span><span class="fv-att-status present">Present</span><span class="fv-att-hrs">7.5h</span></div>
+                <div class="fv-att-row"><span class="fv-att-name">Carol T.</span><span class="fv-att-status absent">Absent</span><span class="fv-att-hrs">&mdash;</span></div>
+                <div class="fv-att-row"><span class="fv-att-name">Dan R.</span><span class="fv-att-status present">Present</span><span class="fv-att-hrs">8.0h</span></div>
+              </div>
+              <div class="fv-badge">Total: 23.5 hours today</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 8: Calendar -->
+        <div class="feature-slide" data-slide="8">
+          <div class="fs-text">
+            <span class="fs-tag">Visibility</span>
+            <h3>Color-Coded Calendar</h3>
+            <p>See your entire team's week in a beautiful, color-coded grid. Morning, afternoon, and night shifts are instantly recognizable. Drill into any day for detail.</p>
+            <ul class="fs-points">
+              <li>Full team week view in one screen</li>
+              <li>Color-coded by shift type</li>
+              <li>Tap any cell to see details</li>
+              <li>Spot gaps and coverage issues instantly</li>
+            </ul>
+          </div>
+          <div class="fs-visual">
+            <div class="fv-card">
+              <div class="fv-dot fv-dot-2"></div>
+              <div class="fv-dot fv-dot-3"></div>
+              <div class="fv-calendar">
+                <div class="fv-cal-head"><span></span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
+                <div class="fv-cal-row"><span>Alice</span><span class="fv-c m"></span><span class="fv-c m"></span><span class="fv-c a"></span><span class="fv-c off"></span><span class="fv-c m"></span><span class="fv-c off"></span><span class="fv-c off"></span></div>
+                <div class="fv-cal-row"><span>Bob</span><span class="fv-c a"></span><span class="fv-c n"></span><span class="fv-c n"></span><span class="fv-c m"></span><span class="fv-c off"></span><span class="fv-c m"></span><span class="fv-c off"></span></div>
+                <div class="fv-cal-row"><span>Carol</span><span class="fv-c n"></span><span class="fv-c off"></span><span class="fv-c m"></span><span class="fv-c a"></span><span class="fv-c a"></span><span class="fv-c off"></span><span class="fv-c m"></span></div>
+                <div class="fv-cal-row"><span>Dan</span><span class="fv-c off"></span><span class="fv-c m"></span><span class="fv-c off"></span><span class="fv-c n"></span><span class="fv-c n"></span><span class="fv-c a"></span><span class="fv-c off"></span></div>
+                <div class="fv-cal-row"><span>Eva</span><span class="fv-c m"></span><span class="fv-c a"></span><span class="fv-c m"></span><span class="fv-c m"></span><span class="fv-c off"></span><span class="fv-c n"></span><span class="fv-c off"></span></div>
+              </div>
+              <div class="fv-cal-legend"><span><i style="background:#FF9800"></i>Morning</span><span><i style="background:#1E88E5"></i>Afternoon</span><span><i style="background:#5C6BC0"></i>Night</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Slide 9: Analytics -->
+        <div class="feature-slide" data-slide="9">
+          <div class="fs-text">
+            <span class="fs-tag">Insights</span>
+            <h3>Analytics &amp; Reports</h3>
+            <p>Get a clear picture of your team's performance. Track total hours, attendance rates, overtime trends, and shift distribution &mdash; all in easy-to-read dashboards that help you make smarter decisions.</p>
+            <ul class="fs-points">
+              <li>Weekly and monthly hours breakdown</li>
+              <li>Attendance and absence rates</li>
+              <li>Overtime alerts and trends</li>
+              <li>Per-worker and per-role statistics</li>
+            </ul>
+          </div>
+          <div class="fs-visual">
+            <div class="fv-card">
+              <div class="fv-dot fv-dot-1"></div>
+              <div class="fv-dot fv-dot-3"></div>
+              <div class="fv-analytics">
+                <div class="fv-an-title">Weekly Hours</div>
+                <div class="fv-an-chart">
+                  <div class="fv-an-col"><div class="fv-an-bar" style="--h:65%"></div><span>M</span></div>
+                  <div class="fv-an-col"><div class="fv-an-bar" style="--h:82%"></div><span>T</span></div>
+                  <div class="fv-an-col"><div class="fv-an-bar" style="--h:48%"></div><span>W</span></div>
+                  <div class="fv-an-col"><div class="fv-an-bar" style="--h:92%"></div><span>T</span></div>
+                  <div class="fv-an-col"><div class="fv-an-bar" style="--h:73%"></div><span>F</span></div>
+                  <div class="fv-an-col"><div class="fv-an-bar" style="--h:38%"></div><span>S</span></div>
+                  <div class="fv-an-col"><div class="fv-an-bar" style="--h:22%"></div><span>S</span></div>
+                </div>
+                <div class="fv-an-stats">
+                  <div class="fv-an-stat"><strong>156h</strong><span>Total Hours</span></div>
+                  <div class="fv-an-stat"><strong>94%</strong><span>Attendance</span></div>
+                  <div class="fv-an-stat"><strong>2.5h</strong><span>Overtime</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="feature-controls">
+          <button class="feature-arrow" id="featurePrev" aria-label="Previous feature">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <div class="feature-dots">
+            <button class="feature-dot active" data-slide="0"></button>
+            <button class="feature-dot" data-slide="1"></button>
+            <button class="feature-dot" data-slide="2"></button>
+            <button class="feature-dot" data-slide="3"></button>
+            <button class="feature-dot" data-slide="4"></button>
+            <button class="feature-dot" data-slide="5"></button>
+            <button class="feature-dot" data-slide="6"></button>
+            <button class="feature-dot" data-slide="7"></button>
+            <button class="feature-dot" data-slide="8"></button>
+            <button class="feature-dot" data-slide="9"></button>
+          </div>
+          <button class="feature-arrow" id="featureNext" aria-label="Next feature">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== HOW IT WORKS ========== -->
+  <section class="how-it-works" id="how-it-works">
+    <div class="section-bg-shapes dark-shapes">
+      <div class="shape sh-a"></div>
+      <div class="shape sh-b"></div>
+    </div>
+    <div class="container">
+      <div class="section-header dark fade-in">
+        <span class="section-label dark">How It Works</span>
+        <h2 class="section-title">Up and running in minutes</h2>
+        <p class="section-subtitle">No training needed. Petoma is designed to be intuitive from day one.</p>
+      </div>
+      <div class="steps">
+        <div class="steps-line" aria-hidden="true"></div>
+        <div class="step fade-in" data-delay="0">
+          <div class="step-number">1</div>
+          <div class="step-content">
+            <h3 class="step-title">Set Up Your Workplace</h3>
+            <p class="step-desc">Create your workplace, invite team members, define shift types with custom times and colors, and configure roles. Everything is ready in under 5 minutes.</p>
+            <ul class="step-details">
+              <li>Define shift types (Morning, Afternoon, Night, or custom)</li>
+              <li>Create roles and set minimum staffing levels</li>
+              <li>Choose working days for each employee</li>
+            </ul>
+          </div>
+        </div>
+        <div class="step fade-in" data-delay="1">
+          <div class="step-number">2</div>
+          <div class="step-content">
+            <h3 class="step-title">Generate Schedules</h3>
+            <p class="step-desc">Hit the generate button and our algorithm creates a complete, fair schedule. Or go manual &mdash; assign shifts exactly where you want them.</p>
+            <ul class="step-details">
+              <li>Auto-scheduler respects all constraints automatically</li>
+              <li>Fine-tune any assignment with a single tap</li>
+              <li>Copy schedules to future weeks in one click</li>
+            </ul>
+          </div>
+        </div>
+        <div class="step fade-in" data-delay="2">
+          <div class="step-number">3</div>
+          <div class="step-content">
+            <h3 class="step-title">Manage &amp; Communicate</h3>
+            <p class="step-desc">Your team sees their schedule instantly. Handle swap requests, track attendance, export reports, and chat &mdash; all without leaving the app.</p>
+            <ul class="step-details">
+              <li>Workers get push notifications for schedule updates</li>
+              <li>Approve swaps and time-off requests on the go</li>
+              <li>Export PDF/Excel reports for payroll and compliance</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="gradient-divider">
+
+  <!-- ========== FEATURE SPOTLIGHT ========== -->
+  <section class="spotlight" id="spotlight">
+    <div class="section-bg-shapes dark-shapes">
+      <div class="shape sh-c"></div>
+      <div class="shape sh-d"></div>
+    </div>
+    <div class="container">
+      <div class="section-header dark fade-in">
+        <span class="section-label dark">In Action</span>
+        <h2 class="section-title">See Petoma at work</h2>
+        <p class="section-subtitle">A closer look at the features that make scheduling effortless.</p>
+      </div>
+
+      <!-- Spotlight 1: Manager Schedule View -->
+      <div class="spotlight-row fade-in">
+        <div class="spotlight-text">
+          <span class="spotlight-label">Manager View</span>
+          <h3>Your entire team, one screen</h3>
+          <p>The manager dashboard shows every worker's shifts for the week in a color-coded grid. Spot gaps instantly, reassign shifts with a tap, and make sure every slot is covered before publishing.</p>
+          <ul class="spotlight-bullets">
+            <li>Color-coded by shift type for instant recognition</li>
+            <li>Tap any cell to reassign, swap, or clear</li>
+            <li>See role coverage and staffing warnings in real time</li>
+          </ul>
+        </div>
+        <div class="spotlight-visual">
+          <div class="spotlight-card">
+            <div class="sc-title-bar">
+              <span class="sc-title">Team Schedule</span>
+              <span class="sc-subtitle">Feb 23 &ndash; Mar 1</span>
+            </div>
+            <div class="sc-grid">
+              <div class="sc-grid-header"><span></span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div>
+              <div class="sc-grid-row"><span class="sc-worker">Alice K.</span><span class="sc-cell morning"></span><span class="sc-cell morning"></span><span class="sc-cell afternoon"></span><span class="sc-cell off"></span><span class="sc-cell morning"></span><span class="sc-cell off"></span><span class="sc-cell off"></span></div>
+              <div class="sc-grid-row"><span class="sc-worker">Bob M.</span><span class="sc-cell afternoon"></span><span class="sc-cell night"></span><span class="sc-cell night"></span><span class="sc-cell morning"></span><span class="sc-cell off"></span><span class="sc-cell morning"></span><span class="sc-cell off"></span></div>
+              <div class="sc-grid-row"><span class="sc-worker">Carol T.</span><span class="sc-cell night"></span><span class="sc-cell off"></span><span class="sc-cell morning"></span><span class="sc-cell afternoon"></span><span class="sc-cell afternoon"></span><span class="sc-cell off"></span><span class="sc-cell morning"></span></div>
+              <div class="sc-grid-row"><span class="sc-worker">Dan R.</span><span class="sc-cell off"></span><span class="sc-cell morning"></span><span class="sc-cell off"></span><span class="sc-cell night"></span><span class="sc-cell night"></span><span class="sc-cell afternoon"></span><span class="sc-cell off"></span></div>
+              <div class="sc-grid-row"><span class="sc-worker">Eva S.</span><span class="sc-cell morning"></span><span class="sc-cell afternoon"></span><span class="sc-cell morning"></span><span class="sc-cell morning"></span><span class="sc-cell off"></span><span class="sc-cell night"></span><span class="sc-cell off"></span></div>
+            </div>
+            <div class="sc-legend">
+              <span class="sc-legend-item"><span class="sc-legend-dot morning"></span>Morning</span>
+              <span class="sc-legend-item"><span class="sc-legend-dot afternoon"></span>Afternoon</span>
+              <span class="sc-legend-item"><span class="sc-legend-dot night"></span>Night</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Spotlight 2: Chat & Swaps -->
+      <div class="spotlight-row reverse fade-in">
+        <div class="spotlight-text">
+          <span class="spotlight-label">Communication</span>
+          <h3>Chat, swap, and stay connected</h3>
+          <p>No more group chat chaos. Petoma's built-in messaging lets workers coordinate shift swaps directly, with full context of who's working when.</p>
+          <ul class="spotlight-bullets">
+            <li>Direct messages between any team members</li>
+            <li>Shift swap requests embedded in conversations</li>
+            <li>Read receipts so you know your message was seen</li>
+          </ul>
+        </div>
+        <div class="spotlight-visual">
+          <div class="spotlight-card">
+            <div class="sc-title-bar">
+              <span class="sc-title">Alice K.</span>
+            </div>
+            <div class="sc-chat">
+              <div class="sc-bubble received"><p>Hey! Could you swap your Wednesday afternoon for my Thursday morning?</p><span class="sc-chat-time">10:24 AM</span></div>
+              <div class="sc-bubble sent"><p>Let me check... Yeah that works for me!</p><span class="sc-chat-time">10:26 AM <span class="sc-chat-read">&#10003;&#10003;</span></span></div>
+              <div class="sc-swap-card">
+                <div class="sc-swap-header">Shift Swap Request</div>
+                <div class="sc-swap-detail">
+                  <div class="sc-swap-from"><span class="sc-swap-label">Alice gives</span><div class="sc-swap-shift morning">Wed &middot; Morning</div></div>
+                  <div class="sc-swap-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="#0D7C66" stroke-width="2"><path d="M7 16l-4-4 4-4"/><path d="M17 8l4 4-4 4"/><line x1="3" y1="12" x2="11" y2="12"/><line x1="13" y1="12" x2="21" y2="12"/></svg></div>
+                  <div class="sc-swap-to"><span class="sc-swap-label">Bob gives</span><div class="sc-swap-shift afternoon">Thu &middot; Afternoon</div></div>
+                </div>
+                <div class="sc-swap-actions"><button class="sc-swap-btn accept">Accept</button><button class="sc-swap-btn decline">Decline</button></div>
+              </div>
+              <div class="sc-bubble received"><p>Sent! Check the swap request above.</p><span class="sc-chat-time">10:27 AM</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Spotlight 3: Time Off -->
+      <div class="spotlight-row fade-in">
+        <div class="spotlight-text">
+          <span class="spotlight-label">Time Off</span>
+          <h3>Vacation requests, simplified</h3>
+          <p>Workers submit time-off requests right from the app. Managers review, approve or deny with optional notes, and the schedule adjusts automatically.</p>
+          <ul class="spotlight-bullets">
+            <li>Pick dates and type (vacation, sick, personal)</li>
+            <li>Track approval status in real time</li>
+            <li>Schedule auto-adjusts around approved absences</li>
+          </ul>
+        </div>
+        <div class="spotlight-visual">
+          <div class="spotlight-card">
+            <div class="sc-title-bar">
+              <span class="sc-title">Time Off</span>
+            </div>
+            <div class="sc-timeoff">
+              <div class="sc-timeoff-card"><div class="sc-timeoff-badge approved">Approved</div><div class="sc-timeoff-type">Vacation</div><div class="sc-timeoff-dates">Feb 15 &ndash; Feb 18</div><div class="sc-timeoff-days">4 days</div></div>
+              <div class="sc-timeoff-card"><div class="sc-timeoff-badge pending">Pending</div><div class="sc-timeoff-type">Vacation</div><div class="sc-timeoff-dates">Mar 10 &ndash; Mar 12</div><div class="sc-timeoff-days">3 days</div></div>
+              <div class="sc-timeoff-card"><div class="sc-timeoff-badge approved">Approved</div><div class="sc-timeoff-type">Sick Day</div><div class="sc-timeoff-dates">Jan 22</div><div class="sc-timeoff-days">1 day</div></div>
+              <div class="sc-timeoff-summary">
+                <div class="sc-timeoff-summary-row"><span>Vacation used</span><span class="sc-timeoff-val">7 / 21 days</span></div>
+                <div class="sc-timeoff-bar"><div class="sc-timeoff-bar-fill" style="width:33%"></div></div>
+                <div class="sc-timeoff-summary-row"><span>Sick days used</span><span class="sc-timeoff-val">1 / 10 days</span></div>
+                <div class="sc-timeoff-bar"><div class="sc-timeoff-bar-fill sick" style="width:10%"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="gradient-divider">
+
+  <!-- ========== FOR TEAMS ========== -->
+  <section class="for-teams" id="for-teams">
+    <div class="section-bg-shapes dark-shapes">
+      <div class="shape sh-c"></div>
+      <div class="shape sh-b"></div>
+    </div>
+    <div class="container">
+      <div class="section-header dark fade-in">
+        <span class="section-label dark">For Teams</span>
+        <h2 class="section-title">Built for everyone on the team</h2>
+        <p class="section-subtitle">Whether you're running the show or showing up for your shift, Petoma has you covered.</p>
+      </div>
+      <div class="teams-split">
+        <div class="team-col managers fade-in">
+          <div class="team-header"><div class="team-icon-wrap"><svg viewBox="0 0 48 48" fill="none"><rect x="8" y="8" width="32" height="32" rx="4" stroke="currentColor" stroke-width="2.5"/><path d="M16 20h16M16 28h10" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><path d="M8 16h32" stroke="currentColor" stroke-width="2.5"/></svg></div><h3>For Managers</h3></div>
+          <div class="team-header-body">
+            <p class="team-intro">Take control of scheduling with powerful tools that save hours every week.</p>
+            <ul>
+              <li><strong>Auto-generate schedules</strong><span>One button creates a balanced, constraint-respecting schedule</span></li>
+              <li><strong>Export to PDF &amp; Excel</strong><span>Print, email, or archive schedules in professional formats</span></li>
+              <li><strong>Track attendance</strong><span>Mark attendance, track hours, and monitor overtime</span></li>
+              <li><strong>Manage roles</strong><span>Define positions, set minimums per shift, ensure proper coverage</span></li>
+              <li><strong>Approve requests</strong><span>Review swap and time-off requests with full context</span></li>
+              <li><strong>Notifications</strong><span>Get alerted when workers request changes</span></li>
+            </ul>
+          </div>
+        </div>
+        <div class="team-col workers fade-in">
+          <div class="team-header"><div class="team-icon-wrap"><svg viewBox="0 0 48 48" fill="none"><circle cx="24" cy="16" r="8" stroke="currentColor" stroke-width="2.5"/><path d="M8 40c0-8 7.2-14 16-14s16 6 16 14" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></div><h3>For Team Members</h3></div>
+          <div class="team-header-body">
+            <p class="team-intro">Stay informed and in control of your work schedule from anywhere.</p>
+            <ul>
+              <li><strong>View your schedule</strong><span>See your week with clear shift names, times, and colors</span></li>
+              <li><strong>Request time off</strong><span>Submit vacation or sick day requests and track status</span></li>
+              <li><strong>Swap shifts</strong><span>Propose swaps with coworkers directly</span></li>
+              <li><strong>Chat with your team</strong><span>Message coworkers or your manager in the app</span></li>
+              <li><strong>Get notified</strong><span>Push notifications when your schedule changes</span></li>
+              <li><strong>Always up to date</strong><span>Schedule syncs in real time</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== USE CASES (gradient) ========== -->
+  <section class="use-cases">
+    <div class="section-bg-shapes">
+      <div class="shape sh-1"></div>
+      <div class="shape sh-2"></div>
+      <div class="shape sh-5"></div>
+      <div class="shape sh-6"></div>
+    </div>
+    <div class="container">
+      <div class="section-header light fade-in">
+        <span class="section-label light">Use Cases</span>
+        <h2 class="section-title">Built for shift-based businesses</h2>
+        <p class="section-subtitle">From restaurants to retail, healthcare to hospitality &mdash; if your team works in shifts, Petoma fits.</p>
+      </div>
+      <div class="use-cases-grid">
+        <div class="use-case-card fade-in"><div class="use-case-icon"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 26h20"/><path d="M8 26v-8h16v8"/><path d="M11 18v-4h10v4"/><path d="M14 14v-3h4v3"/><circle cx="16" cy="7" r="2"/></svg></div><h4>Restaurants &amp; Cafes</h4><p>Manage kitchen, waitstaff, and front-of-house rotations. Handle weekend rushes with proper coverage.</p></div>
+        <div class="use-case-card fade-in"><div class="use-case-icon"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8h2l3 14h12l3-10H10"/><circle cx="12" cy="26" r="2"/><circle cx="22" cy="26" r="2"/></svg></div><h4>Retail Stores</h4><p>Schedule cashiers, stockers, and floor managers across morning and evening shifts with ease.</p></div>
+        <div class="use-case-card fade-in"><div class="use-case-icon"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 26h22V12L16 6 5 12v14z"/><rect x="12" y="18" width="8" height="8"/><path d="M12 14h8"/><path d="M9 12h14"/></svg></div><h4>Hotels &amp; Hospitality</h4><p>24/7 operations need round-the-clock scheduling. Cover reception, housekeeping, and maintenance.</p></div>
+        <div class="use-case-card fade-in"><div class="use-case-icon"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="24" height="16" rx="2"/><path d="M4 16h24"/><path d="M10 10V7h12v3"/><path d="M10 16v4"/><path d="M22 16v4"/></svg></div><h4>Warehouses &amp; Logistics</h4><p>Coordinate day, night, and weekend shifts for packing, shipping, and operations teams.</p></div>
+        <div class="use-case-card fade-in"><div class="use-case-icon"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4v8l4-2"/><circle cx="16" cy="12" r="8"/><path d="M10 24c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M12 28h8"/></svg></div><h4>Healthcare &amp; Clinics</h4><p>Ensure proper nurse and staff coverage across all hours while respecting rest periods.</p></div>
+        <div class="use-case-card fade-in"><div class="use-case-icon"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="6" width="20" height="20" rx="3"/><path d="M6 12h20"/><path d="M12 6v20"/><path d="M17 17l2 2 4-4"/></svg></div><h4>Any Shift-Based Team</h4><p>Security, cleaning, call centers, gyms &mdash; if you schedule shifts, Petoma works for you.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== TESTIMONIALS ========== -->
+  <section class="testimonials">
+    <div class="section-bg-shapes dark-shapes">
+      <div class="shape sh-a"></div>
+      <div class="shape sh-d"></div>
+    </div>
+    <div class="container">
+      <div class="section-header dark fade-in">
+        <span class="section-label dark">Testimonials</span>
+        <h2 class="section-title">Loved by teams everywhere</h2>
+      </div>
+      <div class="testimonials-grid">
+        <div class="testimonial-card fade-in">
+          <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <blockquote>"Petoma cut our scheduling time from 3 hours to 10 minutes. The auto-scheduler just works &mdash; it handles all the constraints I used to juggle in my head."</blockquote>
+          <div class="testimonial-author"><div class="testimonial-avatar">MR</div><div><strong>Maria R.</strong><span>Restaurant Manager, 22 staff</span></div></div>
+        </div>
+        <div class="testimonial-card fade-in">
+          <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <blockquote>"My team loves being able to see their schedule instantly and swap shifts without calling me. The chat feature means I don't get messages at midnight anymore."</blockquote>
+          <div class="testimonial-author"><div class="testimonial-avatar">TK</div><div><strong>Tom K.</strong><span>Retail Store Lead, 15 staff</span></div></div>
+        </div>
+        <div class="testimonial-card fade-in">
+          <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <blockquote>"The color-coded grid view is a game changer. I can see gaps and double-bookings immediately. And the PDF export makes payroll so much easier."</blockquote>
+          <div class="testimonial-author"><div class="testimonial-avatar">SN</div><div><strong>Sara N.</strong><span>Hotel Operations, 40 staff</span></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="gradient-divider">
+
+  <!-- ========== FAQ ========== -->
+  <section class="faq" id="faq">
+    <div class="section-bg-shapes dark-shapes">
+      <div class="shape sh-a"></div>
+      <div class="shape sh-d"></div>
+    </div>
+    <div class="container">
+      <div class="section-header dark fade-in">
+        <span class="section-label dark">FAQ</span>
+        <h2 class="section-title">Frequently asked questions</h2>
+      </div>
+      <div class="faq-list">
+        <div class="faq-item fade-in"><button class="faq-question"><span>How much does Petoma cost?</span><svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button><div class="faq-answer"><p>Petoma offers flexible plans to fit teams of all sizes. Download the app and explore our pricing options to find the right plan for your business. We're committed to keeping Petoma affordable for every team.</p></div></div>
+        <div class="faq-item fade-in"><button class="faq-question"><span>How many team members can I add?</span><svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button><div class="faq-answer"><p>There's no hard limit. Petoma is designed to work for teams of any size &mdash; from a small cafe with 5 staff to a hotel chain with 100+ employees.</p></div></div>
+        <div class="faq-item fade-in"><button class="faq-question"><span>How does the auto-scheduler work?</span><svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button><div class="faq-answer"><p>The algorithm takes into account your shift types, role requirements, minimum staffing levels, worker availability, approved vacations, sick days, and mandatory rest hours between shifts. It generates a complete, balanced schedule that distributes shifts fairly.</p></div></div>
+        <div class="faq-item fade-in"><button class="faq-question"><span>Is my data secure?</span><svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button><div class="faq-answer"><p>Absolutely. All data is transmitted over HTTPS and stored securely. Only authorized members of your workplace can see your team's schedule and information.</p></div></div>
+        <div class="faq-item fade-in"><button class="faq-question"><span>What platforms is Petoma available on?</span><svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button><div class="faq-answer"><p>Petoma is currently available on Android. An iOS version is in development and coming soon. The app works on phones and tablets.</p></div></div>
+        <div class="faq-item fade-in"><button class="faq-question"><span>Can workers see the full team schedule?</span><svg class="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></button><div class="faq-answer"><p>Workers can see their own personal schedule with full detail. The manager controls what visibility workers have over the broader team schedule.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== DOWNLOAD CTA ========== -->
+  <section class="download" id="download">
+    <div class="download-bg-shapes">
+      <div class="shape shape-dl-1"></div>
+      <div class="shape shape-dl-2"></div>
+      <div class="shape shape-dl-3"></div>
+      <div class="shape shape-dl-4"></div>
+    </div>
+    <div class="container">
+      <div class="download-content fade-in">
+        <h2 class="download-title">Ready to simplify scheduling?</h2>
+        <p class="download-subtitle">Join hundreds of teams that save hours every week with Petoma. Set up your workplace in under 5 minutes and generate your first schedule today.</p>
+        <div class="download-actions">
+          <a href="#" class="btn btn-download">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download for Android
+          </a>
+        </div>
+        <p class="download-note">Available on Android &middot; iOS coming soon</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-top">
+        <div class="footer-brand-col">
+          <a href="#" class="footer-brand"><img src="petoma_logo.png" alt="Petoma" class="footer-logo"><span class="footer-wordmark">Petoma</span></a>
+          <p class="footer-tagline">Smart shift scheduling for modern teams. Build fair schedules, communicate better, and keep your operations running smoothly.</p>
+        </div>
+        <div class="footer-links-col"><h4>Product</h4><ul><li><a href="#features">Features</a></li><li><a href="#how-it-works">How It Works</a></li><li><a href="#for-teams">For Teams</a></li><li><a href="#download">Download</a></li></ul></div>
+        <div class="footer-links-col"><h4>Resources</h4><ul><li><a href="#faq">FAQ</a></li><li><a href="#">Getting Started Guide</a></li><li><a href="#">Contact Support</a></li></ul></div>
+        <div class="footer-links-col"><h4>Legal</h4><ul><li><a href="#">Privacy Policy</a></li><li><a href="#">Terms of Service</a></li></ul></div>
+      </div>
+      <div class="footer-bottom"><span>&copy; 2026 Petoma. All rights reserved.</span></div>
+    </div>
+  </footer>
+
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+  </button>
+
+  <script src="script.js"></script>
+</body>
+</html>

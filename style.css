@@ -434,6 +434,7 @@ button { font-family: inherit; }
 .feature-slide.active {
   opacity: 1; transform: translateX(0);
   position: relative; pointer-events: auto;
+  min-height: 320px;
 }
 
 .feature-slide.exit-left {
@@ -676,6 +677,63 @@ button { font-family: inherit; }
 .fv-doc-lines { display: flex; flex-direction: column; gap: 5px; width: 100%; }
 .fv-doc-lines div { height: 4px; background: #e8eaed; border-radius: 2px; }
 .fv-doc-label { font-size: 0.6rem; color: var(--charcoal-muted); font-weight: 500; }
+
+/* Feature Visual: Tracking */
+.fv-tracking { display: flex; flex-direction: column; gap: 8px; }
+
+.fv-tr-row {
+  background: var(--white); border-radius: 10px; padding: 10px 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.fv-tr-info {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.fv-tr-info strong { font-size: 0.72rem; color: var(--charcoal); }
+
+.fv-tr-badges { display: flex; gap: 6px; }
+
+.fv-tr-badge {
+  padding: 2px 8px; border-radius: 6px; font-size: 0.55rem;
+  font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em;
+}
+.fv-tr-badge.sick { background: rgba(255,152,0,0.12); color: #EF6C00; }
+.fv-tr-badge.vac { background: rgba(13,124,102,0.12); color: var(--primary); }
+
+.fv-tr-bar {
+  height: 5px; background: #e8eaed; border-radius: 3px; overflow: hidden;
+}
+
+.fv-tr-bar-fill {
+  height: 100%; border-radius: 3px;
+  background: var(--gradient);
+  width: var(--w, 0%);
+}
+
+/* Feature Visual: Analytics Bottom Stats */
+.fv-an-bottom {
+  display: flex; gap: 8px; justify-content: center;
+}
+
+.fv-an-stat-sm {
+  flex: 1; text-align: center;
+  padding: 6px 10px;
+  background: rgba(13,124,102,0.06);
+  border-radius: 8px;
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.fv-an-stat-sm strong {
+  display: block; font-size: 0.75rem; font-weight: 800;
+  color: var(--primary);
+}
+
+.fv-an-stat-sm span {
+  font-size: 0.5rem; color: var(--charcoal-muted);
+}
 
 /* Feature Visual: Attendance */
 .fv-attendance { display: flex; flex-direction: column; gap: 6px; }
@@ -1156,7 +1214,7 @@ button { font-family: inherit; }
 .fv-gen-btn svg { flex-shrink: 0; }
 
 /* ===== ANALYTICS VISUAL ===== */
-.fv-analytics { display: flex; flex-direction: column; gap: 14px; }
+.fv-analytics { display: flex; flex-direction: column; gap: 10px; }
 
 .fv-an-title {
   font-size: 0.75rem; font-weight: 700; color: var(--charcoal);
@@ -1165,7 +1223,7 @@ button { font-family: inherit; }
 
 .fv-an-chart {
   display: flex; gap: 6px; align-items: flex-end;
-  height: 110px; padding: 0 4px;
+  height: 80px; padding: 0 4px;
 }
 
 .fv-an-col {
@@ -1228,12 +1286,15 @@ button { font-family: inherit; }
 .feature-slide:not(.active) .fv-att-row,
 .feature-slide:not(.active) .fv-cal-legend,
 .feature-slide:not(.active) .fv-an-title,
-.feature-slide:not(.active) .fv-an-stat { opacity: 0; }
+.feature-slide:not(.active) .fv-an-stat,
+.feature-slide:not(.active) .fv-an-stat-sm,
+.feature-slide:not(.active) .fv-tr-row { opacity: 0; }
 .feature-slide:not(.active) .fv-an-bar { transform: scaleY(0); }
 .feature-slide:not(.active) .fv-swap-person,
 .feature-slide:not(.active) .fv-swap-arrows { opacity: 0; }
 .feature-slide:not(.active) .fv-badge { opacity: 0; }
 .feature-slide:not(.active) .fv-to-bar-fill { width: 0; }
+.feature-slide:not(.active) .fv-tr-bar-fill { width: 0; }
 
 /* --- Shared keyframes --- */
 @keyframes fv-fade-up {
@@ -1319,152 +1380,179 @@ button { font-family: inherit; }
   animation: fv-fade-up 0.4s ease 1.8s forwards;
 }
 
-/* --- Slide 1: Custom Shifts --- */
-/* Cards slide up staggered */
-.feature-slide.active[data-slide="1"] .fv-shift-type {
-  opacity: 0;
-  animation: fv-fade-up 0.45s ease forwards;
+/* --- Slide 1: Calendar --- */
+/* Rows fill in staggered, legend fades in */
+.feature-slide.active[data-slide="1"] .fv-cal-row .fv-c {
+  opacity: 0; transform: scale(0);
+  animation: fv-fill-cell 0.3s ease forwards;
 }
-.feature-slide.active[data-slide="1"] .fv-shift-type:nth-child(1) { animation-delay: 0.15s; }
-.feature-slide.active[data-slide="1"] .fv-shift-type:nth-child(2) { animation-delay: 0.3s; }
-.feature-slide.active[data-slide="1"] .fv-shift-type:nth-child(3) { animation-delay: 0.45s; }
-.feature-slide.active[data-slide="1"] .fv-shift-type:nth-child(4) { animation-delay: 0.6s; }
 
-/* --- Slide 2: Roles --- */
-/* Role rows slide in staggered */
-.feature-slide.active[data-slide="2"] .fv-role {
+.feature-slide.active[data-slide="1"] .fv-cal-row:nth-child(1) .fv-c { --rd: 0.15s; }
+.feature-slide.active[data-slide="1"] .fv-cal-row:nth-child(2) .fv-c { --rd: 0.3s; }
+.feature-slide.active[data-slide="1"] .fv-cal-row:nth-child(3) .fv-c { --rd: 0.45s; }
+.feature-slide.active[data-slide="1"] .fv-cal-row:nth-child(4) .fv-c { --rd: 0.6s; }
+.feature-slide.active[data-slide="1"] .fv-cal-row:nth-child(5) .fv-c { --rd: 0.75s; }
+
+.feature-slide.active[data-slide="1"] .fv-cal-row .fv-c:nth-child(2) { animation-delay: calc(var(--rd, 0.15s) + 0.00s); }
+.feature-slide.active[data-slide="1"] .fv-cal-row .fv-c:nth-child(3) { animation-delay: calc(var(--rd, 0.15s) + 0.06s); }
+.feature-slide.active[data-slide="1"] .fv-cal-row .fv-c:nth-child(4) { animation-delay: calc(var(--rd, 0.15s) + 0.12s); }
+.feature-slide.active[data-slide="1"] .fv-cal-row .fv-c:nth-child(5) { animation-delay: calc(var(--rd, 0.15s) + 0.18s); }
+.feature-slide.active[data-slide="1"] .fv-cal-row .fv-c:nth-child(6) { animation-delay: calc(var(--rd, 0.15s) + 0.24s); }
+.feature-slide.active[data-slide="1"] .fv-cal-row .fv-c:nth-child(7) { animation-delay: calc(var(--rd, 0.15s) + 0.30s); }
+.feature-slide.active[data-slide="1"] .fv-cal-row .fv-c:nth-child(8) { animation-delay: calc(var(--rd, 0.15s) + 0.36s); }
+
+.feature-slide.active[data-slide="1"] .fv-cal-legend {
   opacity: 0;
-  animation: fv-slide-left 0.45s ease forwards;
+  animation: fv-fade-up 0.4s ease 1.2s forwards;
 }
-.feature-slide.active[data-slide="2"] .fv-role:nth-child(1) { animation-delay: 0.15s; }
-.feature-slide.active[data-slide="2"] .fv-role:nth-child(2) { animation-delay: 0.35s; }
-.feature-slide.active[data-slide="2"] .fv-role:nth-child(3) { animation-delay: 0.55s; }
 
-/* --- Slide 3: Shift Swaps --- */
+/* --- Slide 2: Shift Swaps --- */
 /* Persons slide in from sides, arrows animate, badge appears */
-.feature-slide.active[data-slide="3"] .fv-swap-person:first-child {
+.feature-slide.active[data-slide="2"] .fv-swap-person:first-child {
   opacity: 0;
   animation: fv-slide-left 0.5s ease 0.1s forwards;
 }
-.feature-slide.active[data-slide="3"] .fv-swap-person:last-child {
+.feature-slide.active[data-slide="2"] .fv-swap-person:last-child {
   opacity: 0;
   animation: fv-slide-right 0.5s ease 0.1s forwards;
 }
-.feature-slide.active[data-slide="3"] .fv-swap-arrows {
+.feature-slide.active[data-slide="2"] .fv-swap-arrows {
   opacity: 0;
   animation: fv-swap-arrows 0.5s ease 0.5s forwards;
 }
-.feature-slide.active[data-slide="3"] .fv-badge {
+.feature-slide.active[data-slide="2"] .fv-badge {
   opacity: 0;
   animation: fv-fade-up 0.4s ease 0.9s forwards;
 }
 
-/* --- Slide 4: Time Off --- */
+/* --- Slide 3: Time Off --- */
 /* Request cards stagger in, bar fills */
-.feature-slide.active[data-slide="4"] .fv-to-req {
+.feature-slide.active[data-slide="3"] .fv-to-req {
   opacity: 0;
   animation: fv-bounce-in 0.45s ease forwards;
 }
-.feature-slide.active[data-slide="4"] .fv-to-req:nth-child(1) { animation-delay: 0.1s; }
-.feature-slide.active[data-slide="4"] .fv-to-req:nth-child(2) { animation-delay: 0.3s; }
-.feature-slide.active[data-slide="4"] .fv-to-req:nth-child(3) { animation-delay: 0.5s; }
+.feature-slide.active[data-slide="3"] .fv-to-req:nth-child(1) { animation-delay: 0.1s; }
+.feature-slide.active[data-slide="3"] .fv-to-req:nth-child(2) { animation-delay: 0.3s; }
+.feature-slide.active[data-slide="3"] .fv-to-req:nth-child(3) { animation-delay: 0.5s; }
 
-.feature-slide.active[data-slide="4"] .fv-to-bar-wrap {
+.feature-slide.active[data-slide="3"] .fv-to-bar-wrap {
   opacity: 0;
   animation: fv-fade-up 0.4s ease 0.7s forwards;
 }
-.feature-slide.active[data-slide="4"] .fv-to-bar-fill {
+.feature-slide.active[data-slide="3"] .fv-to-bar-fill {
   width: 0;
   animation: fv-bar-fill 0.8s ease 1.0s forwards;
   --w: 33%;
 }
 
-/* --- Slide 5: Chat --- */
+/* --- Slide 4: Chat --- */
 /* Bubbles appear one by one */
-.feature-slide.active[data-slide="5"] .fv-bubble,
-.feature-slide.active[data-slide="5"] .fv-typing {
+.feature-slide.active[data-slide="4"] .fv-bubble,
+.feature-slide.active[data-slide="4"] .fv-typing {
   opacity: 0;
   animation: fv-bounce-in 0.4s ease forwards;
 }
-.feature-slide.active[data-slide="5"] .fv-bubble:nth-child(1) { animation-delay: 0.15s; }
-.feature-slide.active[data-slide="5"] .fv-bubble:nth-child(2) { animation-delay: 0.55s; }
-.feature-slide.active[data-slide="5"] .fv-bubble:nth-child(3) { animation-delay: 0.95s; }
-.feature-slide.active[data-slide="5"] .fv-typing { animation-delay: 1.35s; }
+.feature-slide.active[data-slide="4"] .fv-bubble:nth-child(1) { animation-delay: 0.15s; }
+.feature-slide.active[data-slide="4"] .fv-bubble:nth-child(2) { animation-delay: 0.55s; }
+.feature-slide.active[data-slide="4"] .fv-bubble:nth-child(3) { animation-delay: 0.95s; }
+.feature-slide.active[data-slide="4"] .fv-typing { animation-delay: 1.35s; }
 
-/* --- Slide 6: Export --- */
-/* Documents slide up staggered */
-.feature-slide.active[data-slide="6"] .fv-doc {
+/* --- Slide 5: Tracking --- */
+/* Worker rows stagger in, progress bars fill */
+.feature-slide.active[data-slide="5"] .fv-tr-row {
   opacity: 0;
-  animation: fv-fade-up 0.5s ease forwards;
+  animation: fv-fade-up 0.4s ease forwards;
 }
-.feature-slide.active[data-slide="6"] .fv-doc:nth-child(1) { animation-delay: 0.15s; }
-.feature-slide.active[data-slide="6"] .fv-doc:nth-child(2) { animation-delay: 0.4s; }
+.feature-slide.active[data-slide="5"] .fv-tr-row:nth-child(1) { animation-delay: 0.1s; }
+.feature-slide.active[data-slide="5"] .fv-tr-row:nth-child(2) { animation-delay: 0.25s; }
+.feature-slide.active[data-slide="5"] .fv-tr-row:nth-child(3) { animation-delay: 0.4s; }
+.feature-slide.active[data-slide="5"] .fv-tr-row:nth-child(4) { animation-delay: 0.55s; }
 
-/* --- Slide 7: Attendance --- */
+.feature-slide.active[data-slide="5"] .fv-tr-bar-fill {
+  width: 0;
+  animation: fv-bar-fill 0.6s ease forwards;
+}
+.feature-slide.active[data-slide="5"] .fv-tr-row:nth-child(1) .fv-tr-bar-fill { animation-delay: 0.3s; }
+.feature-slide.active[data-slide="5"] .fv-tr-row:nth-child(2) .fv-tr-bar-fill { animation-delay: 0.45s; }
+.feature-slide.active[data-slide="5"] .fv-tr-row:nth-child(3) .fv-tr-bar-fill { animation-delay: 0.6s; }
+.feature-slide.active[data-slide="5"] .fv-tr-row:nth-child(4) .fv-tr-bar-fill { animation-delay: 0.75s; }
+
+/* --- Slide 6: Attendance --- */
 /* Rows stagger in, badge appears */
-.feature-slide.active[data-slide="7"] .fv-att-row {
+.feature-slide.active[data-slide="6"] .fv-att-row {
   opacity: 0;
   animation: fv-slide-left 0.4s ease forwards;
 }
-.feature-slide.active[data-slide="7"] .fv-att-row:nth-child(1) { animation-delay: 0.1s; }
-.feature-slide.active[data-slide="7"] .fv-att-row:nth-child(2) { animation-delay: 0.25s; }
-.feature-slide.active[data-slide="7"] .fv-att-row:nth-child(3) { animation-delay: 0.4s; }
-.feature-slide.active[data-slide="7"] .fv-att-row:nth-child(4) { animation-delay: 0.55s; }
-.feature-slide.active[data-slide="7"] .fv-badge {
+.feature-slide.active[data-slide="6"] .fv-att-row:nth-child(1) { animation-delay: 0.1s; }
+.feature-slide.active[data-slide="6"] .fv-att-row:nth-child(2) { animation-delay: 0.25s; }
+.feature-slide.active[data-slide="6"] .fv-att-row:nth-child(3) { animation-delay: 0.4s; }
+.feature-slide.active[data-slide="6"] .fv-att-row:nth-child(4) { animation-delay: 0.55s; }
+.feature-slide.active[data-slide="6"] .fv-badge {
   opacity: 0;
   animation: fv-fade-up 0.4s ease 0.8s forwards;
 }
 
-/* --- Slide 8: Calendar --- */
-/* Rows fill in staggered, legend fades in */
-.feature-slide.active[data-slide="8"] .fv-cal-row .fv-c {
-  opacity: 0; transform: scale(0);
-  animation: fv-fill-cell 0.3s ease forwards;
-}
-
-.feature-slide.active[data-slide="8"] .fv-cal-row:nth-child(1) .fv-c { --rd: 0.15s; }
-.feature-slide.active[data-slide="8"] .fv-cal-row:nth-child(2) .fv-c { --rd: 0.3s; }
-.feature-slide.active[data-slide="8"] .fv-cal-row:nth-child(3) .fv-c { --rd: 0.45s; }
-.feature-slide.active[data-slide="8"] .fv-cal-row:nth-child(4) .fv-c { --rd: 0.6s; }
-.feature-slide.active[data-slide="8"] .fv-cal-row:nth-child(5) .fv-c { --rd: 0.75s; }
-
-.feature-slide.active[data-slide="8"] .fv-cal-row .fv-c:nth-child(2) { animation-delay: calc(var(--rd, 0.15s) + 0.00s); }
-.feature-slide.active[data-slide="8"] .fv-cal-row .fv-c:nth-child(3) { animation-delay: calc(var(--rd, 0.15s) + 0.06s); }
-.feature-slide.active[data-slide="8"] .fv-cal-row .fv-c:nth-child(4) { animation-delay: calc(var(--rd, 0.15s) + 0.12s); }
-.feature-slide.active[data-slide="8"] .fv-cal-row .fv-c:nth-child(5) { animation-delay: calc(var(--rd, 0.15s) + 0.18s); }
-.feature-slide.active[data-slide="8"] .fv-cal-row .fv-c:nth-child(6) { animation-delay: calc(var(--rd, 0.15s) + 0.24s); }
-.feature-slide.active[data-slide="8"] .fv-cal-row .fv-c:nth-child(7) { animation-delay: calc(var(--rd, 0.15s) + 0.30s); }
-.feature-slide.active[data-slide="8"] .fv-cal-row .fv-c:nth-child(8) { animation-delay: calc(var(--rd, 0.15s) + 0.36s); }
-
-.feature-slide.active[data-slide="8"] .fv-cal-legend {
+/* --- Slide 7: Roles --- */
+/* Role rows slide in staggered */
+.feature-slide.active[data-slide="7"] .fv-role {
   opacity: 0;
-  animation: fv-fade-up 0.4s ease 1.2s forwards;
+  animation: fv-slide-left 0.45s ease forwards;
 }
+.feature-slide.active[data-slide="7"] .fv-role:nth-child(1) { animation-delay: 0.15s; }
+.feature-slide.active[data-slide="7"] .fv-role:nth-child(2) { animation-delay: 0.35s; }
+.feature-slide.active[data-slide="7"] .fv-role:nth-child(3) { animation-delay: 0.55s; }
 
-/* --- Slide 9: Analytics --- */
-/* Bars grow from bottom, stat cards fade in */
-.feature-slide.active[data-slide="9"] .fv-an-title {
+/* --- Slide 8: Custom Shifts --- */
+/* Cards slide up staggered */
+.feature-slide.active[data-slide="8"] .fv-shift-type {
   opacity: 0;
-  animation: fv-fade-up 0.4s ease 0.1s forwards;
-}
-
-.feature-slide.active[data-slide="9"] .fv-an-bar {
-  animation: fv-bar-grow 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-}
-.feature-slide.active[data-slide="9"] .fv-an-col:nth-child(1) .fv-an-bar { animation-delay: 0.2s; }
-.feature-slide.active[data-slide="9"] .fv-an-col:nth-child(2) .fv-an-bar { animation-delay: 0.3s; }
-.feature-slide.active[data-slide="9"] .fv-an-col:nth-child(3) .fv-an-bar { animation-delay: 0.4s; }
-.feature-slide.active[data-slide="9"] .fv-an-col:nth-child(4) .fv-an-bar { animation-delay: 0.5s; }
-.feature-slide.active[data-slide="9"] .fv-an-col:nth-child(5) .fv-an-bar { animation-delay: 0.6s; }
-.feature-slide.active[data-slide="9"] .fv-an-col:nth-child(6) .fv-an-bar { animation-delay: 0.7s; }
-.feature-slide.active[data-slide="9"] .fv-an-col:nth-child(7) .fv-an-bar { animation-delay: 0.8s; }
-
-.feature-slide.active[data-slide="9"] .fv-an-stat {
   animation: fv-fade-up 0.45s ease forwards;
 }
-.feature-slide.active[data-slide="9"] .fv-an-stat:nth-child(1) { animation-delay: 1.0s; }
-.feature-slide.active[data-slide="9"] .fv-an-stat:nth-child(2) { animation-delay: 1.15s; }
-.feature-slide.active[data-slide="9"] .fv-an-stat:nth-child(3) { animation-delay: 1.3s; }
+.feature-slide.active[data-slide="8"] .fv-shift-type:nth-child(1) { animation-delay: 0.15s; }
+.feature-slide.active[data-slide="8"] .fv-shift-type:nth-child(2) { animation-delay: 0.3s; }
+.feature-slide.active[data-slide="8"] .fv-shift-type:nth-child(3) { animation-delay: 0.45s; }
+.feature-slide.active[data-slide="8"] .fv-shift-type:nth-child(4) { animation-delay: 0.6s; }
+
+/* --- Slide 9: Analytics --- */
+/* Stats appear first, bars grow fast, bottom stats last */
+.feature-slide.active[data-slide="9"] .fv-an-title {
+  opacity: 0;
+  animation: fv-fade-up 0.3s ease 0.05s forwards;
+}
+
+.feature-slide.active[data-slide="9"] .fv-an-stat {
+  animation: fv-fade-up 0.35s ease forwards;
+}
+.feature-slide.active[data-slide="9"] .fv-an-stat:nth-child(1) { animation-delay: 0.1s; }
+.feature-slide.active[data-slide="9"] .fv-an-stat:nth-child(2) { animation-delay: 0.2s; }
+.feature-slide.active[data-slide="9"] .fv-an-stat:nth-child(3) { animation-delay: 0.3s; }
+
+.feature-slide.active[data-slide="9"] .fv-an-bar {
+  animation: fv-bar-grow 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+.feature-slide.active[data-slide="9"] .fv-an-col:nth-child(1) .fv-an-bar { animation-delay: 0.15s; }
+.feature-slide.active[data-slide="9"] .fv-an-col:nth-child(2) .fv-an-bar { animation-delay: 0.2s; }
+.feature-slide.active[data-slide="9"] .fv-an-col:nth-child(3) .fv-an-bar { animation-delay: 0.25s; }
+.feature-slide.active[data-slide="9"] .fv-an-col:nth-child(4) .fv-an-bar { animation-delay: 0.3s; }
+.feature-slide.active[data-slide="9"] .fv-an-col:nth-child(5) .fv-an-bar { animation-delay: 0.35s; }
+.feature-slide.active[data-slide="9"] .fv-an-col:nth-child(6) .fv-an-bar { animation-delay: 0.4s; }
+.feature-slide.active[data-slide="9"] .fv-an-col:nth-child(7) .fv-an-bar { animation-delay: 0.45s; }
+
+.feature-slide.active[data-slide="9"] .fv-an-stat-sm {
+  opacity: 0;
+  animation: fv-fade-up 0.35s ease forwards;
+}
+.feature-slide.active[data-slide="9"] .fv-an-stat-sm:nth-child(1) { animation-delay: 0.4s; }
+.feature-slide.active[data-slide="9"] .fv-an-stat-sm:nth-child(2) { animation-delay: 0.5s; }
+
+/* --- Slide 10: Export --- */
+/* Documents slide up staggered */
+.feature-slide.active[data-slide="10"] .fv-doc {
+  opacity: 0;
+  animation: fv-fade-up 0.5s ease forwards;
+}
+.feature-slide.active[data-slide="10"] .fv-doc:nth-child(1) { animation-delay: 0.15s; }
+.feature-slide.active[data-slide="10"] .fv-doc:nth-child(2) { animation-delay: 0.4s; }
 
 /* ===== SCROLL ANIMATIONS ===== */
 .fade-in { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease-out, transform 0.7s ease-out; }
@@ -1657,6 +1745,7 @@ button { font-family: inherit; }
   .feature-slide { flex-direction: column-reverse; }
   .fs-visual { order: -1; }
   .fv-card { padding: 16px; min-height: auto; border-radius: 14px; max-width: 100%; }
+  .feature-slide.active { min-height: auto; }
   /* Trim text: keep tag + heading + description, hide bullets */
   .fs-points { display: none; }
   .fs-tag { font-size: 0.62rem; padding: 3px 10px; margin-bottom: 6px; }
@@ -1704,6 +1793,15 @@ button { font-family: inherit; }
   .fv-to-req strong { font-size: 0.65rem; }
   .fv-to-req span { font-size: 0.55rem; }
   .fv-to-bar-label { font-size: 0.55rem; }
+  .fv-tr-row { padding: 8px 10px; }
+  .fv-tr-info strong { font-size: 0.65rem; }
+  .fv-tr-badge { font-size: 0.5rem; padding: 2px 6px; }
+  .fv-tr-bar { height: 4px; }
+  .fv-an-bottom { gap: 6px; }
+  .fv-an-stat-sm { padding: 5px 8px; }
+  .fv-an-stat-sm strong { font-size: 0.65rem; }
+  .fv-an-stat-sm span { font-size: 0.45rem; }
+  .fv-an-chart { height: 60px; }
   .fv-dot { display: none; }
   .feature-controls { padding: 10px 16px 16px; gap: 16px; }
   .feature-arrow { width: 36px; height: 36px; }

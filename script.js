@@ -148,46 +148,50 @@ document.addEventListener('DOMContentLoaded', () => {
   const totalSlides = slides.length;
 
   function goToSlide(index, direction) {
-    if (index === currentSlide && slides[currentSlide].classList.contains('active')) return;
+    const currentEl = showcase.querySelector('.feature-slide[data-slide="' + currentSlide + '"]');
+    if (index === currentSlide && currentEl && currentEl.classList.contains('active')) return;
     if (index < 0) index = totalSlides - 1;
     if (index >= totalSlides) index = 0;
 
     const dir = direction || (index > currentSlide ? 'next' : 'prev');
 
+    const oldEl = showcase.querySelector('.feature-slide[data-slide="' + currentSlide + '"]');
+    const newEl = showcase.querySelector('.feature-slide[data-slide="' + index + '"]');
+    if (!oldEl || !newEl) return;
+
     // Outgoing slide
-    slides[currentSlide].classList.remove('active');
-    slides[currentSlide].classList.add(dir === 'next' ? 'exit-left' : 'exit-right');
+    oldEl.classList.remove('active');
+    oldEl.classList.add(dir === 'next' ? 'exit-left' : 'exit-right');
 
     // Incoming slide
-    slides[index].classList.remove('exit-left', 'exit-right');
-    slides[index].classList.add(dir === 'next' ? 'enter-right' : 'enter-left');
+    newEl.classList.remove('exit-left', 'exit-right');
+    newEl.classList.add(dir === 'next' ? 'enter-right' : 'enter-left');
 
     // Force reflow to trigger transition
-    void slides[index].offsetWidth;
+    void newEl.offsetWidth;
 
-    slides[index].classList.remove('enter-right', 'enter-left');
-    slides[index].classList.add('active');
+    newEl.classList.remove('enter-right', 'enter-left');
+    newEl.classList.add('active');
 
-    const prevSlide = currentSlide;
     currentSlide = index;
 
     // Clean up old slide after transition
     setTimeout(() => {
-      slides[prevSlide].classList.remove('exit-left', 'exit-right');
+      oldEl.classList.remove('exit-left', 'exit-right');
     }, 500);
 
     // Update pills
     pills.forEach(p => p.classList.remove('active'));
-    if (pills[currentSlide]) {
-      pills[currentSlide].classList.add('active');
+    const activePill = document.querySelector('.feature-pill[data-slide="' + currentSlide + '"]');
+    if (activePill) {
+      activePill.classList.add('active');
       // Scroll pill into view (container-only, never moves the page)
-      const pill = pills[currentSlide];
       const navWrap = featureNav ? featureNav.closest('.feature-nav-wrap') || featureNav.parentElement : null;
       if (navWrap) {
         const wrapRect = navWrap.getBoundingClientRect();
-        const pillRect = pill.getBoundingClientRect();
+        const pillRect = activePill.getBoundingClientRect();
         if (pillRect.left < wrapRect.left || pillRect.right > wrapRect.right) {
-          const scrollTarget = pill.offsetLeft - navWrap.offsetWidth / 2 + pill.offsetWidth / 2;
+          const scrollTarget = activePill.offsetLeft - navWrap.offsetWidth / 2 + activePill.offsetWidth / 2;
           navWrap.scrollTo({ left: scrollTarget, behavior: 'smooth' });
         }
       }
@@ -195,7 +199,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Update dots
     dots.forEach(d => d.classList.remove('active'));
-    if (dots[currentSlide]) dots[currentSlide].classList.add('active');
+    const activeDot = document.querySelector('.feature-dot[data-slide="' + currentSlide + '"]');
+    if (activeDot) activeDot.classList.add('active');
   }
 
   function nextSlide() {

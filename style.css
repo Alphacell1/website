@@ -24,7 +24,7 @@
   --off: #E8EAED;
   --gradient: linear-gradient(135deg, #2C3C3C 0%, #1A7A5A 30%, #0A8A8A 60%, #1976D2 100%);
   --radius-card: 16px;
-  --radius-btn: 12px;
+  --radius-btn: 100px;
   --radius-sm: 8px;
   --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
   --shadow: 0 4px 20px rgba(0,0,0,0.08);
@@ -1805,7 +1805,7 @@ button { font-family: inherit; }
   /* -- Download -- */
   .download { padding: 64px 0; }
   .download-subtitle { font-size: 0.92rem; margin-bottom: 28px; }
-  .btn-download { font-size: 0.95rem; padding: 14px 28px; border-radius: 10px; }
+  .btn-download { font-size: 0.95rem; padding: 14px 28px; }
   .download-note { font-size: 0.78rem; }
 
   /* -- Footer -- */

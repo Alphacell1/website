@@ -8,18 +8,28 @@ document.addEventListener('DOMContentLoaded', () => {
   const navToggle = document.getElementById('navToggle');
   const navLinks = document.getElementById('navLinks');
 
+  function openMobileNav() {
+    document.body.classList.add('mobile-nav-open');
+    navToggle.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeMobileNav() {
+    document.body.classList.remove('mobile-nav-open');
+    navToggle.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
   navToggle.addEventListener('click', () => {
-    const isOpen = navLinks.classList.toggle('open');
-    navToggle.classList.toggle('active');
-    document.body.style.overflow = isOpen ? 'hidden' : '';
+    if (document.body.classList.contains('mobile-nav-open')) {
+      closeMobileNav();
+    } else {
+      openMobileNav();
+    }
   });
 
   navLinks.querySelectorAll('a').forEach(link => {
-    link.addEventListener('click', () => {
-      navLinks.classList.remove('open');
-      navToggle.classList.remove('active');
-      document.body.style.overflow = '';
-    });
+    link.addEventListener('click', () => closeMobileNav());
   });
 
   // ===== Navbar scroll effect =====

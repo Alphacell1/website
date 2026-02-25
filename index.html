@@ -608,6 +608,7 @@
             <div class="sc-title-bar">
               <span class="sc-title">Team Schedule</span>
               <span class="sc-subtitle">Feb 23 &ndash; Mar 1</span>
+              <button class="sc-generate-btn" id="scGenerateBtn">&#9881; Generate</button>
             </div>
             <div class="sc-grid">
               <div class="sc-grid-header"><span></span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div>
@@ -622,6 +623,7 @@
               <span class="sc-legend-item"><span class="sc-legend-dot afternoon"></span>Afternoon</span>
               <span class="sc-legend-item"><span class="sc-legend-dot night"></span>Night</span>
             </div>
+            <div class="sc-hint">Click any cell to change shift &middot; Hit Generate to auto-fill</div>
           </div>
         </div>
       </div>
@@ -657,6 +659,12 @@
               </div>
               <div class="sc-bubble received"><p>Sent! Check the swap request above.</p><span class="sc-chat-time">10:27 AM</span></div>
             </div>
+            <div class="sc-chat-input">
+              <input type="text" class="sc-chat-field" id="scChatField" placeholder="Type a message..." maxlength="120" autocomplete="off">
+              <button class="sc-chat-send" id="scChatSend" aria-label="Send message">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -689,6 +697,7 @@
                 <div class="sc-timeoff-bar"><div class="sc-timeoff-bar-fill sick" style="width:10%"></div></div>
               </div>
             </div>
+            <div class="sc-hint">Click any badge to cycle its status</div>
           </div>
         </div>
       </div>

@@ -170,13 +170,15 @@ document.addEventListener('DOMContentLoaded', () => {
     pills.forEach(p => p.classList.remove('active'));
     if (pills[currentSlide]) {
       pills[currentSlide].classList.add('active');
-      // Scroll pill into view
+      // Scroll pill into view (container-only, never moves the page)
       const pill = pills[currentSlide];
-      if (featureNav) {
-        const navRect = featureNav.getBoundingClientRect();
+      const navWrap = featureNav ? featureNav.closest('.feature-nav-wrap') || featureNav.parentElement : null;
+      if (navWrap) {
+        const wrapRect = navWrap.getBoundingClientRect();
         const pillRect = pill.getBoundingClientRect();
-        if (pillRect.left < navRect.left || pillRect.right > navRect.right) {
-          pill.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        if (pillRect.left < wrapRect.left || pillRect.right > wrapRect.right) {
+          const scrollTarget = pill.offsetLeft - navWrap.offsetWidth / 2 + pill.offsetWidth / 2;
+          navWrap.scrollTo({ left: scrollTarget, behavior: 'smooth' });
         }
       }
     }
@@ -302,5 +304,197 @@ document.addEventListener('DOMContentLoaded', () => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   }
+
+  // ===== Spotlight Interactive Cards =====
+
+  // ---- 1. Schedule Card: Clickable Cells + Generate ----
+  const SHIFT_CYCLE = ['morning', 'afternoon', 'night', 'off'];
+
+  // Click any cell to cycle shift type
+  document.querySelectorAll('.sc-grid-row .sc-cell').forEach(cell => {
+    cell.addEventListener('click', () => {
+      const current = SHIFT_CYCLE.find(s => cell.classList.contains(s)) || 'off';
+      const nextIdx = (SHIFT_CYCLE.indexOf(current) + 1) % SHIFT_CYCLE.length;
+      SHIFT_CYCLE.forEach(s => cell.classList.remove(s));
+      cell.classList.add(SHIFT_CYCLE[nextIdx]);
+    });
+  });
+
+  // Generate cascade animation
+  const generateBtn = document.getElementById('scGenerateBtn');
+  if (generateBtn) {
+    let generating = false;
+
+    generateBtn.addEventListener('click', () => {
+      if (generating) return;
+      generating = true;
+
+      const rows = document.querySelectorAll('.sc-grid-row');
+      const allCells = [];
+      rows.forEach(row => {
+        row.querySelectorAll('.sc-cell').forEach(cell => allCells.push(cell));
+      });
+
+      // Step 1: Clear all to "off"
+      allCells.forEach(cell => {
+        SHIFT_CYCLE.forEach(s => cell.classList.remove(s));
+        cell.classList.remove('cell-pop');
+        cell.classList.add('off');
+        cell.style.opacity = '0.3';
+      });
+
+      // Step 2: Fill one-by-one after a short pause
+      setTimeout(() => {
+        const rowCount = rows.length;
+        const colCount = 7;
+
+        allCells.forEach((cell, i) => {
+          const row = Math.floor(i / colCount);
+          const col = i % colCount;
+          const delay = (row * colCount + col) * 50;
+
+          setTimeout(() => {
+            // Pick random shift; guarantee at least one "off" per row
+            // (force last cell of row to "off" if none yet in this row)
+            const rowStart = row * colCount;
+            const rowEnd = rowStart + colCount;
+            const isLastInRow = (col === colCount - 1);
+            let hasOffInRow = false;
+
+            if (isLastInRow) {
+              for (let j = rowStart; j < rowEnd - 1; j++) {
+                if (allCells[j].classList.contains('off')) {
+                  hasOffInRow = true;
+                  break;
+                }
+              }
+            }
+
+            let shift;
+            if (isLastInRow && !hasOffInRow) {
+              shift = 'off';
+            } else {
+              // Weight: 30% morning, 25% afternoon, 20% night, 25% off
+              const r = Math.random();
+              if (r < 0.30) shift = 'morning';
+              else if (r < 0.55) shift = 'afternoon';
+              else if (r < 0.75) shift = 'night';
+              else shift = 'off';
+            }
+
+            SHIFT_CYCLE.forEach(s => cell.classList.remove(s));
+            cell.classList.add(shift);
+            cell.style.opacity = '';
+
+            // Trigger pop animation
+            cell.classList.remove('cell-pop');
+            void cell.offsetWidth; // reflow
+            cell.classList.add('cell-pop');
+          }, delay);
+        });
+
+        // Unlock after full cascade
+        const totalDuration = allCells.length * 50 + 400;
+        setTimeout(() => { generating = false; }, totalDuration);
+      }, 300);
+    });
+  }
+
+  // ---- 2. Chat Card: Type & Send Messages ----
+  const chatField = document.getElementById('scChatField');
+  const chatSendBtn = document.getElementById('scChatSend');
+  const chatContainer = document.querySelector('.sc-chat');
+
+  if (chatField && chatSendBtn && chatContainer) {
+    const CANNED_REPLIES = [
+      'Sounds good, I\'ll update the schedule!',
+      'Thanks! See you on shift.',
+      'Got it, let me check with the manager.',
+      'Perfect, I\'ll confirm the swap now.',
+      'No worries, we\'ll figure it out!',
+    ];
+
+    let chatCooldown = false;
+
+    function getTimeString() {
+      const now = new Date();
+      let h = now.getHours();
+      const m = now.getMinutes().toString().padStart(2, '0');
+      const ampm = h >= 12 ? 'PM' : 'AM';
+      h = h % 12 || 12;
+      return `${h}:${m} ${ampm}`;
+    }
+
+    function createBubble(text, type) {
+      const bubble = document.createElement('div');
+      bubble.className = `sc-bubble ${type} bubble-enter`;
+      bubble.innerHTML = `<p>${text}</p><span class="sc-chat-time">${getTimeString()}${type === 'sent' ? ' <span class="sc-chat-read">&#10003;</span>' : ''}</span>`;
+      return bubble;
+    }
+
+    function scrollChatToBottom() {
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
+
+    function sendMessage() {
+      const text = chatField.value.trim();
+      if (!text || chatCooldown) return;
+
+      chatCooldown = true;
+
+      // Sanitize text (prevent XSS in demo)
+      const safe = text.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+      // Append sent bubble
+      const sentBubble = createBubble(safe, 'sent');
+      chatContainer.appendChild(sentBubble);
+      chatField.value = '';
+      scrollChatToBottom();
+
+      // Auto-reply after 1.5s
+      setTimeout(() => {
+        const reply = CANNED_REPLIES[Math.floor(Math.random() * CANNED_REPLIES.length)];
+        const receivedBubble = createBubble(reply, 'received');
+        chatContainer.appendChild(receivedBubble);
+        scrollChatToBottom();
+
+        // Update sent bubble to show read receipt
+        const sentCheck = sentBubble.querySelector('.sc-chat-read');
+        if (sentCheck) sentCheck.innerHTML = '&#10003;&#10003;';
+      }, 1500);
+
+      // 2s cooldown
+      setTimeout(() => { chatCooldown = false; }, 2000);
+    }
+
+    chatSendBtn.addEventListener('click', sendMessage);
+    chatField.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+  }
+
+  // ---- 3. Time Off Card: Badge Toggle ----
+  const BADGE_CYCLE = ['approved', 'pending', 'denied'];
+  const BADGE_LABELS = { approved: 'Approved', pending: 'Pending', denied: 'Denied' };
+
+  document.querySelectorAll('.sc-timeoff-badge').forEach(badge => {
+    badge.addEventListener('click', () => {
+      const current = BADGE_CYCLE.find(s => badge.classList.contains(s)) || 'approved';
+      const nextIdx = (BADGE_CYCLE.indexOf(current) + 1) % BADGE_CYCLE.length;
+      const next = BADGE_CYCLE[nextIdx];
+
+      BADGE_CYCLE.forEach(s => badge.classList.remove(s));
+      badge.classList.add(next);
+      badge.textContent = BADGE_LABELS[next];
+
+      // Pop animation
+      badge.classList.remove('badge-pop');
+      void badge.offsetWidth; // reflow
+      badge.classList.add('badge-pop');
+    });
+  });
 
 });

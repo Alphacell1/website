@@ -829,7 +829,7 @@ button { font-family: inherit; }
 .sc-legend-dot.night     { background: var(--night); }
 
 /* ---- Spotlight Chat ---- */
-.sc-chat { display: flex; flex-direction: column; gap: 10px; padding: 14px 16px; }
+.sc-chat { display: flex; flex-direction: column; gap: 10px; padding: 14px 16px; max-height: 320px; overflow-y: auto; scroll-behavior: smooth; }
 .sc-bubble { max-width: 82%; padding: 10px 14px; border-radius: 16px; font-size: 0.72rem; line-height: 1.5; }
 .sc-bubble p { margin-bottom: 4px; }
 .sc-chat-time { font-size: 0.55rem; color: rgba(255,255,255,0.3); display: block; }
@@ -881,6 +881,93 @@ button { font-family: inherit; }
 .sc-timeoff-bar:last-child { margin-bottom: 0; }
 .sc-timeoff-bar-fill { height: 100%; background: var(--primary); border-radius: 3px; transition: width 1s ease; }
 .sc-timeoff-bar-fill.sick { background: var(--morning); }
+
+/* ---- Spotlight Interactive States ---- */
+
+/* Generate button */
+.sc-generate-btn {
+  padding: 5px 14px; border-radius: 20px; font-size: 0.62rem; font-weight: 700;
+  background: var(--primary); color: var(--white); border: none; cursor: pointer;
+  letter-spacing: 0.03em; transition: background 0.2s, transform 0.15s;
+  white-space: nowrap;
+}
+.sc-generate-btn:hover { background: var(--primary-light); transform: scale(1.05); }
+.sc-generate-btn:active { transform: scale(0.97); }
+
+/* Clickable cells */
+.sc-cell {
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease, opacity 0.2s ease;
+}
+.sc-cell:hover { filter: brightness(1.25); }
+
+/* Cell pop animation (used during generate) */
+@keyframes cell-pop {
+  0%   { transform: scale(0); opacity: 0; }
+  60%  { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.sc-cell.cell-pop {
+  animation: cell-pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+/* Hint text below cards */
+.sc-hint {
+  padding: 8px 20px 12px; font-size: 0.58rem; color: rgba(255,255,255,0.25);
+  text-align: center; letter-spacing: 0.02em;
+}
+
+/* ---- Chat input bar ---- */
+.sc-chat-input {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 14px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.02);
+}
+.sc-chat-field {
+  flex: 1; padding: 8px 12px; border-radius: 20px;
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.8); font-size: 0.68rem; font-family: inherit;
+  outline: none; transition: border-color 0.2s;
+}
+.sc-chat-field::placeholder { color: rgba(255,255,255,0.25); }
+.sc-chat-field:focus { border-color: rgba(13,124,102,0.5); }
+.sc-chat-send {
+  flex: 0 0 32px; height: 32px; border-radius: 50%;
+  background: var(--primary); border: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.2s, transform 0.15s;
+}
+.sc-chat-send svg { width: 14px; height: 14px; color: var(--white); }
+.sc-chat-send:hover { background: var(--primary-light); transform: scale(1.08); }
+.sc-chat-send:active { transform: scale(0.95); }
+
+/* Bubble slide-in animation */
+@keyframes bubble-enter {
+  0%   { transform: translateY(12px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+.sc-bubble.bubble-enter {
+  animation: bubble-enter 0.3s ease-out both;
+}
+
+/* ---- Time off badge interactive ---- */
+.sc-timeoff-badge {
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, transform 0.15s;
+  user-select: none;
+}
+.sc-timeoff-badge:hover { filter: brightness(1.2); }
+.sc-timeoff-badge.denied { background: rgba(211,47,47,0.2); color: #EF5350; }
+
+@keyframes badge-pop {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+.sc-timeoff-badge.badge-pop {
+  animation: badge-pop 0.3s ease;
+}
 
 /* ===== FOR TEAMS ===== */
 .for-teams { padding: 100px 0; background: #141414; position: relative; overflow: hidden; }
@@ -1384,9 +1471,27 @@ button { font-family: inherit; }
 .fade-in[data-delay="1"] { transition-delay: 0.1s; }
 .fade-in[data-delay="2"] { transition-delay: 0.2s; }
 
+/* ===== MOBILE TOUCH TARGETS ===== */
+@media (pointer: coarse) {
+  .btn, .sc-swap-btn, .feature-arrow, .faq-question,
+  .sc-generate-btn, .sc-chat-send, .feature-pill { min-height: 44px; }
+  .sc-cell { min-height: 28px; }
+  .sc-timeoff-badge { min-height: 32px; display: flex; align-items: center; justify-content: center; }
+}
+
+/* ===== FEATURE NAV SCROLL FADE (edge hints) ===== */
+@media (max-width: 768px) {
+  .feature-nav-wrap {
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 24px, black calc(100% - 24px), transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0%, black 24px, black calc(100% - 24px), transparent 100%);
+  }
+}
+
 /* ============================================================
    RESPONSIVE
    ============================================================ */
+
+/* ---- Tablet ---- */
 @media (max-width: 1024px) {
   .use-cases-grid, .testimonials-grid { grid-template-columns: repeat(2, 1fr); }
 
@@ -1406,7 +1511,21 @@ button { font-family: inherit; }
   .footer-brand-col { grid-column: 1 / -1; }
 }
 
+/* ---- Mobile landscape / small tablet ---- */
 @media (max-width: 768px) {
+  .container { padding: 0 20px; }
+  .hero-container { padding: 0 20px; }
+  .nav-container { padding: 0 20px; }
+  .footer-container { padding: 0 20px; }
+
+  /* Hide decorative shapes on mobile — cleaner look & better perf */
+  .section-bg-shapes .shape,
+  .hero-bg-shapes .shape,
+  .download-bg-shapes [class*="shape-dl"] { display: none; }
+
+  .section-header { margin-bottom: 40px; }
+  .section-subtitle { font-size: 1rem; }
+
   .nav-toggle { display: block; }
 
   .nav-links {
@@ -1423,55 +1542,352 @@ button { font-family: inherit; }
   .hero { padding: 130px 0 100px; }
   .hero-container { flex-direction: column; text-align: center; gap: 48px; }
   .hero-title-line { font-size: clamp(2rem, 8vw, 2.8rem); }
-  .hero-subtitle { margin-left: auto; margin-right: auto; }
+  .hero-subtitle { margin-left: auto; margin-right: auto; font-size: 1.05rem; }
   .hero-actions { justify-content: center; }
   .hero-note { text-align: center; }
   .hero-wave svg { height: 50px; }
 
-  .stats-grid { flex-wrap: wrap; gap: 32px 40px; }
+  .stats-grid { flex-wrap: wrap; gap: 28px 36px; }
   .stat-divider { display: none; }
-  .stat { flex: 0 0 calc(50% - 20px); }
+  .stat { flex: 0 0 calc(50% - 18px); }
   .stat-number { font-size: 2.2rem; }
+  .stat-label { font-size: 0.8rem; }
 
   .feature-slide { padding: 28px 20px; }
   .feature-controls { padding: 16px 20px 22px; }
+  .feature-showcase { border-radius: 18px; }
+  .fs-text h3 { font-size: 1.3rem; }
+  .fs-text p { font-size: 0.88rem; }
+  .fs-points li { font-size: 0.84rem; }
 
   .use-cases-grid, .testimonials-grid { grid-template-columns: 1fr; max-width: 480px; margin: 0 auto; }
-  .teams-split { grid-template-columns: 1fr; }
+  .use-case-card { padding: 28px 24px; }
+  .testimonial-card { padding: 28px 24px; }
 
-  .phone-mockup { width: 260px; }
+  .teams-split { grid-template-columns: 1fr; max-width: 520px; margin: 0 auto; }
+  .team-header { padding: 20px 24px 0; }
+  .team-header-body { padding: 14px 24px 28px; }
 
-  .features, .how-it-works, .spotlight, .for-teams, .use-cases, .testimonials, .faq { padding: 72px 0; }
+  .steps { max-width: 100%; }
+  .step { gap: 20px; padding: 24px 0; }
+  .step-number { width: 48px; height: 48px; min-width: 48px; font-size: 1.1rem; }
+  .steps-line { left: 23px; top: 48px; }
+  .step-title { font-size: 1.1rem; }
+  .step-desc { font-size: 0.88rem; }
+  .step-details li { font-size: 0.82rem; }
+
+  .phone-mockup { width: 240px; }
+
+  .features, .how-it-works, .spotlight, .for-teams, .use-cases, .testimonials, .faq { padding: 64px 0; }
   .spotlight-row { margin-bottom: 56px; }
+  .spotlight-text h3 { font-size: 1.35rem; }
+  .spotlight-text p { font-size: 0.9rem; }
+  .spotlight-bullets li { font-size: 0.85rem; }
+
+  .faq-question { font-size: 0.92rem; padding: 18px 20px; }
+  .faq-chevron { width: 18px; height: 18px; }
+  .faq-answer p { font-size: 0.88rem; }
+
+  .download { padding: 80px 0; }
+  .download-subtitle { font-size: 1rem; }
 
   .footer-top { grid-template-columns: 1fr; text-align: center; gap: 28px; }
   .footer-tagline { margin-left: auto; margin-right: auto; }
 
-  .back-to-top { bottom: 20px; right: 20px; width: 40px; height: 40px; }
+  .back-to-top { bottom: 20px; right: 20px; width: 42px; height: 42px; }
 }
 
+/* ---- Mobile portrait ---- */
 @media (max-width: 480px) {
-  .hero { padding: 120px 0 80px; }
-  .hero-actions { flex-direction: column; align-items: center; }
-  .btn-hero-primary, .btn-hero-secondary { width: 100%; max-width: 280px; }
+  .container { padding: 0 16px; }
+  .hero-container { padding: 0 16px; }
+  .nav-container { padding: 0 16px; }
+  .footer-container { padding: 0 16px; }
 
-  .phone-mockup { width: 240px; }
+  .section-header { margin-bottom: 32px; }
+  .section-label { font-size: 0.72rem; padding: 5px 14px; }
+
+  /* -- Hero: hide phone mockup, focus on copy + CTA -- */
+  .hero { padding: 110px 0 72px; }
+  .hero-container { gap: 36px; }
+  .hero-visual { display: none; }
+  .hero-badge { font-size: 0.72rem; padding: 6px 14px; margin-bottom: 18px; }
+  .hero-subtitle { font-size: 0.95rem; margin-bottom: 28px; }
+  .hero-actions { flex-direction: column; align-items: center; gap: 12px; }
+  .btn-hero-primary, .btn-hero-secondary { width: 100%; max-width: 300px; font-size: 0.95rem; padding: 14px 28px; }
+  .hero-note { font-size: 0.78rem; }
+  .hero-wave svg { height: 36px; }
+
+  /* -- Stats -- */
   .stat { flex: 0 0 100%; }
-  .stats-bar { padding: 40px 0; }
+  .stat-number { font-size: 2rem; }
+  .stat-suffix { font-size: 1.2rem; }
+  .stats-bar { padding: 36px 0; }
+  .stats-grid { gap: 24px; }
 
-  .feature-pill { padding: 8px 14px; font-size: 0.78rem; }
-  .fv-card { padding: 18px; min-height: 220px; }
+  /* -- Features: visual-first — show card, compact text -- */
+  .feature-nav-wrap { margin-bottom: 24px; }
+  .feature-pill { padding: 8px 14px; font-size: 0.75rem; }
+  .feature-showcase { border-radius: 14px; }
+  .feature-slide { padding: 20px 18px; gap: 16px; }
+  /* Flip order: visual on top, text summary below */
+  .feature-slide { flex-direction: column-reverse; }
+  .fs-visual { order: -1; }
+  .fv-card { padding: 16px; min-height: auto; border-radius: 14px; max-width: 100%; }
+  /* Trim text: keep tag + heading + description, hide bullets */
+  .fs-points { display: none; }
+  .fs-tag { font-size: 0.62rem; padding: 3px 10px; margin-bottom: 6px; }
+  .fs-text h3 { font-size: 1.05rem; margin-bottom: 6px; text-align: center; }
+  .fs-text p { font-size: 0.82rem; margin-bottom: 0; text-align: center; line-height: 1.5; }
+  .fs-text { text-align: center; }
+  /* Compact visual card internals */
+  .fv-mini-grid, .fv-calendar { gap: 2px; }
+  .fv-grid-head { grid-template-columns: 36px repeat(5, 1fr); }
+  .fv-grid-row { grid-template-columns: 36px repeat(5, 1fr); }
+  .fv-cal-head { grid-template-columns: 32px repeat(7, 1fr); }
+  .fv-cal-row { grid-template-columns: 32px repeat(7, 1fr); }
+  .fv-grid-head span, .fv-cal-head span { font-size: 0.52rem; }
+  .fv-grid-row span:first-child, .fv-cal-row span:first-child { font-size: 0.52rem; }
+  .fv-c { height: 20px; border-radius: 4px; }
+  .fv-badge { font-size: 0.62rem; padding: 5px 10px; margin-top: 8px; }
+  .fv-gen-btn { font-size: 0.58rem; padding: 5px 10px; margin-bottom: 8px; }
+  .fv-shift-stack { gap: 7px; }
+  .fv-shift-type { padding: 10px 12px; gap: 10px; }
+  .fv-shift-color { width: 26px; height: 26px; border-radius: 6px; }
+  .fv-shift-info strong { font-size: 0.72rem; }
+  .fv-shift-info span { font-size: 0.58rem; }
+  .fv-role { padding: 8px 12px; gap: 8px; }
+  .fv-role-icon { width: 30px; height: 30px; font-size: 0.75rem; border-radius: 8px; }
+  .fv-role-info strong { font-size: 0.7rem; }
+  .fv-role-info span { font-size: 0.55rem; }
+  .fv-role-count { font-size: 0.58rem; }
+  .fv-swap-avatar { width: 34px; height: 34px; font-size: 0.78rem; }
+  .fv-swap-person strong { font-size: 0.68rem; margin-bottom: 4px; }
+  .fv-swap-shift { font-size: 0.52rem; padding: 4px 8px; }
+  .fv-swap-arrows { flex: 0 0 36px; }
+  .fv-swap-arrows svg { width: 36px; height: 18px; }
+  .fv-bubble { font-size: 0.65rem; padding: 8px 12px; }
+  .fv-time { font-size: 0.5rem; }
+  .fv-typing span { width: 5px; height: 5px; }
+  .fv-doc { padding: 14px 12px; border-radius: 12px; }
+  .fv-doc-icon { width: 40px; height: 40px; font-size: 0.72rem; border-radius: 10px; }
+  .fv-doc-label { font-size: 0.55rem; }
+  .fv-att-row { padding: 8px 10px; }
+  .fv-att-name { font-size: 0.65rem; }
+  .fv-att-status { font-size: 0.5rem; }
+  .fv-att-hrs { font-size: 0.62rem; }
+  .fv-to-req { padding: 8px 10px; gap: 8px; }
+  .fv-to-badge { font-size: 0.5rem; }
+  .fv-to-req strong { font-size: 0.65rem; }
+  .fv-to-req span { font-size: 0.55rem; }
+  .fv-to-bar-label { font-size: 0.55rem; }
+  .fv-dot { display: none; }
+  .feature-controls { padding: 10px 16px 16px; gap: 16px; }
+  .feature-arrow { width: 36px; height: 36px; }
+  .feature-arrow svg { width: 16px; height: 16px; }
+  .feature-dot { width: 8px; height: 8px; }
+  .feature-dot.active { width: 22px; }
+
+  /* -- Section padding: tighter for less scrolling -- */
+  .features, .how-it-works, .spotlight, .for-teams, .use-cases, .testimonials, .faq { padding: 52px 0; }
+
+  /* -- How It Works: hide bullet details, keep title + desc -- */
+  .step { gap: 16px; padding: 20px 0; }
+  .step-number { width: 42px; height: 42px; min-width: 42px; font-size: 1rem; }
+  .steps-line { left: 20px; top: 42px; }
+  .step-title { font-size: 1rem; }
+  .step-desc { font-size: 0.84rem; margin-bottom: 0; }
+  .step-details { display: none; }
+
+  /* -- Spotlight: keep interactive cards (they're the star) -- */
+  .spotlight-row { margin-bottom: 44px; gap: 28px; }
+  .spotlight-text h3 { font-size: 1.2rem; }
+  .spotlight-text p { font-size: 0.85rem; margin-bottom: 14px; }
+  /* hide bullet lists — the interactive card IS the demo */
+  .spotlight-bullets { display: none; }
 
   .spotlight-card { max-width: 100%; border-radius: 16px; }
-  .sc-cell { height: 20px; }
-  .sc-grid-header span, .sc-worker { font-size: 0.5rem; }
-  .sc-grid { padding: 10px 12px; }
-  .sc-chat { padding: 10px 12px; gap: 8px; }
-  .sc-bubble { font-size: 0.65rem; padding: 8px 10px; }
+  .sc-title-bar { padding: 12px 14px 10px; }
+  .sc-title { font-size: 0.82rem; }
+  .sc-subtitle { font-size: 0.68rem; }
+  .sc-grid { padding: 10px 12px; gap: 4px; }
+  .sc-grid-header { grid-template-columns: 46px repeat(7, 1fr); gap: 3px; }
+  .sc-grid-row { grid-template-columns: 46px repeat(7, 1fr); gap: 3px; }
+  .sc-grid-header span, .sc-worker { font-size: 0.52rem; }
+  .sc-cell { height: 24px; border-radius: 4px; }
+  .sc-legend { padding: 10px 14px; gap: 12px; }
+  .sc-legend-item { font-size: 0.58rem; }
+  .sc-legend-dot { width: 8px; height: 8px; }
+  .sc-hint { font-size: 0.54rem; padding: 6px 14px 10px; }
+  .sc-generate-btn { font-size: 0.56rem; padding: 4px 10px; }
 
-  .faq-question { font-size: 0.88rem; padding: 16px 18px; }
-  .faq-answer p { padding: 0 18px 16px; font-size: 0.85rem; }
+  .sc-chat { padding: 10px 12px; gap: 8px; max-height: 260px; }
+  .sc-bubble { font-size: 0.68rem; padding: 8px 11px; max-width: 88%; }
+  .sc-chat-time { font-size: 0.5rem; }
+  .sc-swap-card { padding: 8px 10px; }
+  .sc-swap-header { font-size: 0.55rem; margin-bottom: 6px; }
+  .sc-swap-shift { font-size: 0.5rem; padding: 3px 6px; }
+  .sc-swap-label { font-size: 0.45rem; }
+  .sc-swap-btn { font-size: 0.55rem; padding: 4px 0; }
+  .sc-chat-input { padding: 8px 10px; }
+  .sc-chat-field { font-size: 0.68rem; padding: 7px 12px; }
+  .sc-chat-send { flex: 0 0 30px; height: 30px; }
 
-  .download { padding: 80px 0; }
-  .btn-download { font-size: 1rem; padding: 16px 32px; }
+  .sc-timeoff { padding: 12px 14px; gap: 8px; }
+  .sc-timeoff-card { padding: 12px 14px; gap: 3px 10px; }
+  .sc-timeoff-badge { font-size: 0.52rem; padding: 4px 8px; }
+  .sc-timeoff-type { font-size: 0.75rem; }
+  .sc-timeoff-dates { font-size: 0.62rem; }
+  .sc-timeoff-days { font-size: 0.68rem; }
+  .sc-timeoff-summary { padding: 12px 14px; }
+  .sc-timeoff-summary-row { font-size: 0.64rem; }
+
+  /* -- For Teams: hide description spans, show titles only -- */
+  .team-header { padding: 18px 20px 0; gap: 12px; }
+  .team-header-body { padding: 12px 20px 24px; }
+  .team-icon-wrap { width: 38px; height: 38px; border-radius: 10px; }
+  .team-icon-wrap svg { width: 20px; height: 20px; }
+  .team-col h3 { font-size: 1.05rem; }
+  .team-intro { font-size: 0.84rem; margin-bottom: 16px; }
+  .team-col li strong { font-size: 0.85rem; }
+  .team-col li span { display: none; }
+  .team-col ul { gap: 10px; }
+  /* hide last 2 items per card (keep 4 of 6) */
+  .team-col li:nth-child(n+5) { display: none; }
+
+  /* -- Use Cases: show top 3 only -- */
+  .use-case-card { padding: 24px 20px; }
+  .use-case-icon { width: 44px; height: 44px; border-radius: 12px; margin-bottom: 14px; }
+  .use-case-icon svg { width: 24px; height: 24px; }
+  .use-case-card h4 { font-size: 0.95rem; }
+  .use-case-card p { font-size: 0.82rem; }
+  .use-case-card:nth-child(n+4) { display: none; }
+
+  /* -- Testimonials: show 2 only -- */
+  .testimonial-card { padding: 24px 20px; border-radius: 16px; }
+  .testimonial-stars { font-size: 1rem; margin-bottom: 12px; }
+  .testimonial-card blockquote { font-size: 0.88rem; margin-bottom: 16px; }
+  .testimonial-avatar { width: 36px; height: 36px; font-size: 0.72rem; }
+  .testimonial-author strong { font-size: 0.82rem; }
+  .testimonial-author span { font-size: 0.72rem; }
+  .testimonial-card:last-child { display: none; }
+
+  /* -- FAQ -- */
+  .faq-list { max-width: 100%; }
+  .faq-item { border-radius: 12px; }
+  .faq-question { font-size: 0.88rem; padding: 16px 18px; gap: 10px; }
+  .faq-chevron { width: 16px; height: 16px; }
+  .faq-answer p { padding: 0 18px 16px; font-size: 0.84rem; }
+
+  /* -- Download -- */
+  .download { padding: 64px 0; }
+  .download-subtitle { font-size: 0.92rem; margin-bottom: 28px; }
+  .btn-download { font-size: 0.95rem; padding: 14px 28px; border-radius: 10px; }
+  .download-note { font-size: 0.78rem; }
+
+  /* -- Footer -- */
+  .footer-top { padding: 40px 0 32px; gap: 24px; }
+  .footer-links-col h4 { font-size: 0.75rem; margin-bottom: 12px; }
+  .footer-links-col a { font-size: 0.82rem; }
+  .footer-bottom { padding: 16px 0; font-size: 0.78rem; }
+
+  .back-to-top { bottom: 16px; right: 16px; width: 38px; height: 38px; }
+  .back-to-top svg { width: 18px; height: 18px; }
+}
+
+/* ---- Ultra-small phones (iPhone SE, Galaxy A series) ---- */
+@media (max-width: 375px) {
+  .container { padding: 0 14px; }
+  .hero-container { padding: 0 14px; }
+  .nav-container { padding: 0 14px; }
+  .footer-container { padding: 0 14px; }
+
+  .hero { padding: 100px 0 64px; }
+  .hero-container { gap: 28px; }
+  .hero-badge { font-size: 0.68rem; padding: 5px 12px; margin-bottom: 14px; }
+  .hero-subtitle { font-size: 0.9rem; }
+  .btn-hero-primary, .btn-hero-secondary { font-size: 0.9rem; padding: 13px 24px; }
+
+  .stat-number { font-size: 1.8rem; }
+  .stat-suffix { font-size: 1rem; }
+  .stat-label { font-size: 0.75rem; }
+  .stats-bar { padding: 32px 0; }
+
+  .feature-pill { padding: 7px 12px; font-size: 0.7rem; }
+  .feature-slide { padding: 16px 14px; gap: 12px; }
+  .fv-card { padding: 14px; border-radius: 12px; }
+  .fs-text h3 { font-size: 0.98rem; }
+  .feature-controls { padding: 10px 14px 16px; }
+
+  .features, .how-it-works, .spotlight, .for-teams, .use-cases, .testimonials, .faq { padding: 44px 0; }
+  .section-header { margin-bottom: 28px; }
+
+  .step { gap: 12px; padding: 16px 0; }
+  .step-number { width: 36px; height: 36px; min-width: 36px; font-size: 0.9rem; }
+  .steps-line { left: 17px; top: 36px; }
+  .step-title { font-size: 0.95rem; }
+  .step-desc { font-size: 0.8rem; }
+
+  .spotlight-row { margin-bottom: 36px; gap: 20px; }
+  .spotlight-text h3 { font-size: 1.08rem; }
+  .spotlight-text p { font-size: 0.82rem; }
+
+  .sc-title-bar { padding: 10px 12px 8px; }
+  .sc-grid { padding: 8px 10px; gap: 3px; }
+  .sc-grid-header { grid-template-columns: 38px repeat(7, 1fr); gap: 2px; margin-bottom: 2px; }
+  .sc-grid-row { grid-template-columns: 38px repeat(7, 1fr); gap: 2px; }
+  .sc-grid-header span, .sc-worker { font-size: 0.48rem; }
+  .sc-cell { height: 20px; border-radius: 3px; }
+  .sc-legend { padding: 8px 10px; gap: 8px; }
+  .sc-legend-item { font-size: 0.52rem; gap: 4px; }
+  .sc-legend-dot { width: 7px; height: 7px; }
+
+  .sc-chat { max-height: 220px; }
+  .sc-bubble { font-size: 0.64rem; padding: 7px 10px; }
+  .sc-chat-field { font-size: 0.64rem; }
+  .sc-chat-send { flex: 0 0 28px; height: 28px; }
+  .sc-chat-send svg { width: 12px; height: 12px; }
+
+  .sc-timeoff-card { padding: 10px 12px; }
+  .sc-timeoff-type { font-size: 0.7rem; }
+  /* hide progress bars on smallest screens — just show cards */
+  .sc-timeoff-summary { display: none; }
+
+  /* -- For Teams: keep only 3 items per card -- */
+  .team-header { padding: 16px 16px 0; }
+  .team-header-body { padding: 10px 16px 20px; }
+  .team-col h3 { font-size: 0.98rem; }
+  .team-intro { font-size: 0.8rem; }
+  .team-col li strong { font-size: 0.82rem; }
+  .team-col li:nth-child(n+4) { display: none; }
+
+  /* -- Use Cases: compact horizontal cards -- */
+  .use-cases-grid { gap: 12px; }
+  .use-case-card {
+    padding: 16px; text-align: left;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .use-case-icon { margin: 0; width: 40px; height: 40px; flex-shrink: 0; }
+  .use-case-icon svg { width: 22px; height: 22px; }
+  .use-case-card h4 { font-size: 0.88rem; margin-bottom: 2px; }
+  .use-case-card p { font-size: 0.75rem; line-height: 1.4; }
+
+  .testimonial-card { padding: 20px 16px; }
+  .testimonial-card blockquote { font-size: 0.84rem; }
+
+  .faq-question { font-size: 0.84rem; padding: 14px 16px; }
+  .faq-answer p { padding: 0 16px 14px; font-size: 0.8rem; }
+
+  .download { padding: 52px 0; }
+  .download-subtitle { font-size: 0.88rem; }
+  .btn-download { font-size: 0.9rem; padding: 13px 24px; }
+
+  /* -- Footer: collapse link columns into 2-col grid -- */
+  .footer-top { gap: 20px; }
+  .footer-links-col { text-align: left; }
+  .footer-top {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .footer-brand-col { grid-column: 1 / -1; text-align: center; }
 }

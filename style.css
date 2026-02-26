@@ -100,6 +100,8 @@ button { font-family: inherit; }
   background: var(--gradient); opacity: 0.3;
 }
 
+.dark-break { height: 64px; background: #111; }
+
 /* ===== SECTION SHARED ===== */
 .section-header { text-align: center; margin-bottom: 56px; }
 

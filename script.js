@@ -92,47 +92,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   faders.forEach(el => fadeObserver.observe(el));
 
-  // ===== Animated stat counters =====
-  const statNumbers = document.querySelectorAll('.stat-number[data-target]');
-  let statsCounted = false;
-
-  function animateCounters() {
-    statNumbers.forEach(el => {
-      const target = parseInt(el.dataset.target, 10);
-      const duration = 2000;
-      const startTime = performance.now();
-
-      function step(currentTime) {
-        const elapsed = currentTime - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        const eased = 1 - Math.pow(1 - progress, 3);
-        const current = Math.round(eased * target);
-        el.textContent = current.toLocaleString();
-        if (progress < 1) {
-          requestAnimationFrame(step);
-        }
-      }
-
-      requestAnimationFrame(step);
-    });
-  }
-
-  if (statNumbers.length > 0) {
-    const statsSection = document.querySelector('.stats-bar');
-    if (statsSection) {
-      const statsObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting && !statsCounted) {
-            statsCounted = true;
-            animateCounters();
-            statsObserver.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.3 });
-      statsObserver.observe(statsSection);
-    }
-  }
-
   // ===== Feature Carousel =====
   const showcase = document.getElementById('featureShowcase');
   const slides = document.querySelectorAll('.feature-slide');
@@ -142,18 +101,48 @@ document.addEventListener('DOMContentLoaded', () => {
   const nextBtn = document.getElementById('featureNext');
   const featureNav = document.getElementById('featureNav');
 
-  let currentSlide = 0;
+  // Slide order matches the pill order (Auto-Scheduling, Analytics, Export, Calendar, ...)
+  const slideOrder = [0, 9, 10, 1, 2, 3, 4, 8, 5, 6, 7];
+  let currentSlide = 0;       // actual data-slide value of the active slide
   let autoTimer = null;
   const SLIDE_INTERVAL = 6000;
   const totalSlides = slides.length;
 
+  // Index of currentSlide within slideOrder
+  function orderIndex() {
+    const i = slideOrder.indexOf(currentSlide);
+    return i >= 0 ? i : 0;
+  }
+
+  // ===== Lock carousel height to tallest slide =====
+  function normalizeShowcaseHeight() {
+    if (!showcase || slides.length === 0) return;
+    // Reset so we can measure naturally
+    showcase.style.height = 'auto';
+    let maxH = 0;
+    // Measure each slide individually (absolute so they don't stack)
+    slides.forEach(s => {
+      s.style.cssText = 'position:absolute !important;top:0 !important;left:0 !important;right:0 !important;opacity:1 !important;transform:none !important;visibility:hidden !important;';
+      const h = s.offsetHeight;
+      if (h > maxH) maxH = h;
+    });
+    // Restore all inline styles
+    slides.forEach(s => { s.style.cssText = ''; });
+    if (maxH > 0) showcase.style.height = maxH + 'px';
+  }
+
+  normalizeShowcaseHeight();
+  window.addEventListener('resize', normalizeShowcaseHeight);
+
   function goToSlide(index, direction) {
     const currentEl = showcase.querySelector('.feature-slide[data-slide="' + currentSlide + '"]');
     if (index === currentSlide && currentEl && currentEl.classList.contains('active')) return;
-    if (index < 0) index = totalSlides - 1;
-    if (index >= totalSlides) index = 0;
 
-    const dir = direction || (index > currentSlide ? 'next' : 'prev');
+    // Wrap using slideOrder
+    const curOI = slideOrder.indexOf(index);
+    if (curOI < 0) return; // safety
+
+    const dir = direction || (slideOrder.indexOf(index) > orderIndex() ? 'next' : 'prev');
 
     const oldEl = showcase.querySelector('.feature-slide[data-slide="' + currentSlide + '"]');
     const newEl = showcase.querySelector('.feature-slide[data-slide="' + index + '"]');
@@ -204,11 +193,13 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function nextSlide() {
-    goToSlide(currentSlide + 1, 'next');
+    const nextIdx = (orderIndex() + 1) % slideOrder.length;
+    goToSlide(slideOrder[nextIdx], 'next');
   }
 
   function prevSlide() {
-    goToSlide(currentSlide - 1, 'prev');
+    const prevIdx = (orderIndex() - 1 + slideOrder.length) % slideOrder.length;
+    goToSlide(slideOrder[prevIdx], 'prev');
   }
 
   function startAuto() {

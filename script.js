@@ -1,5 +1,5 @@
 // ============================================================
-// PETOMA LANDING PAGE — script.js
+// WROK LANDING PAGE — script.js
 // ============================================================
 
 document.addEventListener('DOMContentLoaded', () => {

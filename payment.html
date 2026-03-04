@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wrok — Subscribe</title>
+  <meta name="theme-color" content="#0D7C66">
+  <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --primary: #0D7C66;
+      --primary-light: #14A085;
+      --charcoal: #3C3C3C;
+      --bg: #F4F7F9;
+      --white: #FFFFFF;
+      --radius: 16px;
+      --shadow: 0 4px 20px rgba(0,0,0,0.08);
+    }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: var(--bg);
+      color: var(--charcoal);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .card {
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 48px 40px;
+      max-width: 440px;
+      width: 100%;
+      text-align: center;
+    }
+    .logo { height: 40px; margin-bottom: 24px; }
+    h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 8px; }
+    .tier-name { color: var(--primary); font-weight: 700; }
+    .subtitle { color: #777; font-size: 0.95rem; margin-bottom: 32px; }
+    .spinner {
+      width: 40px; height: 40px;
+      border: 4px solid #e0e0e0;
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 16px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .status { font-size: 0.95rem; color: #555; }
+    .error { color: #D32F2F; font-weight: 500; margin-top: 16px; }
+    .btn {
+      display: inline-block;
+      background: var(--primary);
+      color: var(--white);
+      border: none;
+      border-radius: 100px;
+      padding: 14px 32px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 16px;
+    }
+    .btn:hover { background: var(--primary-light); }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <img src="wrok_logo.png" alt="Wrok" class="logo">
+    <h1>Subscribe to <span class="tier-name" id="tierDisplay">—</span></h1>
+    <p class="subtitle" id="priceDisplay"></p>
+
+    <div id="loadingState">
+      <div class="spinner"></div>
+      <p class="status">Redirecting to checkout...</p>
+    </div>
+
+    <div id="errorState" class="hidden">
+      <p class="error" id="errorMessage"></p>
+      <button class="btn" onclick="retryCheckout()">Try Again</button>
+    </div>
+  </div>
+
+  <script src="payment.js"></script>
+</body>
+</html>

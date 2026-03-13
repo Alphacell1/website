@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wrok — Manage Subscription</title>
+  <meta name="theme-color" content="#0D7C66">
+  <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --primary: #0D7C66;
+      --primary-light: #14A085;
+      --primary-dark: #095E4E;
+      --charcoal: #3C3C3C;
+      --bg: #F4F7F9;
+      --white: #FFFFFF;
+      --gradient: linear-gradient(135deg, #2C3C3C 0%, #1A7A5A 30%, #0A8A8A 60%, #1976D2 100%);
+      --error: #D32F2F;
+      --warning: #F9A825;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: var(--gradient);
+      color: var(--white);
+      min-height: 100vh;
+      padding: 32px 16px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    .logo { height: 36px; margin-bottom: 20px; }
+    h1 { font-size: 2rem; font-weight: 900; margin-bottom: 8px; }
+    .subtitle { color: rgba(255,255,255,0.7); font-size: 1rem; }
+
+    /* Current plan card */
+    .plan-card {
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 20px;
+      padding: 28px;
+      margin-bottom: 24px;
+    }
+    .plan-card h2 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    .plan-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .plan-row:last-child { border-bottom: none; }
+    .plan-label { color: rgba(255,255,255,0.6); font-size: 0.9rem; }
+    .plan-value { font-weight: 600; font-size: 0.95rem; }
+    .status-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+    .status-active { background: rgba(76,175,80,0.2); color: #81C784; }
+    .status-trial { background: rgba(249,168,37,0.2); color: #FFD54F; }
+    .status-expired { background: rgba(211,47,47,0.2); color: #EF9A9A; }
+    .status-cancelled { background: rgba(158,158,158,0.2); color: #BDBDBD; }
+
+    /* Tier grid */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 20px;
+      padding: 24px 20px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+      cursor: pointer;
+      position: relative;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.2);
+      background: rgba(255,255,255,0.14);
+    }
+    .card.current {
+      border: 2px solid rgba(255,255,255,0.4);
+      cursor: default;
+    }
+    .card.current:hover { transform: none; box-shadow: none; }
+    .card.selected {
+      border: 2px solid var(--white);
+      background: rgba(255,255,255,0.2);
+      box-shadow: 0 0 0 3px rgba(255,255,255,0.3);
+    }
+    .card.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .card.disabled:hover { transform: none; box-shadow: none; }
+
+    .tier-name {
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 8px;
+    }
+    .price {
+      display: flex;
+      align-items: flex-start;
+      gap: 0;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+    .price-currency { font-size: 1rem; font-weight: 700; color: rgba(255,255,255,0.8); margin-top: 4px; }
+    .price-amount { font-size: 2.2rem; font-weight: 900; }
+    .price-cents { font-size: 1rem; font-weight: 700; color: rgba(255,255,255,0.8); margin-top: 4px; }
+    .price-period { font-size: 0.8rem; color: rgba(255,255,255,0.5); align-self: flex-end; margin-bottom: 2px; }
+    .worker-count {
+      display: inline-block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      background: rgba(255,255,255,0.15);
+      padding: 4px 12px;
+      border-radius: 100px;
+      margin-bottom: 12px;
+    }
+    .current-badge {
+      display: inline-block;
+      background: var(--white);
+      color: var(--primary-dark);
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 100px;
+      margin-bottom: 8px;
+    }
+    .popular-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.2);
+      color: var(--white);
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 100px;
+      margin-bottom: 8px;
+    }
+
+    .cta {
+      display: block;
+      width: 100%;
+      text-align: center;
+      padding: 12px 20px;
+      background: rgba(255,255,255,0.15);
+      color: var(--white);
+      font-size: 0.88rem;
+      font-weight: 700;
+      border-radius: 100px;
+      border: 1px solid rgba(255,255,255,0.25);
+      text-decoration: none;
+      transition: background 0.3s ease;
+      cursor: pointer;
+    }
+    .cta:hover { background: rgba(255,255,255,0.25); }
+    .cta.current-btn { opacity: 0.5; cursor: default; }
+
+    /* Cancel section */
+    .cancel-section {
+      text-align: center;
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    .cancel-btn {
+      display: inline-block;
+      padding: 12px 32px;
+      background: transparent;
+      color: rgba(255,255,255,0.6);
+      font-size: 0.9rem;
+      font-weight: 500;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 100px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .cancel-btn:hover {
+      background: rgba(211,47,47,0.15);
+      border-color: var(--error);
+      color: #EF9A9A;
+    }
+
+    /* Confirm dialog */
+    .dialog-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(4px);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+    .dialog-overlay.visible { display: flex; }
+    .dialog-box {
+      background: #2C3C3C;
+      border-radius: 20px;
+      padding: 32px;
+      max-width: 420px;
+      width: 90%;
+      text-align: center;
+    }
+    .dialog-box h3 { font-size: 1.2rem; font-weight: 700; margin-bottom: 12px; }
+    .dialog-box p { color: rgba(255,255,255,0.7); font-size: 0.9rem; margin-bottom: 24px; line-height: 1.5; }
+    .dialog-actions { display: flex; gap: 12px; }
+    .dialog-actions button {
+      flex: 1;
+      padding: 12px;
+      border-radius: 100px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-secondary {
+      background: rgba(255,255,255,0.15);
+      color: var(--white);
+    }
+    .btn-secondary:hover { background: rgba(255,255,255,0.25); }
+    .btn-danger {
+      background: var(--error);
+      color: var(--white);
+    }
+    .btn-danger:hover { background: #C62828; }
+    .btn-primary {
+      background: var(--white);
+      color: var(--primary-dark);
+    }
+    .btn-primary:hover { background: rgba(255,255,255,0.9); }
+
+    /* Loading & messages */
+    .loading-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(4px);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .loading-overlay.visible { display: flex; }
+    .spinner {
+      width: 40px; height: 40px;
+      border: 4px solid rgba(255,255,255,0.2);
+      border-top-color: var(--white);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-text { font-size: 0.95rem; color: rgba(255,255,255,0.8); }
+
+    .toast {
+      display: none;
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      z-index: 300;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    }
+    .toast.visible { display: block; }
+    .toast.error { background: var(--error); color: white; }
+    .toast.success { background: #2E7D32; color: white; }
+
+    .return-notice {
+      text-align: center;
+      margin-top: 32px;
+      color: rgba(255,255,255,0.5);
+      font-size: 0.85rem;
+    }
+
+    .init-loading {
+      text-align: center;
+      padding: 80px 0;
+    }
+    .init-loading .spinner { margin: 0 auto 16px; }
+
+    .error-state {
+      text-align: center;
+      padding: 80px 0;
+      color: rgba(255,255,255,0.7);
+    }
+    .error-state h2 { margin-bottom: 12px; }
+
+    @media (max-width: 540px) {
+      .grid { grid-template-columns: 1fr; max-width: 360px; margin-left: auto; margin-right: auto; }
+      h1 { font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <img src="wrok_logo.png" alt="Wrok" class="logo">
+      <h1>Manage Subscription</h1>
+      <p class="subtitle">Change your plan or manage your subscription</p>
+    </div>
+
+    <div id="initLoading" class="init-loading">
+      <div class="spinner"></div>
+      <span class="loading-text">Loading subscription...</span>
+    </div>
+
+    <div id="errorState" class="error-state" style="display:none">
+      <h2>Unable to load subscription</h2>
+      <p>Please try again from the app or check your internet connection.</p>
+    </div>
+
+    <div id="mainContent" style="display:none">
+      <!-- Current plan -->
+      <div class="plan-card" id="currentPlanCard"></div>
+
+      <!-- Tier selection -->
+      <div class="grid" id="tierGrid"></div>
+
+      <!-- Cancel -->
+      <div class="cancel-section" id="cancelSection" style="display:none">
+        <button class="cancel-btn" onclick="showCancelDialog()">Cancel Subscription</button>
+      </div>
+
+      <p class="return-notice">Changes take effect immediately. Return to the app to continue.</p>
+    </div>
+  </div>
+
+  <!-- Confirm dialog -->
+  <div class="dialog-overlay" id="confirmDialog">
+    <div class="dialog-box">
+      <h3 id="dialogTitle"></h3>
+      <p id="dialogMessage"></p>
+      <div class="dialog-actions">
+        <button class="btn-secondary" onclick="closeDialog()">Go Back</button>
+        <button id="dialogAction" class="btn-danger"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading overlay -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="spinner"></div>
+    <span class="loading-text" id="loadingText">Processing...</span>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const API_BASE = 'https://schedulerapi-production.up.railway.app/api';
+
+    const TIERS = [
+      { id: 'STARTER', name: 'Starter', price: '12', cents: '.99', maxWorkers: 10 },
+      { id: 'GROWTH', name: 'Growth', price: '29', cents: '.99', maxWorkers: 20, popular: true },
+      { id: 'BUSINESS', name: 'Business', price: '79', cents: '.99', maxWorkers: 50 },
+      { id: 'ENTERPRISE', name: 'Enterprise', price: '139', cents: '.99', maxWorkers: 100 },
+    ];
+
+    let params;
+    let subscription = null;
+
+    function getParams() {
+      const p = new URLSearchParams(window.location.search);
+      return {
+        workplaceId: p.get('workplaceId'),
+        token: p.get('token'),
+        action: p.get('action'),
+        tier: (p.get('tier') || '').toUpperCase(),
+      };
+    }
+
+    function authHeaders() {
+      return {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${params.token}`,
+      };
+    }
+
+    function showToast(msg, type = 'error') {
+      const el = document.getElementById('toast');
+      el.textContent = msg;
+      el.className = `toast visible ${type}`;
+      setTimeout(() => el.classList.remove('visible'), 5000);
+    }
+
+    function showLoading(visible, text) {
+      document.getElementById('loadingOverlay').classList.toggle('visible', visible);
+      if (text) document.getElementById('loadingText').textContent = text;
+    }
+
+    function showDialog(title, message, actionLabel, actionClass, onAction) {
+      document.getElementById('dialogTitle').textContent = title;
+      document.getElementById('dialogMessage').textContent = message;
+      const btn = document.getElementById('dialogAction');
+      btn.textContent = actionLabel;
+      btn.className = actionClass;
+      btn.onclick = () => { closeDialog(); onAction(); };
+      document.getElementById('confirmDialog').classList.add('visible');
+    }
+
+    function closeDialog() {
+      document.getElementById('confirmDialog').classList.remove('visible');
+    }
+
+    function renderCurrentPlan() {
+      const sub = subscription;
+      if (!sub) return;
+
+      let statusClass = 'status-active';
+      let statusLabel = sub.status;
+      if (sub.isTrial) { statusClass = 'status-trial'; statusLabel = 'Free Trial'; }
+      else if (sub.status === 'ACTIVE') { statusClass = 'status-active'; statusLabel = 'Active'; }
+      else if (sub.status === 'EXPIRED') { statusClass = 'status-expired'; statusLabel = 'Expired'; }
+      else if (sub.status === 'CANCELLED') { statusClass = 'status-cancelled'; statusLabel = 'Cancelled'; }
+
+      const tier = TIERS.find(t => t.id === sub.tier) || { name: sub.tier };
+      const periodEnd = sub.currentPeriodEnd ? new Date(sub.currentPeriodEnd).toLocaleDateString() : '—';
+
+      let rows = `
+        <div class="plan-row">
+          <span class="plan-label">Plan</span>
+          <span class="plan-value">${tier.name}</span>
+        </div>
+        <div class="plan-row">
+          <span class="plan-label">Status</span>
+          <span class="status-badge ${statusClass}">${statusLabel}</span>
+        </div>
+        <div class="plan-row">
+          <span class="plan-label">Workers</span>
+          <span class="plan-value">${sub.maxWorkers} max</span>
+        </div>
+      `;
+
+      if (sub.isTrial && sub.trialRemainingMs) {
+        const days = Math.ceil(sub.trialRemainingMs / (1000 * 60 * 60 * 24));
+        rows += `
+          <div class="plan-row">
+            <span class="plan-label">Trial Remaining</span>
+            <span class="plan-value">${days} days</span>
+          </div>
+        `;
+      }
+
+      if (sub.currentPeriodEnd && sub.status === 'ACTIVE' && !sub.isTrial) {
+        rows += `
+          <div class="plan-row">
+            <span class="plan-label">Renews on</span>
+            <span class="plan-value">${periodEnd}</span>
+          </div>
+        `;
+      }
+
+      document.getElementById('currentPlanCard').innerHTML = `<h2>Current Plan</h2>${rows}`;
+
+      // Show cancel button only for active paid subscriptions
+      if (sub.status === 'ACTIVE' && !sub.isTrial && sub.stripeSubscriptionId) {
+        document.getElementById('cancelSection').style.display = '';
+      }
+    }
+
+    function renderTierCards() {
+      const grid = document.getElementById('tierGrid');
+      grid.innerHTML = '';
+
+      TIERS.forEach(tier => {
+        const isCurrent = subscription && subscription.tier === tier.id && subscription.isActive;
+        const card = document.createElement('div');
+        card.className = `card${isCurrent ? ' current' : ''}`;
+        card.dataset.tier = tier.id;
+
+        let badges = '';
+        if (isCurrent) badges += '<span class="current-badge">Current Plan</span> ';
+        else if (tier.popular) badges += '<span class="popular-badge">Most Popular</span> ';
+
+        card.innerHTML = `
+          ${badges}
+          <div class="tier-name">${tier.name}</div>
+          <div class="price">
+            <span class="price-currency">&euro;</span>
+            <span class="price-amount">${tier.price}</span>
+            <span class="price-cents">${tier.cents}</span>
+            <span class="price-period">/mo</span>
+          </div>
+          <span class="worker-count">Up to ${tier.maxWorkers} workers</span>
+          <button class="cta${isCurrent ? ' current-btn' : ''}" ${isCurrent ? 'disabled' : ''}>
+            ${isCurrent ? 'Current Plan' : 'Switch to ' + tier.name}
+          </button>
+        `;
+
+        if (!isCurrent) {
+          card.onclick = () => confirmTierChange(tier);
+        }
+
+        grid.appendChild(card);
+      });
+    }
+
+    function confirmTierChange(tier) {
+      const isUpgrade = subscription && TIERS.findIndex(t => t.id === tier.id) >
+                         TIERS.findIndex(t => t.id === subscription.tier);
+      const action = isUpgrade ? 'upgrade' : 'switch';
+
+      showDialog(
+        `${isUpgrade ? 'Upgrade' : 'Switch'} to ${tier.name}?`,
+        `Your plan will change immediately. The price difference will be prorated \u2014 you'll only pay the remaining portion at the new rate of \u20AC${tier.price}${tier.cents}/mo.`,
+        `${isUpgrade ? 'Upgrade' : 'Switch'} to ${tier.name}`,
+        'btn-primary',
+        () => changeTier(tier.id)
+      );
+    }
+
+    async function changeTier(tierId) {
+      showLoading(true, 'Changing plan...');
+      try {
+        const res = await fetch(`${API_BASE}/subscriptions/change-tier`, {
+          method: 'POST',
+          headers: authHeaders(),
+          body: JSON.stringify({
+            workplaceId: parseInt(params.workplaceId),
+            tier: tierId,
+          }),
+        });
+
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          throw new Error(data.error || data.message || 'Failed to change plan');
+        }
+
+        showLoading(false);
+        showToast('Plan changed successfully!', 'success');
+
+        // Reload subscription
+        await loadSubscription();
+      } catch (err) {
+        showLoading(false);
+        showToast(err.message || 'Failed to change plan. Please try again.');
+      }
+    }
+
+    function showCancelDialog() {
+      showDialog(
+        'Cancel Subscription?',
+        'Your subscription will remain active until the end of the current billing period. After that, you won\'t have access to premium features.',
+        'Cancel Subscription',
+        'btn-danger',
+        () => cancelSubscription()
+      );
+    }
+
+    async function cancelSubscription() {
+      showLoading(true, 'Cancelling subscription...');
+      try {
+        const res = await fetch(`${API_BASE}/subscriptions/cancel`, {
+          method: 'POST',
+          headers: authHeaders(),
+          body: JSON.stringify({
+            workplaceId: parseInt(params.workplaceId),
+          }),
+        });
+
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          throw new Error(data.error || data.message || 'Cancellation failed');
+        }
+
+        showLoading(false);
+        showToast('Subscription cancelled. Access continues until end of billing period.', 'success');
+
+        await loadSubscription();
+      } catch (err) {
+        showLoading(false);
+        showToast(err.message || 'Cancellation failed. Please try again.');
+      }
+    }
+
+    async function loadSubscription() {
+      try {
+        const res = await fetch(`${API_BASE}/subscriptions/workplace/${params.workplaceId}`, {
+          headers: authHeaders(),
+        });
+        if (!res.ok) throw new Error('Failed to load subscription');
+        subscription = await res.json();
+
+        document.getElementById('initLoading').style.display = 'none';
+        document.getElementById('mainContent').style.display = '';
+        renderCurrentPlan();
+        renderTierCards();
+      } catch (err) {
+        document.getElementById('initLoading').style.display = 'none';
+        document.getElementById('errorState').style.display = '';
+      }
+    }
+
+    // Init
+    params = getParams();
+    if (!params.workplaceId || !params.token) {
+      document.getElementById('initLoading').style.display = 'none';
+      document.getElementById('errorState').style.display = '';
+      document.querySelector('#errorState p').textContent =
+        'Missing authentication. Please open this page from the Wrok app.';
+    } else {
+      loadSubscription().then(() => {
+        // Auto-trigger action if specified in URL
+        if (params.action === 'cancel' && subscription && subscription.isActive) {
+          showCancelDialog();
+        } else if (params.action === 'change' && params.tier) {
+          const tier = TIERS.find(t => t.id === params.tier);
+          if (tier) confirmTierChange(tier);
+        }
+      });
+    }
+  </script>
+</body>
+</html>

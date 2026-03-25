@@ -575,10 +575,13 @@ document.addEventListener('DOMContentLoaded', () => {
   var cssContainer = document.getElementById('phone3d-css');
   var heroVisual = document.querySelector('.hero-visual');
   var phoneMockup = document.querySelector('.phone-mockup.hero-phone');
-  if (!container || !webglCanvas || !cssContainer || !heroVisual || !phoneMockup) return;
+  var phoneScreen = document.querySelector('.phone-mockup.hero-phone .phone-screen');
+  if (!container || !webglCanvas || !cssContainer || !heroVisual || !phoneMockup || !phoneScreen) return;
 
-  var W = heroVisual.offsetWidth;
-  var H = heroVisual.offsetHeight;
+  // Size to the full hero section, not just hero-visual
+  var heroSection = document.getElementById('hero');
+  var W = heroSection ? heroSection.offsetWidth : heroVisual.offsetWidth;
+  var H = heroSection ? heroSection.offsetHeight : heroVisual.offsetHeight;
 
   // Shared camera
   var camera = new THREE.PerspectiveCamera(40, W / H, 1, 10000);
@@ -605,11 +608,11 @@ document.addEventListener('DOMContentLoaded', () => {
   cssContainer.appendChild(cssRenderer.domElement);
 
   // ===== Phone Body (WebGL) =====
-  // Measure the CSS phone to match dimensions exactly
-  var mockupW = phoneMockup.offsetWidth || 280;
-  var mockupH = phoneMockup.offsetHeight || 540;
-  // Body is slightly larger than the screen (frame bezel)
-  var PW = mockupW + 24, PH = mockupH + 24, PD = 20;
+  // Measure the screen (not the full mockup) to size the 3D body
+  var scrW = phoneScreen.offsetWidth || 260;
+  var scrH = phoneScreen.offsetHeight || 500;
+  // Body is larger than the screen (bezel frame around it)
+  var PW = scrW + 30, PH = scrH + 30, PD = 20;
 
   function makeRoundedRect(w, h, r) {
     var s = new THREE.Shape();
@@ -704,10 +707,11 @@ document.addEventListener('DOMContentLoaded', () => {
   glScene.add(rimLight);
 
   // ===== CSS Phone Screen (CSS3D) =====
-  // CSS3DObject wraps the real phone-mockup HTML
-  var cssObject = new THREE.CSS3DObject(phoneMockup);
-  // CSS3D: 1px = 1 Three.js unit. The phone-mockup is mockupW x mockupH px.
-  // Scale it to exactly 1:1 since PW/PH are based on mockup size + 24px bezel
+  // CSS3DObject wraps only the phone-screen (the white app content), not the dark frame
+  var cssObject = new THREE.CSS3DObject(phoneScreen);
+  // The screen should fit inside the 3D body's bezel
+  var screenW = phoneScreen.offsetWidth || 260;
+  var screenH = phoneScreen.offsetHeight || 510;
   cssObject.scale.set(1, 1, 1);
   cssObject.position.set(0, 0, PD / 2 + 1);
   cssScene.add(cssObject);
@@ -718,10 +722,10 @@ document.addEventListener('DOMContentLoaded', () => {
   phoneGroup.add(phoneMesh);
   glScene.add(phoneGroup);
 
-  // Position the phone group — slightly right of center in the camera view
-  // Camera FOV=40, z=900 means visible width at z=0 is roughly 2*900*tan(20°) ≈ 655
-  // So to position at the right third: ~110 units right
-  phoneGroup.position.set(120, 0, 0);
+  // Position the phone at the right side of the hero
+  // FOV=40 at z=900: visible half-width ≈ 900*tan(20°) ≈ 328 units
+  // Place phone at ~60% to the right
+  phoneGroup.position.set(200, 0, 0);
   phoneMesh.position.set(0, 0, 0);
 
   // Mark 3D as active
@@ -730,6 +734,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Enable pointer events on the container for dragging
   container.style.pointerEvents = 'auto';
   container.style.cursor = 'grab';
+  container.style.zIndex = '10';
 
   // ===== Drag to Rotate =====
   var isDragging = false, prevMX = 0, prevMY = 0;
@@ -766,8 +771,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ===== Resize =====
   window.addEventListener('resize', function() {
-    W = heroVisual.offsetWidth;
-    H = heroVisual.offsetHeight;
+    W = heroSection ? heroSection.offsetWidth : heroVisual.offsetWidth;
+    H = heroSection ? heroSection.offsetHeight : heroVisual.offsetHeight;
     camera.aspect = W / H;
     camera.updateProjectionMatrix();
     glRenderer.setSize(W, H);

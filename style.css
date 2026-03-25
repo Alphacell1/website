@@ -315,6 +315,7 @@ button { font-family: inherit; }
   position: relative;
   transform-style: preserve-3d;
 }
+.phone-3d-body * { transform-style: preserve-3d; }
 
 /* Front and back faces */
 .phone-face { position: absolute; backface-visibility: hidden; }
@@ -325,11 +326,20 @@ button { font-family: inherit; }
   height: 650px;
   background: #1a1a2e;
   border-radius: 40px;
-  padding: 14px;
+  padding: 12px;
   box-sizing: border-box;
   transform: translateZ(8px);
-  box-shadow: 0 30px 80px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.08) inset,
-    14px 0 0 #15152a, -14px 0 0 #15152a, 0 -14px 0 #18182e, 0 14px 0 #12122a;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.4), 0 0 0 1.5px rgba(255,255,255,0.1) inset;
+}
+/* 3D depth layer — sits behind front face to create visible thickness */
+.phone-front::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  background: linear-gradient(135deg, #1e1e38, #0e0e22);
+  border-radius: 38px;
+  transform: translateZ(-16px);
+  z-index: -1;
 }
 
 /* BACK */
@@ -339,8 +349,17 @@ button { font-family: inherit; }
   background: linear-gradient(145deg, #22223a, #15152a);
   border-radius: 40px;
   transform: rotateY(180deg) translateZ(8px);
-  box-shadow: 0 30px 80px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.06) inset,
-    14px 0 0 #12122a, -14px 0 0 #12122a, 0 -14px 0 #15152a, 0 14px 0 #10102a;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.4), 0 0 0 1.5px rgba(255,255,255,0.06) inset;
+}
+/* Back depth layer */
+.phone-back::after {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  background: linear-gradient(135deg, #1a1a30, #0c0c1e);
+  border-radius: 38px;
+  transform: translateZ(-16px);
+  z-index: -1;
 }
 .phone-back-camera {
   width: 28px;
@@ -603,7 +622,7 @@ button { font-family: inherit; }
 .mock-week-nav.compact { padding: 6px 10px; }
 .mock-week-nav svg { width: 14px; height: 14px; }
 
-.mock-schedule { display: flex; flex-direction: column; gap: 4px; padding: 4px 12px 12px; flex: 1; }
+.mock-schedule { display: flex; flex-direction: column; gap: 4px; padding: 4px 12px 12px; flex: 1; justify-content: center; }
 .mock-day { display: flex; align-items: center; gap: 8px; }
 .mock-day-label { width: 32px; font-size: 0.6rem; font-weight: 600; color: var(--charcoal-muted); text-align: center; line-height: 1.2; }
 .mock-day-num { font-size: 0.75rem; font-weight: 700; color: var(--charcoal); }

@@ -418,34 +418,34 @@ document.addEventListener('DOMContentLoaded', () => {
     function flyPhoneToSidebar() {
       if (phoneIsFixed || !phoneFloat) return;
       phoneIsFixed = true;
-      phoneFloat.classList.add('dragging'); // stop bob animation
+      phoneFloat.classList.add('dragging');
 
-      // Get phone's current position on screen
+      // Allow phone to escape hero's overflow:hidden
+      if (heroSection) heroSection.style.overflow = 'visible';
+
+      // Immediately switch to fixed position and animate from current spot
       const rect = phoneFloat.getBoundingClientRect();
-      const parent = phoneFloat.parentElement;
+      phoneFloat.style.position = 'fixed';
+      phoneFloat.style.left = rect.left + 'px';
+      phoneFloat.style.top = rect.top + 'px';
+      phoneFloat.style.right = 'auto';
+      phoneFloat.style.zIndex = '1000';
+      phoneFloat.style.margin = '0';
+      if (heroVisual) heroVisual.classList.add('phone-away');
 
-      // Calculate target position (right side, vertically centered)
-      const targetX = window.innerWidth - 360 - rect.left;
-      const targetY = (window.innerHeight / 2 - rect.height * 0.38) - rect.top;
-
-      // Animate to fixed-like position
+      // Animate from current position to right sidebar
       gsap.to(phoneFloat, {
-        x: targetX,
-        y: targetY,
-        scale: 0.7,
+        left: 'auto',
+        right: 40,
+        top: '50%',
+        yPercent: -50,
+        scale: 0.65,
         rotateY: -12,
         rotateX: 3,
-        duration: 0.8,
-        ease: 'power2.out',
+        duration: 1,
+        ease: 'power3.inOut',
         onComplete: () => {
-          // Switch to actual fixed positioning
-          phoneFloat.style.position = 'fixed';
-          phoneFloat.style.right = '40px';
-          phoneFloat.style.top = '50%';
           phoneFloat.style.left = 'auto';
-          phoneFloat.style.zIndex = '100';
-          gsap.set(phoneFloat, { x: 0, y: '-50%', scale: 0.7, rotateY: -12, rotateX: 3 });
-          if (heroVisual) heroVisual.classList.add('phone-away');
           updatePhoneOverlay(currentSlide);
         }
       });
@@ -455,27 +455,29 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!phoneIsFixed || !phoneFloat) return;
       phoneIsFixed = false;
 
-      // Remove fixed positioning
-      phoneFloat.style.position = '';
-      phoneFloat.style.right = '';
-      phoneFloat.style.top = '';
-      phoneFloat.style.left = '';
-      phoneFloat.style.zIndex = '';
-      if (heroVisual) heroVisual.classList.remove('phone-away');
-
-      // Animate back to original position
+      // Animate back to hero position
       gsap.to(phoneFloat, {
-        x: 0,
-        y: 0,
+        right: 'auto',
+        left: heroVisual ? heroVisual.getBoundingClientRect().left + heroVisual.offsetWidth / 2 - 160 : '60%',
+        top: heroVisual ? heroVisual.getBoundingClientRect().top : 200,
+        yPercent: 0,
         scale: 1,
         rotateY: -10,
         rotateX: 3,
-        duration: 0.8,
-        ease: 'power2.out',
+        duration: 1,
+        ease: 'power3.inOut',
         onComplete: () => {
+          // Restore to normal flow
+          phoneFloat.style.position = '';
+          phoneFloat.style.left = '';
+          phoneFloat.style.top = '';
+          phoneFloat.style.right = '';
+          phoneFloat.style.zIndex = '';
+          phoneFloat.style.margin = '';
           phoneFloat.classList.remove('dragging');
-          phoneFloat.style.transform = '';
           gsap.set(phoneFloat, { clearProps: 'all' });
+          if (heroVisual) heroVisual.classList.remove('phone-away');
+          if (heroSection) heroSection.style.overflow = '';
           overlays.forEach(o => o.classList.remove('active'));
         }
       });

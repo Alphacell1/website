@@ -381,8 +381,8 @@ button { font-family: inherit; }
 }
 
 /* ========== PHONE FEATURES ========== */
-.phone-features { background: #1a1a1a; padding: 80px 0 0; position: relative; overflow: hidden; }
-.pf-layout { display: flex; gap: 60px; min-height: 100vh; position: relative; }
+.phone-features { background: #1a1a1a; padding: 80px 0 0; position: relative; }
+.pf-layout { display: flex; gap: 60px; position: relative; }
 .pf-text-track { flex: 1; padding: 40px 0; }
 .pf-phone-col { flex: 0 0 340px; position: relative; }
 .pf-panel { min-height: 80vh; display: flex; flex-direction: column; justify-content: center; padding: 40px 0; opacity: 0.3; transition: opacity 0.5s; }
@@ -395,17 +395,17 @@ button { font-family: inherit; }
 .pf-panel ul li { padding: 6px 0; color: rgba(255,255,255,0.5); font-size: 0.95rem; }
 .pf-panel ul li::before { content: '\2713'; color: var(--primary); margin-right: 10px; font-weight: 700; }
 
-/* 3D Phone */
+/* Sticky phone wrapper */
 .pf-phone-3d { position: sticky; top: 50%; transform: translateY(-50%); perspective: 1200px; }
-.phone-features .phone-mockup { width: 280px; height: 580px; background: #111; border-radius: 36px; border: 3px solid #333; position: relative; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.5); transform: rotateY(0deg) rotateX(2deg); transition: transform 0.6s cubic-bezier(0.23,1,0.32,1); animation: phoneFloat 6s ease-in-out infinite; }
+.phone-features .phone-mockup { width: 280px; height: 580px; background: #111; border-radius: 36px; border: 3px solid #333; position: relative; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05) inset; transition: transform 0.6s cubic-bezier(0.23,1,0.32,1); animation: phoneFloat 6s ease-in-out infinite; }
 @keyframes phoneFloat { 0%,100% { transform: translateY(0) rotateY(0deg) rotateX(2deg); } 50% { transform: translateY(-10px) rotateY(0deg) rotateX(2deg); } }
-.phone-features .phone-frame { width: 100%; height: 100%; position: relative; overflow: hidden; }
+.phone-features .phone-frame { width: 100%; height: 100%; position: relative; overflow: hidden; border-radius: 33px; }
 .phone-features .phone-notch { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 120px; height: 28px; background: #111; border-radius: 0 0 16px 16px; z-index: 10; }
-.phone-features .phone-screen { width: 100%; height: 100%; background: #1a1a1a; padding: 36px 16px 16px; position: relative; overflow: hidden; }
+.phone-features .phone-screen { width: 100%; height: 100%; background: #1a1a1a; position: relative; overflow: hidden; }
 
 /* Phone screens */
-.pf-screen { position: absolute; inset: 36px 16px 16px; opacity: 0; transition: opacity 0.5s; display: flex; flex-direction: column; }
-.pf-screen.active { opacity: 1; }
+.pf-screen { position: absolute; top: 34px; left: 16px; right: 16px; bottom: 16px; opacity: 0; transition: opacity 0.5s ease; display: flex; flex-direction: column; pointer-events: none; }
+.pf-screen.active { opacity: 1; pointer-events: auto; }
 
 /* Schedule screen */
 .ps-bar { padding: 8px 0 12px; font-weight: 700; font-size: 15px; color: #fff; }

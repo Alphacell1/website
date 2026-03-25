@@ -748,7 +748,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Position phone next to the paragraph (left ~50% of hero)
   // The hero container max-width is 1140px, paragraph takes left ~45%
   // Phone should start at roughly 50% from left = center of hero
-  phoneGroup.position.set(250, 50, 0);
+  phoneGroup.position.set(250, 20, 0);
   phoneMesh.position.set(0, 0, 0);
 
   // Mark 3D as active
@@ -804,7 +804,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ===== Scroll: fly phone to right sidebar during features section =====
   var heroStartX = 250;
-  var sidebarX = 400;
+  var sidebarX = 550;
   var targetPhoneX = heroStartX;
   var targetPhoneScale = 1;
   var phoneVisible = true;
@@ -822,14 +822,14 @@ document.addEventListener('DOMContentLoaded', () => {
     var featuresH = featuresEl ? featuresEl.offsetHeight : 800;
     var featuresEnd = featuresTop + featuresH;
 
-    if (scrollY < heroH * 0.4) {
-      // In hero — original position
+    if (scrollY < 20) {
+      // At top — original position
       targetPhoneX = heroStartX;
       targetPhoneScale = 1;
       phoneVisible = true;
     } else if (scrollY < featuresTop) {
-      // Transitioning to sidebar
-      var p = (scrollY - heroH * 0.4) / (featuresTop - heroH * 0.4);
+      // Fly to sidebar as soon as scrolling starts
+      var p = scrollY / featuresTop;
       p = Math.max(0, Math.min(1, p));
       targetPhoneX = heroStartX + (sidebarX - heroStartX) * p;
       targetPhoneScale = 1 - 0.3 * p;
@@ -845,6 +845,64 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }, { passive: true });
 
+  // ===== Sync phone screen with features carousel =====
+  var wsSchedule = phoneScreen.querySelector('.ws-schedule');
+  var wsHeader = phoneScreen.querySelector('.ws-title');
+  var lastActiveSlide = -1;
+
+  // Screen content for each feature slide
+  var featureScreens = {
+    0: { title: 'My Schedule', type: 'schedule' },   // Auto-Scheduling
+    9: { title: 'Analytics', type: 'analytics' },     // Analytics
+    10: { title: 'Export', type: 'export' },           // Export
+    1: { title: 'My Schedule', type: 'schedule' },    // Calendar
+    2: { title: 'Shift Swaps', type: 'swaps' },       // Shift Swaps
+    3: { title: 'Time Off', type: 'timeoff' },        // Time Off
+    4: { title: 'Team Chat', type: 'chat' },          // Chat
+    8: { title: 'Custom Shifts', type: 'schedule' },  // Custom Shifts
+    5: { title: 'Tracking', type: 'schedule' },       // Tracking
+    6: { title: 'Attendance', type: 'schedule' },     // Attendance
+    7: { title: 'Roles', type: 'schedule' },          // Roles
+  };
+
+  function updatePhoneScreen() {
+    var activePill = document.querySelector('.feature-pill.active');
+    if (!activePill) return;
+    var slideIdx = parseInt(activePill.dataset.slide, 10);
+    if (slideIdx === lastActiveSlide) return;
+    lastActiveSlide = slideIdx;
+
+    var screen = featureScreens[slideIdx] || featureScreens[0];
+    if (wsHeader) wsHeader.textContent = screen.title;
+
+    // Update schedule content based on feature type
+    if (wsSchedule) {
+      var days = wsSchedule.querySelectorAll('.ws-shift');
+      days.forEach(function(d) { d.style.transition = 'opacity 0.3s'; d.style.opacity = '0'; });
+      setTimeout(function() {
+        if (screen.type === 'swaps') {
+          wsSchedule.innerHTML = '<div style="padding:20px 10px;text-align:center"><div style="background:#E3F2FD;border-radius:12px;padding:16px;margin-bottom:10px;border-left:3px solid #1E88E5"><div style="font-size:0.7rem;color:#666;margin-bottom:6px">SWAP REQUEST</div><div style="font-weight:700;font-size:0.8rem;color:#1a1a2e">Ana K. ⇄ Marko H.</div><div style="font-size:0.65rem;color:#888;margin:4px 0">Mon Morning ↔ Tue Afternoon</div><div style="display:flex;gap:6px;margin-top:8px"><span style="flex:1;background:#4CAF50;color:#fff;padding:6px;border-radius:8px;text-align:center;font-size:0.65rem;font-weight:600">✓ Approve</span><span style="flex:1;background:#f44336;color:#fff;padding:6px;border-radius:8px;text-align:center;font-size:0.65rem;font-weight:600">✗ Deny</span></div></div><div style="background:#f5f5f5;border-radius:12px;padding:14px;opacity:0.6"><div style="font-size:0.7rem;color:#999">COMPLETED</div><div style="font-weight:600;font-size:0.75rem;color:#444;margin-top:4px">Ivan P. ⇄ Luka M.</div><div style="color:#4CAF50;font-size:0.65rem;margin-top:4px">✓ Approved</div></div></div>';
+        } else if (screen.type === 'chat') {
+          wsSchedule.innerHTML = '<div style="padding:10px;display:flex;flex-direction:column;gap:8px"><div style="align-self:flex-start;background:#f0f0f0;padding:8px 12px;border-radius:14px 14px 14px 4px;font-size:0.7rem;max-width:75%;color:#333">Can you cover my shift tomorrow?</div><div style="align-self:flex-end;background:#0D7C66;color:#fff;padding:8px 12px;border-radius:14px 14px 4px 14px;font-size:0.7rem;max-width:75%">Sure, no problem!</div><div style="align-self:flex-start;background:#f0f0f0;padding:8px 12px;border-radius:14px 14px 14px 4px;font-size:0.7rem;max-width:75%;color:#333">Thanks! 🙏</div><div style="align-self:flex-end;background:#0D7C66;color:#fff;padding:8px 12px;border-radius:14px 14px 4px 14px;font-size:0.7rem;max-width:75%">I\'ll swap it in the app</div></div>';
+        } else if (screen.type === 'analytics') {
+          wsSchedule.innerHTML = '<div style="padding:15px 10px;text-align:center"><div style="font-size:2rem;font-weight:900;color:#1a1a2e">164.5h</div><div style="font-size:0.65rem;color:#999;margin-bottom:12px">Total Hours</div><div style="display:flex;align-items:flex-end;justify-content:center;gap:10px;height:80px"><div style="width:30px;background:linear-gradient(to top,#0D7C66,#0fa);border-radius:4px 4px 0 0;height:50%"></div><div style="width:30px;background:linear-gradient(to top,#0D7C66,#0fa);border-radius:4px 4px 0 0;height:70%"></div><div style="width:30px;background:linear-gradient(to top,#0D7C66,#0fa);border-radius:4px 4px 0 0;height:60%"></div><div style="width:30px;background:linear-gradient(to top,#0D7C66,#0fa);border-radius:4px 4px 0 0;height:85%"></div></div><div style="display:flex;justify-content:center;gap:10px;font-size:0.55rem;color:#999;margin-top:4px"><span>W1</span><span>W2</span><span>W3</span><span>W4</span></div></div>';
+        } else if (screen.type === 'timeoff') {
+          wsSchedule.innerHTML = '<div style="padding:12px 10px"><div style="background:#fff;border-radius:12px;padding:14px;margin-bottom:8px;border-left:3px solid #4CAF50"><span style="background:#E8F5E9;color:#4CAF50;font-size:0.6rem;font-weight:700;padding:2px 8px;border-radius:6px">Approved</span><div style="font-weight:700;font-size:0.8rem;color:#1a1a2e;margin-top:6px">Vacation</div><div style="font-size:0.65rem;color:#888">Mar 28 – Apr 2 · 5 days</div></div><div style="background:#fff;border-radius:12px;padding:14px;border-left:3px solid #FF9800"><span style="background:#FFF3E0;color:#FF9800;font-size:0.6rem;font-weight:700;padding:2px 8px;border-radius:6px">Pending</span><div style="font-weight:700;font-size:0.8rem;color:#1a1a2e;margin-top:6px">Vacation</div><div style="font-size:0.65rem;color:#888">May 12 – May 16 · 5 days</div></div><div style="text-align:center;margin-top:10px;font-size:0.7rem;color:#999"><span style="color:#0D7C66;font-weight:700">12</span> days used of <span style="color:#0D7C66;font-weight:700">20</span></div></div>';
+        } else if (screen.type === 'export') {
+          wsSchedule.innerHTML = '<div style="padding:15px 10px;text-align:center"><div style="font-size:0.8rem;font-weight:700;color:#1a1a2e;margin-bottom:12px">Export Report</div><div style="background:#fff;border-radius:12px;padding:14px;margin-bottom:8px;border:1px solid #eee;display:flex;align-items:center;gap:10px"><div style="width:36px;height:36px;background:#E53935;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:0.6rem;font-weight:700">PDF</div><div style="text-align:left"><div style="font-weight:600;font-size:0.7rem;color:#333">PDF Report</div><div style="font-size:0.6rem;color:#999">Full schedule + hours</div></div></div><div style="background:#fff;border-radius:12px;padding:14px;border:1px solid #eee;display:flex;align-items:center;gap:10px"><div style="width:36px;height:36px;background:#1B5E20;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:0.55rem;font-weight:700">XLS</div><div style="text-align:left"><div style="font-weight:600;font-size:0.7rem;color:#333">Excel Export</div><div style="font-size:0.6rem;color:#999">All workers data</div></div></div></div>';
+        } else {
+          // Default schedule
+          wsSchedule.innerHTML = '<div class="ws-day"><div class="ws-day-info"><span class="ws-day-name">Mon</span><span class="ws-day-num">24</span></div><div class="ws-shift ws-morning"><span>Morning</span><span>06:00 – 14:00</span></div></div><div class="ws-day"><div class="ws-day-info"><span class="ws-day-name">Tue</span><span class="ws-day-num">25</span></div><div class="ws-shift ws-morning"><span>Morning</span><span>06:00 – 14:00</span></div></div><div class="ws-day"><div class="ws-day-info"><span class="ws-day-name">Wed</span><span class="ws-day-num">26</span></div><div class="ws-shift ws-afternoon"><span>Afternoon</span><span>14:00 – 22:00</span></div></div><div class="ws-day"><div class="ws-day-info"><span class="ws-day-name">Thu</span><span class="ws-day-num">27</span></div><div class="ws-shift ws-night"><span>Night</span><span>22:00 – 06:00</span></div></div><div class="ws-day"><div class="ws-day-info"><span class="ws-day-name">Fri</span><span class="ws-day-num">28</span></div><div class="ws-shift ws-afternoon"><span>Afternoon</span><span>14:00 – 22:00</span></div></div><div class="ws-day"><div class="ws-day-info"><span class="ws-day-name">Sat</span><span class="ws-day-num">29</span></div><div class="ws-shift ws-off"><span>Day Off</span></div></div><div class="ws-day"><div class="ws-day-info"><span class="ws-day-name">Sun</span><span class="ws-day-num">30</span></div><div class="ws-shift ws-off"><span>Day Off</span></div></div>';
+        }
+        var newDays = wsSchedule.querySelectorAll('.ws-shift, div[style]');
+        newDays.forEach(function(d) { d.style.opacity = '0'; setTimeout(function() { d.style.transition = 'opacity 0.3s'; d.style.opacity = '1'; }, 50); });
+      }, 300);
+    }
+  }
+
+  // Poll for carousel changes
+  setInterval(updatePhoneScreen, 300);
+
   // ===== Render Loop =====
   function animate() {
     requestAnimationFrame(animate);
@@ -859,7 +917,7 @@ document.addEventListener('DOMContentLoaded', () => {
     phoneGroup.rotation.x += (targetRotX - phoneGroup.rotation.x) * 0.06;
 
     // Bob animation + scroll-based position
-    var baseY = 50 + Math.sin(autoTime * 0.7) * 5;
+    var baseY = 20 + Math.sin(autoTime * 0.7) * 5;
     phoneGroup.position.x += (targetPhoneX - phoneGroup.position.x) * 0.08;
     phoneGroup.position.y = baseY;
     var currentScale = phoneGroup.scale.x + (targetPhoneScale - phoneGroup.scale.x) * 0.08;

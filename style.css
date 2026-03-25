@@ -337,7 +337,7 @@ button { font-family: inherit; }
 .hero-visual.has-3d .phone-notch { display: none !important; }
 .hero-visual.has-3d .phone-mockup { position: absolute; left: -9999px; }
 .hero-visual.has-3d .phone-screen {
-  border-radius: 20px;
+  border-radius: 32px;
   overflow: hidden;
 }
 /* On mobile, no 3D */

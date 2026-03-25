@@ -865,11 +865,10 @@ document.addEventListener('DOMContentLoaded', () => {
     7: { title: 'Roles', type: 'schedule' },          // Roles
   };
 
-  // Lock the schedule container height so all screens are the same size
-  var originalScheduleH = wsSchedule ? wsSchedule.offsetHeight : 0;
-  if (wsSchedule && originalScheduleH > 0) {
-    wsSchedule.style.minHeight = originalScheduleH + 'px';
-    wsSchedule.style.maxHeight = originalScheduleH + 'px';
+  // Lock the schedule container to a fixed height (don't measure — it's unreliable in 3D context)
+  if (wsSchedule) {
+    wsSchedule.style.minHeight = '320px';
+    wsSchedule.style.maxHeight = '320px';
   }
 
   function updatePhoneScreen() {
@@ -925,12 +924,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Bob animation + scroll-based position
     var baseY = 20 + Math.sin(autoTime * 0.7) * 5;
-    // Exponential ease-out: fast start, slow finish
+    // Quick initial burst, then slow crawl to target
     var dx = targetPhoneX - phoneGroup.position.x;
-    phoneGroup.position.x += dx * 0.12 + (dx > 0 ? 1 : dx < 0 ? -1 : 0) * Math.min(Math.abs(dx) * 0.03, 8);
+    phoneGroup.position.x += dx * 0.25;
     phoneGroup.position.y = baseY;
-    var ds = targetPhoneScale - phoneGroup.scale.x;
-    var currentScale = phoneGroup.scale.x + ds * 0.12 + (ds > 0 ? 1 : ds < 0 ? -1 : 0) * Math.min(Math.abs(ds) * 0.03, 0.02);
+    var currentScale = phoneGroup.scale.x + (targetPhoneScale - phoneGroup.scale.x) * 0.25;
     phoneGroup.scale.setScalar(currentScale);
     cssObject.scale.set(fitScale * 1.15 * currentScale, fitScale * currentScale, 1);
 

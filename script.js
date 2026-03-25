@@ -578,6 +578,10 @@ document.addEventListener('DOMContentLoaded', () => {
   var phoneScreen = document.querySelector('.phone-mockup.hero-phone .phone-screen');
   if (!container || !webglCanvas || !cssContainer || !heroVisual || !phoneMockup || !phoneScreen) return;
 
+  // Remove the notch element entirely from DOM so CSS3DRenderer can't show it
+  var notch = document.querySelector('.phone-mockup.hero-phone .phone-notch');
+  if (notch) notch.remove();
+
   // Size to the full hero section, not just hero-visual
   var heroSection = document.getElementById('hero');
   var W = heroSection ? heroSection.offsetWidth : heroVisual.offsetWidth;
@@ -608,8 +612,8 @@ document.addEventListener('DOMContentLoaded', () => {
   cssContainer.appendChild(cssRenderer.domElement);
 
   // ===== Phone Body (WebGL) =====
-  // Phone body dimensions — width is good, reduce height
-  var PW = 285, PH = 480, PD = 18;
+  // Phone body dimensions
+  var PW = 285, PH = 420, PD = 18;
 
   function makeRoundedRect(w, h, r) {
     var s = new THREE.Shape();
@@ -722,7 +726,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // Position the phone at the right side of the hero
   // FOV=40 at z=900: visible half-width ≈ 900*tan(20°) ≈ 328 units
   // Place phone at ~60% to the right
-  phoneGroup.position.set(50, 0, 0);
+  // Position: the notch was at the right spot, so match that position
+  // Notch was roughly 55% from left of hero. Camera sees ±328 units.
+  // 55% of the way = 0.55 * 656 - 328 = 32.8. But hero-content takes left ~45%,
+  // so phone should be at about x = -30 to 0 in scene coords
+  phoneGroup.position.set(-20, 0, 0);
   phoneMesh.position.set(0, 0, 0);
 
   // Mark 3D as active

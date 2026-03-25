@@ -368,6 +368,12 @@ document.addEventListener('DOMContentLoaded', () => {
           // Get current position
           const rect = phoneFloat.getBoundingClientRect();
 
+          // Show CSS phone for flight, hide 3D canvas
+          var phoneMockup = phoneFloat.querySelector('.phone-mockup');
+          var canvas3d = document.getElementById('phone3d');
+          if (phoneMockup) phoneMockup.style.visibility = 'visible';
+          if (canvas3d) canvas3d.style.opacity = '0';
+
           // Take phone out of flow
           phoneFloat.classList.add('phone-fixed');
           phoneFloat.style.left = rect.left + 'px';
@@ -379,10 +385,10 @@ document.addEventListener('DOMContentLoaded', () => {
           // Fly to right sidebar
           gsap.to(phoneFloat, {
             left: window.innerWidth - rect.width - 60,
-            top: window.innerHeight * 0.2,
-            scale: 0.8,
+            top: window.innerHeight * 0.15,
+            scale: 0.75,
             rotation: 0,
-            duration: 0.9,
+            duration: 1,
             ease: 'power2.inOut',
           });
         },
@@ -408,6 +414,11 @@ document.addEventListener('DOMContentLoaded', () => {
               if (heroVisual) heroVisual.classList.remove('phone-away');
               if (heroSection) heroSection.classList.remove('phone-flying');
               gsap.set(phoneFloat, { clearProps: 'all' });
+              // Restore 3D, hide CSS phone
+              var phoneMockup = phoneFloat.querySelector('.phone-mockup');
+              var canvas3d = document.getElementById('phone3d');
+              if (phoneMockup) phoneMockup.style.visibility = '';
+              if (canvas3d) canvas3d.style.opacity = '';
             }
           });
         },
@@ -427,6 +438,11 @@ document.addEventListener('DOMContentLoaded', () => {
               if (heroVisual) heroVisual.classList.remove('phone-away');
               if (heroSection) heroSection.classList.remove('phone-flying');
               gsap.set(phoneFloat, { clearProps: 'all' });
+              // Restore 3D
+              var pm = phoneFloat.querySelector('.phone-mockup');
+              var c3 = document.getElementById('phone3d');
+              if (pm) pm.style.visibility = '';
+              if (c3) c3.style.opacity = '';
             }
           });
         },
@@ -434,15 +450,21 @@ document.addEventListener('DOMContentLoaded', () => {
           if (isFixed) return;
           isFixed = true;
 
+          // Show CSS phone for sidebar, hide 3D
+          var phoneMockup = phoneFloat.querySelector('.phone-mockup');
+          var canvas3d = document.getElementById('phone3d');
+          if (phoneMockup) phoneMockup.style.visibility = 'visible';
+          if (canvas3d) canvas3d.style.opacity = '0';
+
           const rect = phoneFloat.getBoundingClientRect();
           phoneFloat.classList.add('phone-fixed');
           phoneFloat.style.left = (window.innerWidth - rect.width - 60) + 'px';
-          phoneFloat.style.top = (window.innerHeight * 0.2) + 'px';
+          phoneFloat.style.top = (window.innerHeight * 0.15) + 'px';
           phoneFloat.style.width = rect.width + 'px';
           phoneFloat.style.opacity = '1';
           if (heroVisual) heroVisual.classList.add('phone-away');
           if (heroSection) heroSection.classList.add('phone-flying');
-          gsap.set(phoneFloat, { scale: 0.8 });
+          gsap.set(phoneFloat, { scale: 0.75 });
         },
       });
     }

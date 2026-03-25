@@ -371,7 +371,7 @@ document.addEventListener('DOMContentLoaded', () => {
           phoneFloat.style.top = rect.top + 'px';
           phoneFloat.style.width = rect.width + 'px';
           if (heroVisual) heroVisual.classList.add('phone-away');
-          if (heroSection) heroSection.style.overflow = 'visible';
+          if (heroSection) heroSection.classList.add('phone-flying');
 
           // Fly to right sidebar
           gsap.to(phoneFloat, {
@@ -403,7 +403,7 @@ document.addEventListener('DOMContentLoaded', () => {
               phoneFloat.style.top = '';
               phoneFloat.style.width = '';
               if (heroVisual) heroVisual.classList.remove('phone-away');
-              if (heroSection) heroSection.style.overflow = '';
+              if (heroSection) heroSection.classList.remove('phone-flying');
               gsap.set(phoneFloat, { clearProps: 'all' });
             }
           });
@@ -422,7 +422,7 @@ document.addEventListener('DOMContentLoaded', () => {
               phoneFloat.style.width = '';
               phoneFloat.style.opacity = '';
               if (heroVisual) heroVisual.classList.remove('phone-away');
-              if (heroSection) heroSection.style.overflow = '';
+              if (heroSection) heroSection.classList.remove('phone-flying');
               gsap.set(phoneFloat, { clearProps: 'all' });
             }
           });
@@ -438,7 +438,7 @@ document.addEventListener('DOMContentLoaded', () => {
           phoneFloat.style.width = rect.width + 'px';
           phoneFloat.style.opacity = '1';
           if (heroVisual) heroVisual.classList.add('phone-away');
-          if (heroSection) heroSection.style.overflow = 'visible';
+          if (heroSection) heroSection.classList.add('phone-flying');
           gsap.set(phoneFloat, { scale: 0.8 });
         },
       });

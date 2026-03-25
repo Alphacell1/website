@@ -306,13 +306,17 @@ button { font-family: inherit; }
 .phone-float.dragging { animation: none; cursor: grabbing; }
 @keyframes phone-bob { 0%, 100% { transform: translateY(0) rotateY(-6deg); } 50% { transform: translateY(-12px) rotateY(-6deg); } }
 .phone-float.phone-fixed { position: fixed !important; z-index: 1000; animation: none; cursor: default; }
+.hero.phone-flying { overflow: visible !important; }
 .hero-visual.phone-away { min-width: 280px; min-height: 500px; }
 
-.phone-mockup { width: 280px; position: relative; }
+.phone-mockup { width: 300px; position: relative; }
 
 .phone-frame {
-  background: #1a1a2e; border-radius: 36px; padding: 10px;
-  box-shadow: 0 24px 80px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.1) inset, 0 0 40px rgba(13,124,102,0.15);
+  background: #1a1a2e; border-radius: 40px; padding: 12px;
+  border: 6px solid #13132a;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.08) inset,
+    0 0 40px rgba(13,124,102,0.15),
+    inset 0 0 20px rgba(0,0,0,0.3);
 }
 
 .phone-notch { width: 90px; height: 5px; background: #2a2a3e; border-radius: 3px; margin: 6px auto 8px; }

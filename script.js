@@ -722,12 +722,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // ===== CSS Phone Screen (CSS3D) =====
   // CSS3DObject wraps only the phone-screen (the white app content), not the dark frame
   var cssObject = new THREE.CSS3DObject(phoneScreen);
-  // Scale screen to fit INSIDE the 3D body with bezel margin
+  // Scale screen to fill most of the 3D body (thin bezel)
   var rawW = phoneScreen.offsetWidth || 260;
   var rawH = phoneScreen.offsetHeight || 520;
-  var scaleByW = (PW - 24) / rawW;
-  var scaleByH = (PH - 24) / rawH;
-  var fitScale = Math.min(scaleByW, scaleByH); // fit whichever is tighter
+  var scaleByW = (PW - 14) / rawW;
+  var scaleByH = (PH - 14) / rawH;
+  var fitScale = Math.min(scaleByW, scaleByH);
   cssObject.scale.set(fitScale, fitScale, 1);
   cssObject.position.set(0, 0, PD / 2 + 1);
   cssScene.add(cssObject);
@@ -745,7 +745,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Notch was roughly 55% from left of hero. Camera sees ±328 units.
   // 55% of the way = 0.55 * 656 - 328 = 32.8. But hero-content takes left ~45%,
   // so phone should be at about x = -30 to 0 in scene coords
-  phoneGroup.position.set(-20, 0, 0);
+  phoneGroup.position.set(-100, 0, 0);
   phoneMesh.position.set(0, 0, 0);
 
   // Mark 3D as active

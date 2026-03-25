@@ -280,6 +280,88 @@ document.addEventListener('DOMContentLoaded', () => {
     startAuto();
   }
 
+  // ===== 3D Phone Interaction =====
+  const phoneFloat = document.querySelector('.phone-float');
+  if (phoneFloat) {
+    let isDragging = false;
+    let startX = 0, startY = 0;
+    let rotateX = 0, rotateY = 0;
+    let currentRotateX = 0, currentRotateY = 0;
+
+    phoneFloat.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      startX = e.clientX;
+      startY = e.clientY;
+      phoneFloat.classList.add('dragging');
+      e.preventDefault();
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      const deltaX = e.clientX - startX;
+      const deltaY = e.clientY - startY;
+      rotateY = currentRotateY + deltaX * 0.3;
+      rotateX = currentRotateX - deltaY * 0.2;
+      rotateX = Math.max(-25, Math.min(25, rotateX));
+      rotateY = Math.max(-40, Math.min(40, rotateY));
+      phoneFloat.style.transform = `translateY(0) rotateY(${rotateY}deg) rotateX(${rotateX}deg)`;
+    });
+
+    document.addEventListener('mouseup', () => {
+      if (!isDragging) return;
+      isDragging = false;
+      phoneFloat.classList.remove('dragging');
+      currentRotateX = rotateX;
+      currentRotateY = rotateY;
+      // Spring back to neutral after 2 seconds
+      setTimeout(() => {
+        if (!isDragging) {
+          phoneFloat.style.transform = '';
+          currentRotateX = 0;
+          currentRotateY = 0;
+          rotateX = 0;
+          rotateY = 0;
+        }
+      }, 2000);
+    });
+
+    // Touch support
+    phoneFloat.addEventListener('touchstart', (e) => {
+      isDragging = true;
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+      phoneFloat.classList.add('dragging');
+    }, { passive: true });
+
+    document.addEventListener('touchmove', (e) => {
+      if (!isDragging) return;
+      const deltaX = e.touches[0].clientX - startX;
+      const deltaY = e.touches[0].clientY - startY;
+      rotateY = currentRotateY + deltaX * 0.3;
+      rotateX = currentRotateX - deltaY * 0.2;
+      rotateX = Math.max(-25, Math.min(25, rotateX));
+      rotateY = Math.max(-40, Math.min(40, rotateY));
+      phoneFloat.style.transform = `translateY(0) rotateY(${rotateY}deg) rotateX(${rotateX}deg)`;
+    }, { passive: true });
+
+    document.addEventListener('touchend', () => {
+      if (!isDragging) return;
+      isDragging = false;
+      phoneFloat.classList.remove('dragging');
+      currentRotateX = rotateX;
+      currentRotateY = rotateY;
+      setTimeout(() => {
+        if (!isDragging) {
+          phoneFloat.style.transform = '';
+          currentRotateX = 0;
+          currentRotateY = 0;
+          rotateX = 0;
+          rotateY = 0;
+        }
+      }, 2000);
+    });
+  }
+
   // ===== FAQ Accordion =====
   const faqItems = document.querySelectorAll('.faq-item');
 

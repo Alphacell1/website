@@ -298,8 +298,11 @@ button { font-family: inherit; }
 .section-wave-top { bottom: auto; top: -1px; }
 
 /* ===== PHONE MOCKUP ===== */
-.phone-float { animation: phone-bob 6s ease-in-out infinite; }
-@keyframes phone-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+.hero-visual { perspective: 1000px; }
+.phone-float { animation: phone-bob 6s ease-in-out infinite; transform-style: preserve-3d; }
+@keyframes phone-bob { 0%, 100% { transform: translateY(0) rotateY(0deg) rotateX(0deg); } 50% { transform: translateY(-12px) rotateY(0deg) rotateX(0deg); } }
+.phone-float.dragging { animation: none; cursor: grabbing; }
+.phone-float:not(.dragging) { cursor: grab; }
 
 .phone-mockup { width: 280px; position: relative; }
 

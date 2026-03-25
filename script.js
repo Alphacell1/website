@@ -93,14 +93,26 @@ document.addEventListener('DOMContentLoaded', () => {
   faders.forEach(el => fadeObserver.observe(el));
 
   // ========== PHONE FEATURES SCROLL ==========
-  if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+  if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined' && window.innerWidth > 900) {
     gsap.registerPlugin(ScrollTrigger);
 
     const panels = document.querySelectorAll('.pf-panel');
     const screens = document.querySelectorAll('.pf-screen');
-    const phone = document.querySelector('.phone-features .phone-mockup');
+    const featurePhone = document.querySelector('.phone-features .phone-mockup');
+    const heroPhone = document.querySelector('.hero-phone');
 
-    if (panels.length && screens.length && phone) {
+    if (panels.length && screens.length && featurePhone) {
+      // Fade out hero phone as user scrolls into features
+      if (heroPhone) {
+        ScrollTrigger.create({
+          trigger: '.phone-features',
+          start: 'top 80%',
+          end: 'top 30%',
+          onEnter: () => gsap.to(heroPhone, { opacity: 0, duration: 0.4 }),
+          onLeaveBack: () => gsap.to(heroPhone, { opacity: 1, duration: 0.4 }),
+        });
+      }
+
       // Highlight active panel and switch phone screen
       panels.forEach((panel, i) => {
         ScrollTrigger.create({
@@ -117,8 +129,8 @@ document.addEventListener('DOMContentLoaded', () => {
         screens.forEach((s, i) => s.classList.toggle('active', i === index));
         // Subtle phone rotation
         const rotations = [-3, -1, 1, 3, -2];
-        if (phone) {
-          phone.style.transform = `translateY(0) rotateY(${rotations[index] || 0}deg) rotateX(2deg)`;
+        if (featurePhone) {
+          featurePhone.style.transform = `translateY(0) rotateY(${rotations[index] || 0}deg) rotateX(2deg)`;
         }
       }
 

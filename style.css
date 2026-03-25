@@ -382,9 +382,9 @@ button { font-family: inherit; }
 
 /* ========== PHONE FEATURES ========== */
 .phone-features { background: #1a1a1a; padding: 80px 0 0; position: relative; }
-.pf-layout { display: flex; gap: 60px; position: relative; }
-.pf-text-track { flex: 1; padding: 40px 0; }
-.pf-phone-col { flex: 0 0 340px; position: relative; }
+.pf-layout { display: flex; gap: 40px; position: relative; max-width: 1140px; margin: 0 auto; padding: 0 24px; }
+.pf-text-track { flex: 1; max-width: 540px; padding: 40px 0; }
+.pf-phone-col { flex: 0 0 320px; position: relative; margin-left: auto; }
 .pf-panel { min-height: 80vh; display: flex; flex-direction: column; justify-content: center; padding: 40px 0; opacity: 0.3; transition: opacity 0.5s; }
 .pf-panel.active { opacity: 1; }
 .pf-panel-icon { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; }

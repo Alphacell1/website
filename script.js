@@ -280,84 +280,128 @@ document.addEventListener('DOMContentLoaded', () => {
     startAuto();
   }
 
-  // ===== Phone Fly to Sidebar (desktop only) =====
-  if (window.innerWidth > 1024) {
-    const phoneFloat = document.querySelector('.phone-float');
-    const heroSection = document.getElementById('hero');
-    const heroVisual = document.querySelector('.hero-visual');
-    const featuresSection = document.getElementById('features');
-    let isInSidebar = false;
+  // ===== 3D Phone Drag to Rotate =====
+  const phoneFloat = document.querySelector('.phone-float');
+  if (phoneFloat) {
+    let isDragging = false, startX = 0, startY = 0;
+    let rotY = 0, rotX = 0, curRotY = 0, curRotX = 0;
 
-    if (phoneFloat && heroSection && featuresSection) {
-      window.addEventListener('scroll', function() {
-        const heroBottom = heroSection.getBoundingClientRect().bottom;
-        const featuresBottom = featuresSection.getBoundingClientRect().bottom;
-
-        if (heroBottom < 100 && featuresBottom > 200 && !isInSidebar) {
-          // Scroll past hero, features still visible — fly to sidebar
-          isInSidebar = true;
-          heroSection.classList.add('phone-flying');
-          if (heroVisual) heroVisual.classList.add('phone-away');
-          // Need to set initial fixed position before adding transition class
-          // First, get current position
-          const rect = phoneFloat.getBoundingClientRect();
-          phoneFloat.style.position = 'fixed';
-          phoneFloat.style.left = rect.left + 'px';
-          phoneFloat.style.top = rect.top + 'px';
-          phoneFloat.style.right = 'auto';
-          phoneFloat.style.zIndex = '999';
-          phoneFloat.style.animation = 'none';
-          // Force reflow
-          void phoneFloat.offsetWidth;
-          // Now animate to sidebar position
-          phoneFloat.style.transition = 'left 0.9s cubic-bezier(0.23,1,0.32,1), top 0.9s cubic-bezier(0.23,1,0.32,1), transform 0.9s cubic-bezier(0.23,1,0.32,1)';
-          phoneFloat.style.left = (window.innerWidth - 340) + 'px';
-          phoneFloat.style.top = '15%';
-          phoneFloat.style.transform = 'scale(0.75)';
-        } else if ((heroBottom >= 100 || featuresBottom <= 200) && isInSidebar) {
-          // Scrolled back to hero or past features — fly back
-          isInSidebar = false;
-          if (heroBottom >= 100) {
-            // Flying back to hero
-            const heroRect = heroVisual ? heroVisual.getBoundingClientRect() : null;
-            if (heroRect) {
-              phoneFloat.style.left = (heroRect.left + heroRect.width / 2 - 140) + 'px';
-              phoneFloat.style.top = (heroRect.top + 40) + 'px';
-              phoneFloat.style.transform = 'scale(1)';
-            }
-            // After transition, restore to flow
-            setTimeout(() => {
-              phoneFloat.style.position = '';
-              phoneFloat.style.left = '';
-              phoneFloat.style.top = '';
-              phoneFloat.style.right = '';
-              phoneFloat.style.zIndex = '';
-              phoneFloat.style.animation = '';
-              phoneFloat.style.transform = '';
-              phoneFloat.style.transition = '';
-              heroSection.classList.remove('phone-flying');
-              if (heroVisual) heroVisual.classList.remove('phone-away');
-            }, 950);
-          } else {
-            // Past features — just fade out and restore
-            phoneFloat.style.opacity = '0';
-            setTimeout(() => {
-              phoneFloat.style.position = '';
-              phoneFloat.style.left = '';
-              phoneFloat.style.top = '';
-              phoneFloat.style.right = '';
-              phoneFloat.style.zIndex = '';
-              phoneFloat.style.animation = '';
-              phoneFloat.style.transform = '';
-              phoneFloat.style.transition = '';
-              phoneFloat.style.opacity = '';
-              heroSection.classList.remove('phone-flying');
-              if (heroVisual) heroVisual.classList.remove('phone-away');
-            }, 500);
-          }
+    phoneFloat.addEventListener('mousedown', function(e) {
+      if (phoneFloat.classList.contains('phone-sidebar')) return;
+      isDragging = true; startX = e.clientX; startY = e.clientY;
+      phoneFloat.style.animationPlayState = 'paused';
+      e.preventDefault();
+    });
+    document.addEventListener('mousemove', function(e) {
+      if (!isDragging) return;
+      rotY = curRotY + (e.clientX - startX) * 0.4;
+      rotX = Math.max(-20, Math.min(20, curRotX - (e.clientY - startY) * 0.2));
+      phoneFloat.style.transform = 'translateY(0) rotateY(' + rotY + 'deg) rotateX(' + rotX + 'deg)';
+    });
+    document.addEventListener('mouseup', function() {
+      if (!isDragging) return;
+      isDragging = false; curRotY = rotY; curRotX = rotX;
+      setTimeout(function() {
+        if (!isDragging && !phoneFloat.classList.contains('phone-sidebar')) {
+          phoneFloat.style.transition = 'transform 1s ease';
+          phoneFloat.style.transform = '';
+          phoneFloat.style.animationPlayState = '';
+          curRotY = 0; curRotX = 0; rotY = 0; rotX = 0;
+          setTimeout(function() { phoneFloat.style.transition = ''; }, 1000);
         }
-      }, { passive: true });
-    }
+      }, 3000);
+    });
+    // Touch
+    phoneFloat.addEventListener('touchstart', function(e) {
+      if (phoneFloat.classList.contains('phone-sidebar')) return;
+      isDragging = true; startX = e.touches[0].clientX; startY = e.touches[0].clientY;
+      phoneFloat.style.animationPlayState = 'paused';
+    }, { passive: true });
+    document.addEventListener('touchmove', function(e) {
+      if (!isDragging) return;
+      rotY = curRotY + (e.touches[0].clientX - startX) * 0.4;
+      rotX = Math.max(-20, Math.min(20, curRotX - (e.touches[0].clientY - startY) * 0.2));
+      phoneFloat.style.transform = 'translateY(0) rotateY(' + rotY + 'deg) rotateX(' + rotX + 'deg)';
+    }, { passive: true });
+    document.addEventListener('touchend', function() {
+      if (!isDragging) return;
+      isDragging = false; curRotY = rotY; curRotX = rotX;
+      setTimeout(function() {
+        if (!isDragging && !phoneFloat.classList.contains('phone-sidebar')) {
+          phoneFloat.style.transition = 'transform 1s ease';
+          phoneFloat.style.transform = '';
+          phoneFloat.style.animationPlayState = '';
+          curRotY = 0; curRotX = 0; rotY = 0; rotX = 0;
+          setTimeout(function() { phoneFloat.style.transition = ''; }, 1000);
+        }
+      }, 3000);
+    });
+  }
+
+  // ===== Phone Fly to Sidebar (desktop only) =====
+  if (window.innerWidth > 1024 && phoneFloat) {
+    var heroSection = document.getElementById('hero');
+    var heroVisual = document.querySelector('.hero-visual');
+    var isInSidebar = false;
+    var flyLocked = false; // prevent re-triggering during animation
+
+    window.addEventListener('scroll', function() {
+      if (flyLocked) return;
+      var scrollY = window.scrollY || window.pageYOffset;
+
+      // Trigger: start flying after scrolling 150px
+      if (scrollY > 150 && !isInSidebar) {
+        isInSidebar = true;
+        flyLocked = true;
+        heroSection.classList.add('phone-flying');
+        if (heroVisual) heroVisual.classList.add('phone-away');
+
+        // Capture current position
+        var rect = phoneFloat.getBoundingClientRect();
+        phoneFloat.style.position = 'fixed';
+        phoneFloat.style.left = rect.left + 'px';
+        phoneFloat.style.top = rect.top + 'px';
+        phoneFloat.style.zIndex = '999';
+        phoneFloat.style.animation = 'none';
+        phoneFloat.style.transform = 'scale(1)';
+        void phoneFloat.offsetWidth; // reflow
+
+        // Animate to sidebar
+        phoneFloat.style.transition = 'all 1s cubic-bezier(0.23,1,0.32,1)';
+        phoneFloat.style.left = (window.innerWidth - 340) + 'px';
+        phoneFloat.style.top = '12%';
+        phoneFloat.style.transform = 'scale(0.7)';
+
+        setTimeout(function() { flyLocked = false; }, 1050);
+
+      } else if (scrollY <= 100 && isInSidebar) {
+        // Scrolled back to top — fly back
+        isInSidebar = false;
+        flyLocked = true;
+
+        var heroRect = heroVisual ? heroVisual.getBoundingClientRect() : null;
+        var targetLeft = heroRect ? (heroRect.left + heroRect.width / 2 - 140) : (window.innerWidth * 0.55);
+        var targetTop = heroRect ? Math.max(heroRect.top + 40, 160) : 200;
+
+        phoneFloat.style.transition = 'all 1s cubic-bezier(0.23,1,0.32,1)';
+        phoneFloat.style.left = targetLeft + 'px';
+        phoneFloat.style.top = targetTop + 'px';
+        phoneFloat.style.transform = 'scale(1)';
+
+        setTimeout(function() {
+          phoneFloat.style.position = '';
+          phoneFloat.style.left = '';
+          phoneFloat.style.top = '';
+          phoneFloat.style.zIndex = '';
+          phoneFloat.style.animation = '';
+          phoneFloat.style.transform = '';
+          phoneFloat.style.transition = '';
+          heroSection.classList.remove('phone-flying');
+          if (heroVisual) heroVisual.classList.remove('phone-away');
+          flyLocked = false;
+        }, 1050);
+      }
+    }, { passive: true });
   }
 
   // ===== FAQ Accordion =====

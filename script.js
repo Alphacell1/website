@@ -727,7 +727,7 @@ document.addEventListener('DOMContentLoaded', () => {
   var rawH = phoneScreen.offsetHeight || 520;
   var scaleByW = (PW - 14) / rawW;
   var scaleByH = (PH - 14) / rawH;
-  var fitScale = Math.min(scaleByW, scaleByH) * 1.3;
+  var fitScale = Math.min(scaleByW, scaleByH) * 1.15;
   cssObject.scale.set(fitScale, fitScale, 1);
   cssObject.position.set(0, 0, PD / 2 + 1);
   cssScene.add(cssObject);

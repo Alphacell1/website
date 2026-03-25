@@ -605,8 +605,11 @@ document.addEventListener('DOMContentLoaded', () => {
   cssContainer.appendChild(cssRenderer.domElement);
 
   // ===== Phone Body (WebGL) =====
-  // Match the CSS phone-mockup size (280px wide, ~560px tall based on content)
-  var PW = 290, PH = 560, PD = 18;
+  // Measure the CSS phone to match dimensions exactly
+  var mockupW = phoneMockup.offsetWidth || 280;
+  var mockupH = phoneMockup.offsetHeight || 540;
+  // Body is slightly larger than the screen (frame bezel)
+  var PW = mockupW + 24, PH = mockupH + 24, PD = 20;
 
   function makeRoundedRect(w, h, r) {
     var s = new THREE.Shape();
@@ -628,49 +631,84 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   bodyGeo.center();
 
+  // Lighter grey body — clearly visible
   var bodyMat = new THREE.MeshPhysicalMaterial({
-    color: 0x2d2d44, metalness: 0.7, roughness: 0.3,
-    clearcoat: 0.4, clearcoatRoughness: 0.3
+    color: 0x3a3a52, metalness: 0.6, roughness: 0.35,
+    clearcoat: 0.3, clearcoatRoughness: 0.4
   });
   var phoneMesh = new THREE.Mesh(bodyGeo, bodyMat);
   glScene.add(phoneMesh);
 
-  // Back face detail
-  var backGeo = new THREE.PlaneGeometry(PW - 20, PH - 20);
-  var backMat = new THREE.MeshPhysicalMaterial({ color: 0x15152a, metalness: 0.6, roughness: 0.4 });
+  // Back face — slightly different shade
+  var backGeo = new THREE.PlaneGeometry(PW - 16, PH - 16);
+  var backMat = new THREE.MeshPhysicalMaterial({ color: 0x2a2a40, metalness: 0.5, roughness: 0.5 });
   var backMesh = new THREE.Mesh(backGeo, backMat);
   backMesh.position.z = -PD / 2 - 1;
   backMesh.rotation.y = Math.PI;
   phoneMesh.add(backMesh);
 
-  // Camera lens on back
-  var lensGeo = new THREE.RingGeometry(8, 15, 32);
-  var lensMat = new THREE.MeshBasicMaterial({ color: 0x333355, side: THREE.DoubleSide });
-  var lensMesh = new THREE.Mesh(lensGeo, lensMat);
-  lensMesh.position.set(0, PH/2 - 60, -PD/2 - 2);
-  lensMesh.rotation.y = Math.PI;
-  phoneMesh.add(lensMesh);
+  // Camera module on back — square housing with rounded corners
+  var camModuleGeo = new THREE.PlaneGeometry(60, 60);
+  var camModuleMat = new THREE.MeshPhysicalMaterial({ color: 0x222238, metalness: 0.7, roughness: 0.3 });
+  var camModuleMesh = new THREE.Mesh(camModuleGeo, camModuleMat);
+  camModuleMesh.position.set(-PW/2 + 55, PH/2 - 55, -PD/2 - 1.5);
+  camModuleMesh.rotation.y = Math.PI;
+  phoneMesh.add(camModuleMesh);
 
-  // Lighting
-  glScene.add(new THREE.AmbientLight(0xffffff, 0.7));
-  var mainLight = new THREE.DirectionalLight(0xffffff, 0.9);
-  mainLight.position.set(400, 400, 600);
+  // Main camera lens (large)
+  var lens1Geo = new THREE.RingGeometry(10, 16, 32);
+  var lens1Mat = new THREE.MeshBasicMaterial({ color: 0x444466, side: THREE.DoubleSide });
+  var lens1Mesh = new THREE.Mesh(lens1Geo, lens1Mat);
+  lens1Mesh.position.set(-PW/2 + 45, PH/2 - 45, -PD/2 - 2);
+  lens1Mesh.rotation.y = Math.PI;
+  phoneMesh.add(lens1Mesh);
+
+  // Inner lens (glass effect)
+  var lensInnerGeo = new THREE.CircleGeometry(8, 32);
+  var lensInnerMat = new THREE.MeshPhysicalMaterial({
+    color: 0x0a0a1a, metalness: 0.9, roughness: 0.1, clearcoat: 1.0
+  });
+  var lensInnerMesh = new THREE.Mesh(lensInnerGeo, lensInnerMat);
+  lensInnerMesh.position.set(-PW/2 + 45, PH/2 - 45, -PD/2 - 2.5);
+  lensInnerMesh.rotation.y = Math.PI;
+  phoneMesh.add(lensInnerMesh);
+
+  // Second camera lens (smaller)
+  var lens2Geo = new THREE.RingGeometry(6, 10, 32);
+  var lens2Mesh = new THREE.Mesh(lens2Geo, lens1Mat);
+  lens2Mesh.position.set(-PW/2 + 65, PH/2 - 45, -PD/2 - 2);
+  lens2Mesh.rotation.y = Math.PI;
+  phoneMesh.add(lens2Mesh);
+
+  // Flash LED
+  var flashGeo = new THREE.CircleGeometry(4, 16);
+  var flashMat = new THREE.MeshBasicMaterial({ color: 0xffffcc });
+  var flashMesh = new THREE.Mesh(flashGeo, flashMat);
+  flashMesh.position.set(-PW/2 + 55, PH/2 - 65, -PD/2 - 2);
+  flashMesh.rotation.y = Math.PI;
+  phoneMesh.add(flashMesh);
+
+  // Wrok logo on back
+  // (Using a simple "W" rendered as a plane — in real life you'd use a texture)
+
+  // Lighting — bright enough to see the phone body clearly
+  glScene.add(new THREE.AmbientLight(0xffffff, 0.8));
+  var mainLight = new THREE.DirectionalLight(0xffffff, 1.0);
+  mainLight.position.set(400, 300, 600);
   glScene.add(mainLight);
-  var rimLight = new THREE.DirectionalLight(0x0D7C66, 0.4);
-  rimLight.position.set(-300, 100, -300);
+  var fillLight = new THREE.DirectionalLight(0xffffff, 0.4);
+  fillLight.position.set(-400, 200, 400);
+  glScene.add(fillLight);
+  var rimLight = new THREE.DirectionalLight(0x0D7C66, 0.5);
+  rimLight.position.set(-200, 0, -400);
   glScene.add(rimLight);
 
   // ===== CSS Phone Screen (CSS3D) =====
-  // Scale the CSS phone to match the 3D body dimensions
+  // CSS3DObject wraps the real phone-mockup HTML
   var cssObject = new THREE.CSS3DObject(phoneMockup);
-  // CSS3D: 1px = 1 Three.js unit. Scale the CSS phone to fit inside the 3D body.
-  var mockupW = phoneMockup.offsetWidth || 280;
-  var mockupH = phoneMockup.offsetHeight || 560;
-  // Use the tighter dimension to ensure it fits both ways
-  var scaleW = (PW - 22) / mockupW;
-  var scaleH = (PH - 22) / mockupH;
-  var screenScale = Math.min(scaleW, scaleH);
-  cssObject.scale.set(screenScale, screenScale, 1);
+  // CSS3D: 1px = 1 Three.js unit. The phone-mockup is mockupW x mockupH px.
+  // Scale it to exactly 1:1 since PW/PH are based on mockup size + 24px bezel
+  cssObject.scale.set(1, 1, 1);
   cssObject.position.set(0, 0, PD / 2 + 1);
   cssScene.add(cssObject);
 
@@ -680,8 +718,10 @@ document.addEventListener('DOMContentLoaded', () => {
   phoneGroup.add(phoneMesh);
   glScene.add(phoneGroup);
 
-  // Position the phone group in the right portion of the hero
-  phoneGroup.position.set(W * 0.15, 0, 0);
+  // Position the phone group — slightly right of center in the camera view
+  // Camera FOV=40, z=900 means visible width at z=0 is roughly 2*900*tan(20°) ≈ 655
+  // So to position at the right third: ~110 units right
+  phoneGroup.position.set(120, 0, 0);
   phoneMesh.position.set(0, 0, 0);
 
   // Mark 3D as active

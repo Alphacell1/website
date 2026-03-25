@@ -693,25 +693,29 @@ document.addEventListener('DOMContentLoaded', () => {
   glass1.position.set(-PW/2 + 40, PH/2 - 40, -PD/2 - 8.6);
   phoneMesh.add(glass1);
 
-  // Second lens (top-right) — match main lens style
-  var lens2OuterGeo = new THREE.CylinderGeometry(12, 12, 4, 32);
-  lens2OuterGeo.rotateX(Math.PI / 2);
-  var lens2Outer = new THREE.Mesh(lens2OuterGeo, ringMat);
-  lens2Outer.position.set(-PW/2 + 80, PH/2 - 40, -PD/2 - 5);
-  phoneMesh.add(lens2Outer);
-  var glass2 = new THREE.Mesh(new THREE.CircleGeometry(9, 32), glassMat);
-  glass2.position.set(-PW/2 + 80, PH/2 - 40, -PD/2 - 7.1);
-  phoneMesh.add(glass2);
+  // Second lens (top-right) — outer ring + inner glass, offset in Z to avoid overlap
+  var lens2RingGeo = new THREE.CylinderGeometry(13, 13, 4, 32);
+  lens2RingGeo.rotateX(Math.PI / 2);
+  var lens2Ring = new THREE.Mesh(lens2RingGeo, ringMat);
+  lens2Ring.position.set(-PW/2 + 80, PH/2 - 40, -PD/2 - 5);
+  phoneMesh.add(lens2Ring);
+  var lens2GlassGeo = new THREE.CylinderGeometry(9, 9, 5, 32);
+  lens2GlassGeo.rotateX(Math.PI / 2);
+  var lens2Glass = new THREE.Mesh(lens2GlassGeo, glassMat);
+  lens2Glass.position.set(-PW/2 + 80, PH/2 - 40, -PD/2 - 5.5);
+  phoneMesh.add(lens2Glass);
 
-  // Third lens (bottom-left) — match main lens style
-  var lens3OuterGeo = new THREE.CylinderGeometry(12, 12, 4, 32);
-  lens3OuterGeo.rotateX(Math.PI / 2);
-  var lens3Outer = new THREE.Mesh(lens3OuterGeo, ringMat);
-  lens3Outer.position.set(-PW/2 + 40, PH/2 - 80, -PD/2 - 5);
-  phoneMesh.add(lens3Outer);
-  var glass3 = new THREE.Mesh(new THREE.CircleGeometry(9, 32), glassMat);
-  glass3.position.set(-PW/2 + 40, PH/2 - 80, -PD/2 - 7.1);
-  phoneMesh.add(glass3);
+  // Third lens (bottom-left)
+  var lens3RingGeo = new THREE.CylinderGeometry(13, 13, 4, 32);
+  lens3RingGeo.rotateX(Math.PI / 2);
+  var lens3Ring = new THREE.Mesh(lens3RingGeo, ringMat);
+  lens3Ring.position.set(-PW/2 + 40, PH/2 - 80, -PD/2 - 5);
+  phoneMesh.add(lens3Ring);
+  var lens3GlassGeo = new THREE.CylinderGeometry(9, 9, 5, 32);
+  lens3GlassGeo.rotateX(Math.PI / 2);
+  var lens3Glass = new THREE.Mesh(lens3GlassGeo, glassMat);
+  lens3Glass.position.set(-PW/2 + 40, PH/2 - 80, -PD/2 - 5.5);
+  phoneMesh.add(lens3Glass);
 
   // Flash
   var flashGeo = new THREE.CylinderGeometry(5, 5, 2, 16);

@@ -578,9 +578,21 @@ document.addEventListener('DOMContentLoaded', () => {
   var phoneScreen = document.querySelector('.phone-mockup.hero-phone .phone-screen');
   if (!container || !webglCanvas || !cssContainer || !heroVisual || !phoneMockup || !phoneScreen) return;
 
-  // Remove the notch element entirely from DOM so CSS3DRenderer can't show it
-  var notch = document.querySelector('.phone-mockup.hero-phone .phone-notch');
-  if (notch) notch.remove();
+  // Extract phone-screen from the phone-float hierarchy, then remove the rest
+  // This eliminates the floating dark bar (phone-frame/notch) while keeping the screen
+  var phoneFrame = phoneMockup.querySelector('.phone-frame');
+  if (phoneFrame && phoneScreen) {
+    // Move phone-screen out of the hierarchy to a hidden container
+    var screenHolder = document.createElement('div');
+    screenHolder.style.position = 'absolute';
+    screenHolder.style.left = '-9999px';
+    screenHolder.style.top = '0';
+    document.body.appendChild(screenHolder);
+    screenHolder.appendChild(phoneScreen);
+  }
+  // Now remove the entire phone-float (frame, notch, everything)
+  var phoneFloatEl = document.querySelector('.phone-float');
+  if (phoneFloatEl) phoneFloatEl.remove();
 
   // Size to the full hero section, not just hero-visual
   var heroSection = document.getElementById('hero');
@@ -612,8 +624,8 @@ document.addEventListener('DOMContentLoaded', () => {
   cssContainer.appendChild(cssRenderer.domElement);
 
   // ===== Phone Body (WebGL) =====
-  // Phone body dimensions
-  var PW = 285, PH = 420, PD = 18;
+  // Phone body — screen must fit inside this
+  var PW = 280, PH = 500, PD = 18;
 
   function makeRoundedRect(w, h, r) {
     var s = new THREE.Shape();
@@ -710,9 +722,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // ===== CSS Phone Screen (CSS3D) =====
   // CSS3DObject wraps only the phone-screen (the white app content), not the dark frame
   var cssObject = new THREE.CSS3DObject(phoneScreen);
-  // Scale screen to fit inside the 3D body bezel (body is 270 wide, screen ~260px)
+  // Scale screen to fit INSIDE the 3D body with bezel margin
   var rawW = phoneScreen.offsetWidth || 260;
-  var fitScale = (PW - 20) / rawW; // 20px total bezel (10 each side)
+  var rawH = phoneScreen.offsetHeight || 520;
+  var scaleByW = (PW - 24) / rawW;
+  var scaleByH = (PH - 24) / rawH;
+  var fitScale = Math.min(scaleByW, scaleByH); // fit whichever is tighter
   cssObject.scale.set(fitScale, fitScale, 1);
   cssObject.position.set(0, 0, PD / 2 + 1);
   cssScene.add(cssObject);

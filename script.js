@@ -280,241 +280,167 @@ document.addEventListener('DOMContentLoaded', () => {
     startAuto();
   }
 
-  // ===== 3D Phone Interaction =====
-  const phoneFloat = document.getElementById('phoneFloat');
-  let phoneIsFixed = false; // true when scroll-follow is active
-
+  // ===== 3D Phone Drag =====
+  const phoneFloat = document.querySelector('.phone-float');
   if (phoneFloat) {
     let isDragging = false;
     let startX = 0, startY = 0;
-    let rotateX = 0, rotateY = 0;
-    let currentRotateX = 0, currentRotateY = 0;
-    // Default resting rotation for the 3D effect
-    const restRotateY = -8;
-    const restRotateX = 2;
+    let rotY = 0, rotX = 0, curRotY = 0, curRotX = 0;
 
     phoneFloat.addEventListener('mousedown', (e) => {
-      if (phoneIsFixed) return;
+      if (phoneFloat.classList.contains('phone-fixed')) return;
       isDragging = true;
-      startX = e.clientX;
-      startY = e.clientY;
+      startX = e.clientX; startY = e.clientY;
       phoneFloat.classList.add('dragging');
       e.preventDefault();
     });
-
     document.addEventListener('mousemove', (e) => {
       if (!isDragging) return;
-      const deltaX = e.clientX - startX;
-      const deltaY = e.clientY - startY;
-      rotateY = currentRotateY + deltaX * 0.3;
-      rotateX = currentRotateX - deltaY * 0.2;
-      rotateX = Math.max(-30, Math.min(30, rotateX));
-      // No Y clamp — allow full 360 rotation to see back
-      phoneFloat.style.transform = `translateY(0) rotateY(${rotateY}deg) rotateX(${rotateX}deg)`;
+      rotY = curRotY + (e.clientX - startX) * 0.4;
+      rotX = Math.max(-20, Math.min(20, curRotX - (e.clientY - startY) * 0.2));
+      phoneFloat.style.transform = 'translateY(0) rotateY(' + rotY + 'deg) rotateX(' + rotX + 'deg)';
     });
-
     document.addEventListener('mouseup', () => {
       if (!isDragging) return;
       isDragging = false;
       phoneFloat.classList.remove('dragging');
-      currentRotateX = rotateX;
-      currentRotateY = rotateY;
-      // Spring back after 4 seconds
+      curRotY = rotY; curRotX = rotX;
       setTimeout(() => {
-        if (!isDragging && !phoneIsFixed) {
-          phoneFloat.style.transition = 'transform 1s cubic-bezier(0.23,1,0.32,1)';
+        if (!isDragging && !phoneFloat.classList.contains('phone-fixed')) {
+          phoneFloat.style.transition = 'transform 1s ease';
           phoneFloat.style.transform = '';
-          currentRotateX = 0;
-          currentRotateY = 0;
-          rotateX = 0;
-          rotateY = 0;
+          curRotY = 0; curRotX = 0; rotY = 0; rotX = 0;
           setTimeout(() => { phoneFloat.style.transition = ''; }, 1000);
         }
-      }, 4000);
+      }, 3000);
     });
-
-    // Touch support
+    // Touch
     phoneFloat.addEventListener('touchstart', (e) => {
-      if (phoneIsFixed) return;
+      if (phoneFloat.classList.contains('phone-fixed')) return;
       isDragging = true;
-      startX = e.touches[0].clientX;
-      startY = e.touches[0].clientY;
+      startX = e.touches[0].clientX; startY = e.touches[0].clientY;
       phoneFloat.classList.add('dragging');
     }, { passive: true });
-
     document.addEventListener('touchmove', (e) => {
       if (!isDragging) return;
-      const deltaX = e.touches[0].clientX - startX;
-      const deltaY = e.touches[0].clientY - startY;
-      rotateY = currentRotateY + deltaX * 0.3;
-      rotateX = currentRotateX - deltaY * 0.2;
-      rotateX = Math.max(-30, Math.min(30, rotateX));
-      phoneFloat.style.transform = `translateY(0) rotateY(${rotateY}deg) rotateX(${rotateX}deg)`;
+      rotY = curRotY + (e.touches[0].clientX - startX) * 0.4;
+      rotX = Math.max(-20, Math.min(20, curRotX - (e.touches[0].clientY - startY) * 0.2));
+      phoneFloat.style.transform = 'translateY(0) rotateY(' + rotY + 'deg) rotateX(' + rotX + 'deg)';
     }, { passive: true });
-
     document.addEventListener('touchend', () => {
       if (!isDragging) return;
       isDragging = false;
       phoneFloat.classList.remove('dragging');
-      currentRotateX = rotateX;
-      currentRotateY = rotateY;
+      curRotY = rotY; curRotX = rotX;
       setTimeout(() => {
-        if (!isDragging && !phoneIsFixed) {
-          phoneFloat.style.transition = 'transform 1s cubic-bezier(0.23,1,0.32,1)';
+        if (!isDragging && !phoneFloat.classList.contains('phone-fixed')) {
+          phoneFloat.style.transition = 'transform 1s ease';
           phoneFloat.style.transform = '';
-          currentRotateX = 0;
-          currentRotateY = 0;
-          rotateX = 0;
-          rotateY = 0;
+          curRotY = 0; curRotX = 0; rotY = 0; rotX = 0;
           setTimeout(() => { phoneFloat.style.transition = ''; }, 1000);
         }
-      }, 4000);
+      }, 3000);
     });
   }
 
-  // ===== GSAP Scroll-Follow Phone (desktop only) =====
-  if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined' && window.innerWidth > 1024) {
+  // ===== Phone Fly Animation (desktop only) =====
+  if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined' && phoneFloat && window.innerWidth > 1024) {
     gsap.registerPlugin(ScrollTrigger);
 
     const heroSection = document.getElementById('hero');
     const featuresSection = document.getElementById('features');
     const heroVisual = document.querySelector('.hero-visual');
-    const overlays = document.querySelectorAll('.phone-overlay');
+    let isFixed = false;
 
-    // Map feature pill data-slide values to overlay data-screen values
-    // slideOrder: [0, 9, 10, 1, 2, 3, 4, 8, 5, 6, 7]
-    // Pill index → screen mapping:
-    // 0=AI Scheduling (no overlay), 1=Analytics (screen 4/reports), 2=Export (no overlay),
-    // 3=Calendar (screen 1), 4=Shift Swaps (screen 2), 5=Time Off (no overlay),
-    // 6=Chat (screen 3), 7=Custom Shifts (no overlay), 8=Tracking (no overlay),
-    // 9=Attendance (no overlay), 10=Roles (no overlay)
-    // Map ALL feature slides to phone screens
-    // null = show default schedule screen (no overlay)
-    const slideToScreen = {
-      0: null,   // AI Scheduling - default schedule screen
-      9: 4,      // Analytics → Reports overlay
-      10: 4,     // Export → Reports overlay (similar)
-      1: 1,      // Calendar → Calendar overlay
-      2: 2,      // Shift Swaps → Swaps overlay
-      3: 1,      // Time Off → Calendar overlay (date-based)
-      4: 3,      // Chat → Chat overlay
-      8: null,   // Custom Shifts - schedule screen
-      5: null,   // Tracking - schedule screen
-      6: null,   // Attendance - schedule screen
-      7: null,   // Roles - schedule screen
-    };
-
-    // Function to update phone overlay based on current carousel slide
-    function updatePhoneOverlay(slideIndex) {
-      const screenId = slideToScreen[slideIndex];
-      overlays.forEach(o => o.classList.remove('active'));
-      if (screenId !== null && screenId !== undefined) {
-        const target = document.querySelector('.phone-overlay[data-screen="' + screenId + '"]');
-        if (target) target.classList.add('active');
-      }
-    }
-
-    // Fly phone from hero to fixed sidebar using GSAP
-    function flyPhoneToSidebar() {
-      if (phoneIsFixed || !phoneFloat) return;
-      phoneIsFixed = true;
-      phoneFloat.classList.add('dragging');
-
-      // Allow phone to escape hero's overflow:hidden
-      if (heroSection) heroSection.style.overflow = 'visible';
-
-      // Immediately switch to fixed position and animate from current spot
-      const rect = phoneFloat.getBoundingClientRect();
-      phoneFloat.style.position = 'fixed';
-      phoneFloat.style.left = rect.left + 'px';
-      phoneFloat.style.top = rect.top + 'px';
-      phoneFloat.style.right = 'auto';
-      phoneFloat.style.zIndex = '1000';
-      phoneFloat.style.margin = '0';
-      if (heroVisual) heroVisual.classList.add('phone-away');
-
-      // Animate from current position to right sidebar
-      gsap.to(phoneFloat, {
-        left: 'auto',
-        right: 40,
-        top: '50%',
-        yPercent: -50,
-        scale: 0.65,
-        rotateY: -12,
-        rotateX: 3,
-        duration: 1,
-        ease: 'power3.inOut',
-        onComplete: () => {
-          phoneFloat.style.left = 'auto';
-          updatePhoneOverlay(currentSlide);
-        }
-      });
-    }
-
-    function flyPhoneToHero() {
-      if (!phoneIsFixed || !phoneFloat) return;
-      phoneIsFixed = false;
-
-      // Animate back to hero position
-      gsap.to(phoneFloat, {
-        right: 'auto',
-        left: heroVisual ? heroVisual.getBoundingClientRect().left + heroVisual.offsetWidth / 2 - 160 : '60%',
-        top: heroVisual ? heroVisual.getBoundingClientRect().top : 200,
-        yPercent: 0,
-        scale: 1,
-        rotateY: -10,
-        rotateX: 3,
-        duration: 1,
-        ease: 'power3.inOut',
-        onComplete: () => {
-          // Restore to normal flow
-          phoneFloat.style.position = '';
-          phoneFloat.style.left = '';
-          phoneFloat.style.top = '';
-          phoneFloat.style.right = '';
-          phoneFloat.style.zIndex = '';
-          phoneFloat.style.margin = '';
-          phoneFloat.classList.remove('dragging');
-          gsap.set(phoneFloat, { clearProps: 'all' });
-          if (heroVisual) heroVisual.classList.remove('phone-away');
-          if (heroSection) heroSection.style.overflow = '';
-          overlays.forEach(o => o.classList.remove('active'));
-        }
-      });
-    }
-
-    // Sync phone screen with carousel
-    let lastSyncedSlide = -1;
-    const pillContainer = document.getElementById('featureNav');
-    if (pillContainer) {
-      const pillObserver = new MutationObserver(() => {
-        if (phoneIsFixed && currentSlide !== lastSyncedSlide) {
-          lastSyncedSlide = currentSlide;
-          updatePhoneOverlay(currentSlide);
-        }
-      });
-      pillContainer.querySelectorAll('.feature-pill').forEach(p => {
-        pillObserver.observe(p, { attributes: true, attributeFilter: ['class'] });
-      });
-    }
-    setInterval(() => {
-      if (phoneIsFixed && currentSlide !== lastSyncedSlide) {
-        lastSyncedSlide = currentSlide;
-        updatePhoneOverlay(currentSlide);
-      }
-    }, 500);
-
-    // ScrollTrigger: fly phone when scrolling past hero into features
     if (heroSection && featuresSection) {
       ScrollTrigger.create({
         trigger: heroSection,
-        start: 'bottom top+=200',
+        start: 'bottom top+=100',
         endTrigger: featuresSection,
         end: 'bottom center',
-        onEnter: flyPhoneToSidebar,
-        onLeaveBack: flyPhoneToHero,
-        onLeave: flyPhoneToHero,
-        onEnterBack: flyPhoneToSidebar,
+        onEnter: () => {
+          if (isFixed) return;
+          isFixed = true;
+
+          // Get current position
+          const rect = phoneFloat.getBoundingClientRect();
+
+          // Take phone out of flow
+          phoneFloat.classList.add('phone-fixed');
+          phoneFloat.style.left = rect.left + 'px';
+          phoneFloat.style.top = rect.top + 'px';
+          phoneFloat.style.width = rect.width + 'px';
+          if (heroVisual) heroVisual.classList.add('phone-away');
+          if (heroSection) heroSection.style.overflow = 'visible';
+
+          // Fly to right sidebar
+          gsap.to(phoneFloat, {
+            left: window.innerWidth - rect.width - 60,
+            top: window.innerHeight * 0.2,
+            scale: 0.8,
+            rotation: 0,
+            duration: 0.9,
+            ease: 'power2.inOut',
+          });
+        },
+        onLeaveBack: () => {
+          if (!isFixed) return;
+          isFixed = false;
+
+          // Fly back to hero
+          const heroRect = heroVisual ? heroVisual.getBoundingClientRect() : { left: window.innerWidth * 0.6, top: 200 };
+
+          gsap.to(phoneFloat, {
+            left: heroRect.left + (heroVisual ? heroVisual.offsetWidth / 2 - 140 : 0),
+            top: heroRect.top + 20,
+            scale: 1,
+            duration: 0.9,
+            ease: 'power2.inOut',
+            onComplete: () => {
+              // Restore to flow
+              phoneFloat.classList.remove('phone-fixed');
+              phoneFloat.style.left = '';
+              phoneFloat.style.top = '';
+              phoneFloat.style.width = '';
+              if (heroVisual) heroVisual.classList.remove('phone-away');
+              if (heroSection) heroSection.style.overflow = '';
+              gsap.set(phoneFloat, { clearProps: 'all' });
+            }
+          });
+        },
+        onLeave: () => {
+          if (!isFixed) return;
+          isFixed = false;
+          // Past features — hide phone
+          gsap.to(phoneFloat, {
+            opacity: 0,
+            duration: 0.4,
+            onComplete: () => {
+              phoneFloat.classList.remove('phone-fixed');
+              phoneFloat.style.left = '';
+              phoneFloat.style.top = '';
+              phoneFloat.style.width = '';
+              phoneFloat.style.opacity = '';
+              if (heroVisual) heroVisual.classList.remove('phone-away');
+              if (heroSection) heroSection.style.overflow = '';
+              gsap.set(phoneFloat, { clearProps: 'all' });
+            }
+          });
+        },
+        onEnterBack: () => {
+          if (isFixed) return;
+          isFixed = true;
+
+          const rect = phoneFloat.getBoundingClientRect();
+          phoneFloat.classList.add('phone-fixed');
+          phoneFloat.style.left = (window.innerWidth - rect.width - 60) + 'px';
+          phoneFloat.style.top = (window.innerHeight * 0.2) + 'px';
+          phoneFloat.style.width = rect.width + 'px';
+          phoneFloat.style.opacity = '1';
+          if (heroVisual) heroVisual.classList.add('phone-away');
+          if (heroSection) heroSection.style.overflow = 'visible';
+          gsap.set(phoneFloat, { scale: 0.8 });
+        },
       });
     }
   }

@@ -503,196 +503,79 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-});
+  // ===== Phone 3D Rotate + Scroll Movement =====
+  var phoneFloat = document.querySelector('.phone-float');
+  if (phoneFloat) {
+    // Drag to rotate
+    var isDrag = false, sx = 0, sy = 0;
+    var ry = 0, rx = 0, cry = 0, crx = 0;
 
-// ===== Three.js 3D Phone (desktop only) =====
-(function() {
-  if (window.innerWidth <= 768) return;
-  if (typeof THREE === 'undefined') return;
-
-  var canvas = document.getElementById('phone3d');
-  var heroVisual = document.querySelector('.hero-visual');
-  var phoneMockup = document.querySelector('.phone-mockup.hero-phone');
-  if (!canvas || !heroVisual || !phoneMockup) return;
-
-  var scene = new THREE.Scene();
-  var camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
-  var renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
-  function resize() {
-    var w = heroVisual.offsetWidth;
-    var h = heroVisual.offsetHeight;
-    renderer.setSize(w, h);
-    camera.aspect = w / h;
-    camera.updateProjectionMatrix();
-  }
-  resize();
-  window.addEventListener('resize', resize);
-
-  // Phone dimensions
-  var PW = 3.0, PH = 6.0, PD = 0.22, PR = 0.45;
-
-  function makeRoundedRect(w, h, r) {
-    var s = new THREE.Shape();
-    s.moveTo(-w/2+r, -h/2);
-    s.lineTo(w/2-r, -h/2);
-    s.quadraticCurveTo(w/2, -h/2, w/2, -h/2+r);
-    s.lineTo(w/2, h/2-r);
-    s.quadraticCurveTo(w/2, h/2, w/2-r, h/2);
-    s.lineTo(-w/2+r, h/2);
-    s.quadraticCurveTo(-w/2, h/2, -w/2, h/2-r);
-    s.lineTo(-w/2, -h/2+r);
-    s.quadraticCurveTo(-w/2, -h/2, -w/2+r, -h/2);
-    return s;
-  }
-
-  // Phone body — extruded rounded rect with bevel
-  var bodyGeo = new THREE.ExtrudeGeometry(makeRoundedRect(PW, PH, PR), {
-    depth: PD, bevelEnabled: true, bevelThickness: 0.03,
-    bevelSize: 0.03, bevelSegments: 4
-  });
-  bodyGeo.center();
-  var bodyMat = new THREE.MeshPhysicalMaterial({
-    color: 0x1a1a2e, metalness: 0.8, roughness: 0.25,
-    clearcoat: 0.5, clearcoatRoughness: 0.2
-  });
-  var phoneMesh = new THREE.Mesh(bodyGeo, bodyMat);
-  scene.add(phoneMesh);
-
-  // Screen on front face
-  var screenW = PW - 0.35, screenH = PH - 0.4;
-  var screenGeo = new THREE.PlaneGeometry(screenW, screenH);
-  var screenTex = null; // will be set by html2canvas
-  var screenMat = new THREE.MeshBasicMaterial({ color: 0xf5f5f5 });
-  var screenMesh = new THREE.Mesh(screenGeo, screenMat);
-  screenMesh.position.z = PD / 2 + 0.02;
-  phoneMesh.add(screenMesh);
-
-  // Also add a white background behind the screen (prevents bleed-through)
-  var screenBgGeo = new THREE.PlaneGeometry(screenW + 0.02, screenH + 0.02);
-  var screenBgMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
-  var screenBgMesh = new THREE.Mesh(screenBgGeo, screenBgMat);
-  screenBgMesh.position.z = PD / 2 + 0.015;
-  phoneMesh.add(screenBgMesh);
-
-  // Back face
-  var backGeo = new THREE.PlaneGeometry(PW - 0.1, PH - 0.1);
-  var backMat = new THREE.MeshPhysicalMaterial({
-    color: 0x15152a, metalness: 0.6, roughness: 0.4
-  });
-  var backMesh = new THREE.Mesh(backGeo, backMat);
-  backMesh.position.z = -PD / 2 - 0.01;
-  backMesh.rotation.y = Math.PI;
-  phoneMesh.add(backMesh);
-
-  // Camera lens on back
-  var lensMesh = new THREE.Mesh(
-    new THREE.RingGeometry(0.08, 0.15, 32),
-    new THREE.MeshBasicMaterial({ color: 0x333355, side: THREE.DoubleSide })
-  );
-  lensMesh.position.set(0, PH/2 - 0.6, -PD/2 - 0.02);
-  lensMesh.rotation.y = Math.PI;
-  phoneMesh.add(lensMesh);
-
-  // Lighting
-  scene.add(new THREE.AmbientLight(0xffffff, 0.5));
-  var mainLight = new THREE.DirectionalLight(0xffffff, 0.9);
-  mainLight.position.set(4, 4, 6);
-  scene.add(mainLight);
-  var rimLight = new THREE.DirectionalLight(0x0D7C66, 0.4);
-  rimLight.position.set(-3, 1, -3);
-  scene.add(rimLight);
-
-  camera.position.set(0, 0, 9);
-
-  // Capture CSS phone screen as texture
-  var textureApplied = false;
-  function capturePhoneScreen() {
-    if (typeof html2canvas === 'undefined') return;
-    // Make sure CSS phone is visible for capture
-    phoneMockup.style.visibility = 'visible';
-    html2canvas(phoneMockup, {
-      backgroundColor: '#ffffff', scale: 2, useCORS: true, logging: false
-    }).then(function(cap) {
-      screenTex = new THREE.CanvasTexture(cap);
-      screenMat.map = screenTex;
-      screenMat.color.set(0xffffff);
-      screenMat.needsUpdate = true;
-      textureApplied = true;
-      // Now hide CSS phone and enable interaction after render
-      requestAnimationFrame(function() {
-        requestAnimationFrame(function() {
-          heroVisual.classList.add('has-3d');
-          canvas.classList.add('interactive');
-        });
-      });
-    }).catch(function(err) {
-      console.warn('html2canvas failed:', err);
+    phoneFloat.addEventListener('mousedown', function(e) {
+      isDrag = true; sx = e.clientX; sy = e.clientY;
+      phoneFloat.classList.add('dragging');
+      e.preventDefault();
     });
-  }
-  // Capture after CSS phone is fully painted
-  setTimeout(capturePhoneScreen, 1200);
+    document.addEventListener('mousemove', function(e) {
+      if (!isDrag) return;
+      ry = cry + (e.clientX - sx) * 0.4;
+      rx = Math.max(-25, Math.min(25, crx - (e.clientY - sy) * 0.2));
+      phoneFloat.style.transform = 'translateY(0) rotateY(' + ry + 'deg) rotateX(' + rx + 'deg)';
+    });
+    document.addEventListener('mouseup', function() {
+      if (!isDrag) return;
+      isDrag = false; cry = ry; crx = rx;
+      phoneFloat.classList.remove('dragging');
+      setTimeout(function() {
+        if (!isDrag) {
+          phoneFloat.style.transition = 'transform 1.2s cubic-bezier(0.23,1,0.32,1)';
+          phoneFloat.style.transform = '';
+          cry = 0; crx = 0; ry = 0; rx = 0;
+          setTimeout(function() { phoneFloat.style.transition = ''; }, 1300);
+        }
+      }, 3000);
+    });
+    // Touch
+    phoneFloat.addEventListener('touchstart', function(e) {
+      isDrag = true; sx = e.touches[0].clientX; sy = e.touches[0].clientY;
+      phoneFloat.classList.add('dragging');
+    }, { passive: true });
+    document.addEventListener('touchmove', function(e) {
+      if (!isDrag) return;
+      ry = cry + (e.touches[0].clientX - sx) * 0.4;
+      rx = Math.max(-25, Math.min(25, crx - (e.touches[0].clientY - sy) * 0.2));
+      phoneFloat.style.transform = 'translateY(0) rotateY(' + ry + 'deg) rotateX(' + rx + 'deg)';
+    }, { passive: true });
+    document.addEventListener('touchend', function() {
+      if (!isDrag) return;
+      isDrag = false; cry = ry; crx = rx;
+      phoneFloat.classList.remove('dragging');
+      setTimeout(function() {
+        if (!isDrag) {
+          phoneFloat.style.transition = 'transform 1.2s cubic-bezier(0.23,1,0.32,1)';
+          phoneFloat.style.transform = '';
+          cry = 0; crx = 0; ry = 0; rx = 0;
+          setTimeout(function() { phoneFloat.style.transition = ''; }, 1300);
+        }
+      }, 3000);
+    });
 
-  // Drag to rotate
-  var isDragging = false, prevMX = 0, prevMY = 0;
-  var targetRotY = -0.12, targetRotX = 0.05, autoTime = 0;
-
-  canvas.addEventListener('mousedown', function(e) {
-    isDragging = true; prevMX = e.clientX; prevMY = e.clientY;
-    e.preventDefault();
-  });
-  window.addEventListener('mousemove', function(e) {
-    if (!isDragging) return;
-    targetRotY += (e.clientX - prevMX) * 0.006;
-    targetRotX = Math.max(-0.5, Math.min(0.5, targetRotX + (e.clientY - prevMY) * 0.004));
-    prevMX = e.clientX; prevMY = e.clientY;
-  });
-  window.addEventListener('mouseup', function() { isDragging = false; });
-
-  canvas.addEventListener('touchstart', function(e) {
-    isDragging = true; prevMX = e.touches[0].clientX; prevMY = e.touches[0].clientY;
-  }, { passive: true });
-  window.addEventListener('touchmove', function(e) {
-    if (!isDragging) return;
-    targetRotY += (e.touches[0].clientX - prevMX) * 0.006;
-    targetRotX = Math.max(-0.5, Math.min(0.5, targetRotX + (e.touches[0].clientY - prevMY) * 0.004));
-    prevMX = e.touches[0].clientX; prevMY = e.touches[0].clientY;
-  }, { passive: true });
-  window.addEventListener('touchend', function() { isDragging = false; });
-
-  // Scroll-based positioning: phone slides to the right as you scroll
-  var scrollTargetX = 0; // 0 = centered in hero, positive = right
-  var scrollTargetScale = 1;
-  var currentScrollX = 0, currentScrollScale = 1;
-
-  window.addEventListener('scroll', function() {
-    var scrollY = window.scrollY || window.pageYOffset;
-    var heroH = heroVisual.offsetHeight || 600;
-    var progress = Math.min(1, Math.max(0, scrollY / (heroH * 0.6)));
-    // Move phone to the right and shrink as user scrolls
-    scrollTargetX = progress * 3.5; // slide right in 3D space
-    scrollTargetScale = 1 - progress * 0.25; // shrink to 0.75
-  }, { passive: true });
-
-  // Render loop
-  function animate() {
-    requestAnimationFrame(animate);
-    autoTime += 0.008;
-    if (!isDragging) {
-      targetRotY += Math.sin(autoTime) * 0.002 - targetRotY * 0.001;
+    // Scroll-based: shrink + slide right as user scrolls (desktop only)
+    if (window.innerWidth > 1024) {
+      var heroVisual = document.querySelector('.hero-visual');
+      window.addEventListener('scroll', function() {
+        if (isDrag) return;
+        var scrollY = window.scrollY || window.pageYOffset;
+        var heroH = heroVisual ? heroVisual.offsetHeight : 600;
+        var progress = Math.min(1, Math.max(0, scrollY / (heroH * 0.7)));
+        // Apply scale and translation via CSS transform on the hero-visual
+        var translateX = progress * 120; // px to the right
+        var scale = 1 - progress * 0.3; // shrink to 0.7
+        heroVisual.style.transform = 'translateX(' + translateX + 'px) scale(' + scale + ')';
+        heroVisual.style.transformOrigin = 'right center';
+        // Fade when scrolled far
+        heroVisual.style.opacity = Math.max(0, 1 - progress * 1.5);
+      }, { passive: true });
     }
-    phoneMesh.rotation.y += (targetRotY - phoneMesh.rotation.y) * 0.06;
-    phoneMesh.rotation.x += (targetRotX - phoneMesh.rotation.x) * 0.06;
-
-    // Scroll-based position
-    currentScrollX += (scrollTargetX - currentScrollX) * 0.08;
-    currentScrollScale += (scrollTargetScale - currentScrollScale) * 0.08;
-    phoneMesh.position.x = currentScrollX;
-    phoneMesh.position.y = Math.sin(autoTime * 0.7) * 0.12;
-    phoneMesh.scale.setScalar(currentScrollScale);
-
-    renderer.render(scene, camera);
   }
-  animate();
-})();
+
+});

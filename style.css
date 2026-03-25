@@ -298,24 +298,16 @@ button { font-family: inherit; }
 .section-wave-top { bottom: auto; top: -1px; }
 
 /* ===== PHONE MOCKUP ===== */
-.phone3d-canvas {
-  position: absolute;
-  top: 0; right: 0;
-  width: 100%; height: 100%;
-  z-index: 2;
-  pointer-events: none;
+.hero-visual { perspective: 800px; }
+.phone-float {
+  animation: phone-bob 6s ease-in-out infinite;
+  cursor: grab;
+  transform-origin: center center;
+  transition: transform 0.1s linear;
+  will-change: transform;
 }
-.phone3d-canvas.interactive { pointer-events: auto; cursor: grab; }
-.phone3d-canvas.interactive:active { cursor: grabbing; }
-.phone3d-canvas:active { cursor: grabbing; }
-/* Hide CSS phone on desktop when 3D is active */
-.hero-visual.has-3d .phone-float { visibility: hidden; }
-@media (max-width: 768px) {
-  .phone3d-canvas { display: none; }
-  .hero-visual.has-3d .phone-float { visibility: visible; }
-}
-.phone-float { animation: phone-bob 6s ease-in-out infinite; }
-@keyframes phone-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+.phone-float.dragging { animation: none; cursor: grabbing; }
+@keyframes phone-bob { 0%, 100% { transform: translateY(0) rotateY(-8deg); } 50% { transform: translateY(-12px) rotateY(-8deg); } }
 
 .phone-mockup { width: 280px; position: relative; }
 

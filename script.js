@@ -871,7 +871,8 @@ document.addEventListener('DOMContentLoaded', () => {
   if (wsSchedule) {
     wsSchedule.style.minHeight = '320px';
     wsSchedule.style.maxHeight = '320px';
-    wsSchedule.style.width = wsSchedule.offsetWidth + 'px';
+    var origW = wsSchedule.offsetWidth || 250;
+    wsSchedule.style.width = Math.round(origW * 1.3) + 'px';
   }
 
   function updatePhoneScreen() {

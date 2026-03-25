@@ -257,7 +257,7 @@ button { font-family: inherit; }
 
 .hero-container {
   max-width: 1140px; margin: 0 auto; padding: 0 24px;
-  display: flex; align-items: center; gap: 60px; position: relative; z-index: 1;
+  display: flex; align-items: center; gap: 60px; position: relative; z-index: 30;
 }
 
 .hero-content { flex: 1; min-width: 0; }

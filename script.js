@@ -308,8 +308,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const deltaY = e.clientY - startY;
       rotateY = currentRotateY + deltaX * 0.3;
       rotateX = currentRotateX - deltaY * 0.2;
-      rotateX = Math.max(-25, Math.min(25, rotateX));
-      rotateY = Math.max(-40, Math.min(40, rotateY));
+      rotateX = Math.max(-30, Math.min(30, rotateX));
+      // No Y clamp — allow full 360 rotation to see back
       phoneFloat.style.transform = `translateY(0) rotateY(${rotateY}deg) rotateX(${rotateX}deg)`;
     });
 
@@ -319,15 +319,18 @@ document.addEventListener('DOMContentLoaded', () => {
       phoneFloat.classList.remove('dragging');
       currentRotateX = rotateX;
       currentRotateY = rotateY;
+      // Spring back after 4 seconds
       setTimeout(() => {
         if (!isDragging && !phoneIsFixed) {
+          phoneFloat.style.transition = 'transform 1s cubic-bezier(0.23,1,0.32,1)';
           phoneFloat.style.transform = '';
           currentRotateX = 0;
           currentRotateY = 0;
           rotateX = 0;
           rotateY = 0;
+          setTimeout(() => { phoneFloat.style.transition = ''; }, 1000);
         }
-      }, 2000);
+      }, 4000);
     });
 
     // Touch support
@@ -345,8 +348,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const deltaY = e.touches[0].clientY - startY;
       rotateY = currentRotateY + deltaX * 0.3;
       rotateX = currentRotateX - deltaY * 0.2;
-      rotateX = Math.max(-25, Math.min(25, rotateX));
-      rotateY = Math.max(-40, Math.min(40, rotateY));
+      rotateX = Math.max(-30, Math.min(30, rotateX));
       phoneFloat.style.transform = `translateY(0) rotateY(${rotateY}deg) rotateX(${rotateX}deg)`;
     }, { passive: true });
 
@@ -358,13 +360,15 @@ document.addEventListener('DOMContentLoaded', () => {
       currentRotateY = rotateY;
       setTimeout(() => {
         if (!isDragging && !phoneIsFixed) {
+          phoneFloat.style.transition = 'transform 1s cubic-bezier(0.23,1,0.32,1)';
           phoneFloat.style.transform = '';
           currentRotateX = 0;
           currentRotateY = 0;
           rotateX = 0;
           rotateY = 0;
+          setTimeout(() => { phoneFloat.style.transition = ''; }, 1000);
         }
-      }, 2000);
+      }, 4000);
     });
   }
 
@@ -384,18 +388,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // 3=Calendar (screen 1), 4=Shift Swaps (screen 2), 5=Time Off (no overlay),
     // 6=Chat (screen 3), 7=Custom Shifts (no overlay), 8=Tracking (no overlay),
     // 9=Attendance (no overlay), 10=Roles (no overlay)
+    // Map ALL feature slides to phone screens
+    // null = show default schedule screen (no overlay)
     const slideToScreen = {
-      0: null,   // AI Scheduling - default hero screen
+      0: null,   // AI Scheduling - default schedule screen
       9: 4,      // Analytics → Reports overlay
-      10: null,  // Export
+      10: 4,     // Export → Reports overlay (similar)
       1: 1,      // Calendar → Calendar overlay
       2: 2,      // Shift Swaps → Swaps overlay
-      3: null,   // Time Off
+      3: 1,      // Time Off → Calendar overlay (date-based)
       4: 3,      // Chat → Chat overlay
-      8: null,   // Custom Shifts
-      5: null,   // Tracking
-      6: null,   // Attendance
-      7: null,   // Roles
+      8: null,   // Custom Shifts - schedule screen
+      5: null,   // Tracking - schedule screen
+      6: null,   // Attendance - schedule screen
+      7: null,   // Roles - schedule screen
     };
 
     // Function to update phone overlay based on current carousel slide

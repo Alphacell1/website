@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -i \"redirect\\\\|domain\\\\|www\\\\|http\" /c/Users/tomis/Documents/GitHub/website/*.html)",
+      "Bash(git -C /c/Users/tomis/Documents/GitHub/website config --list)",
+      "Bash(git:*)"
+    ]
+  }
+}

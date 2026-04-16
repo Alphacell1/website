@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src https://schedulerapi-production.up.railway.app; img-src 'self';">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src https://api.wrokapp.com; img-src 'self';">
   <title>Wrok — Manage Subscription</title>
   <meta name="theme-color" content="#0D7C66">
   <link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
@@ -387,7 +387,7 @@
   <script>
     'use strict';
 
-    const API_BASE = 'https://schedulerapi-production.up.railway.app/api';
+    const API_BASE = 'https://api.wrokapp.com/api';
     const VALID_TIERS = ['STARTER', 'GROWTH', 'BUSINESS', 'ENTERPRISE'];
     const VALID_ACTIONS = ['cancel', 'change'];
 

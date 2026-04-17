@@ -600,6 +600,11 @@ document.addEventListener('DOMContentLoaded', () => {
   var phoneScreen = document.querySelector('.phone-mockup.hero-phone .phone-screen');
   if (!container || !webglCanvas || !cssContainer || !heroVisual || !phoneMockup || !phoneScreen) return;
 
+  // Only render the front face of the CSS3D screen — the back face is invisible
+  // so the screen vanishes cleanly when the phone is rotated past 90°.
+  phoneScreen.style.backfaceVisibility = 'hidden';
+  phoneScreen.style.webkitBackfaceVisibility = 'hidden';
+
   // Extract phone-screen from the phone-float hierarchy, then remove the rest
   // This eliminates the floating dark bar (phone-frame/notch) while keeping the screen
   var phoneFrame = phoneMockup.querySelector('.phone-frame');
@@ -1034,15 +1039,6 @@ document.addEventListener('DOMContentLoaded', () => {
       phoneGroup.position.z + localOffset.z
     );
     cssObject.rotation.copy(phoneGroup.rotation);
-
-    // Hide screen when viewing the back (rotated past ~80 degrees)
-    var absRotY = Math.abs(phoneGroup.rotation.y % (Math.PI * 2));
-    if (absRotY > Math.PI) absRotY = Math.PI * 2 - absRotY;
-    var showScreen = absRotY < 1.2; // ~69 degrees — hide before edge so screen doesn't peek over back
-    cssObject.visible = showScreen;
-    // Fade the screen smoothly near the threshold instead of hard cut
-    var screenOpacity = absRotY < 0.9 ? 1 : Math.max(0, 1 - (absRotY - 0.9) / 0.3);
-    phoneScreen.style.opacity = screenOpacity;
 
     // Render both
     glRenderer.render(glScene, camera);

@@ -1025,13 +1025,10 @@ document.addEventListener('DOMContentLoaded', () => {
     container.style.opacity = phoneVisible ? '1' : '0';
 
     // Sync CSS3D object to match the phone group
-    // Compute the screen position in the phone's local space, then transform to world space
-    // so the screen stays on the front surface of the phone as it rotates.
-    var localOffset = new THREE.Vector3(
-      2.1 * currentScale - (1 - currentScale) * 40,
-      0,
-      PD / 2 + 2
-    );
+    // Compute the screen position in the phone's local space, then scale and rotate
+    // with the phone so the screen stays on the front surface at any scale.
+    var localOffset = new THREE.Vector3(2.1, 0, PD / 2 + 2);
+    localOffset.multiplyScalar(currentScale);
     localOffset.applyQuaternion(phoneGroup.quaternion);
     cssObject.position.set(
       phoneGroup.position.x + localOffset.x,

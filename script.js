@@ -1025,7 +1025,7 @@ document.addEventListener('DOMContentLoaded', () => {
     var localOffset = new THREE.Vector3(
       -3 * currentScale - (1 - currentScale) * 40,
       0,
-      PD / 2 + 12
+      PD / 2 + 2
     );
     localOffset.applyQuaternion(phoneGroup.quaternion);
     cssObject.position.set(

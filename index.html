@@ -910,9 +910,17 @@
         <h2 class="section-title">Simple plans that grow with your team</h2>
         <p class="section-subtitle">Start free with up to 4 workers. Upgrade as your team grows &mdash; no per-user fees, ever.</p>
         <div class="pricing-free-trial-badge fade-in">Free forever for small teams &middot; Save 20% with annual billing</div>
+
+        <div class="pricing-toggle fade-in">
+          <button class="pricing-toggle-btn active" data-billing="monthly">Monthly</button>
+          <button class="pricing-toggle-btn" data-billing="annual">
+            Annual
+            <span class="pricing-toggle-save">Save 20%</span>
+          </button>
+        </div>
       </div>
 
-      <div class="pricing-grid pricing-grid-5">
+      <div class="pricing-grid pricing-grid-5" data-billing="monthly">
         <!-- Free -->
         <div class="pricing-card pricing-card-free fade-in">
           <div class="pricing-card-header">
@@ -934,7 +942,7 @@
         </div>
 
         <!-- Starter -->
-        <div class="pricing-card fade-in">
+        <div class="pricing-card fade-in" data-monthly-whole="14" data-monthly-cents=".99" data-annual-whole="11" data-annual-cents=".99" data-annual-total="143.90">
           <div class="pricing-card-header">
             <span class="pricing-tier-name">Starter</span>
             <div class="pricing-price">
@@ -943,6 +951,7 @@
               <span class="pricing-cents">.99</span>
               <span class="pricing-period">/mo</span>
             </div>
+            <span class="pricing-billed-annually">Billed &euro;143.90/year</span>
             <span class="pricing-worker-count">Up to 15 workers &middot; 2 workplaces</span>
           </div>
           <div class="pricing-card-body">
@@ -956,7 +965,7 @@
         </div>
 
         <!-- Growth (popular) -->
-        <div class="pricing-card popular fade-in">
+        <div class="pricing-card popular fade-in" data-monthly-whole="34" data-monthly-cents=".99" data-annual-whole="27" data-annual-cents=".99" data-annual-total="335.90">
           <div class="pricing-popular-badge">Most Popular</div>
           <div class="pricing-card-header">
             <span class="pricing-tier-name">Growth</span>
@@ -966,6 +975,7 @@
               <span class="pricing-cents">.99</span>
               <span class="pricing-period">/mo</span>
             </div>
+            <span class="pricing-billed-annually">Billed &euro;335.90/year</span>
             <span class="pricing-worker-count">Up to 40 workers &middot; 5 workplaces</span>
           </div>
           <div class="pricing-card-body">
@@ -979,7 +989,7 @@
         </div>
 
         <!-- Business -->
-        <div class="pricing-card fade-in">
+        <div class="pricing-card fade-in" data-monthly-whole="79" data-monthly-cents=".99" data-annual-whole="63" data-annual-cents=".99" data-annual-total="767.90">
           <div class="pricing-card-header">
             <span class="pricing-tier-name">Business</span>
             <div class="pricing-price">
@@ -988,6 +998,7 @@
               <span class="pricing-cents">.99</span>
               <span class="pricing-period">/mo</span>
             </div>
+            <span class="pricing-billed-annually">Billed &euro;767.90/year</span>
             <span class="pricing-worker-count">Up to 100 workers &middot; Unlimited workplaces</span>
           </div>
           <div class="pricing-card-body">

@@ -1237,6 +1237,41 @@ button { font-family: inherit; }
   letter-spacing: 0.02em;
 }
 
+.pricing-toggle {
+  display: inline-flex; margin: 28px auto 0;
+  background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 100px; padding: 4px; gap: 4px;
+  backdrop-filter: blur(10px);
+}
+.pricing-toggle-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 22px; border: none; background: transparent;
+  color: rgba(255,255,255,0.7); font-size: 0.95rem; font-weight: 600;
+  font-family: inherit; cursor: pointer; border-radius: 100px;
+  transition: all 0.2s ease;
+}
+.pricing-toggle-btn:hover { color: var(--white); }
+.pricing-toggle-btn.active {
+  background: var(--white); color: var(--primary-dark);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+.pricing-toggle-save {
+  display: inline-block; padding: 2px 8px; border-radius: 100px;
+  background: rgba(13,124,102,0.2); color: #0D7C66;
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.02em;
+}
+.pricing-toggle-btn:not(.active) .pricing-toggle-save {
+  background: rgba(13,124,102,0.3); color: #7FE3CB;
+}
+
+.pricing-billed-annually {
+  display: none; font-size: 0.78rem; font-weight: 500;
+  color: rgba(255,255,255,0.75); margin-top: -4px; margin-bottom: 8px;
+}
+.pricing-grid[data-billing="annual"] .pricing-billed-annually {
+  display: inline-block;
+}
+
 .pricing-grid {
   display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
   max-width: 1060px; margin: 0 auto;

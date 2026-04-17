@@ -311,6 +311,28 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // ===== Pricing: Monthly / Annual Toggle =====
+  const pricingToggleBtns = document.querySelectorAll('.pricing-toggle-btn');
+  const pricingGrid = document.querySelector('.pricing-grid[data-billing]');
+  if (pricingToggleBtns.length && pricingGrid) {
+    pricingToggleBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const mode = btn.dataset.billing; // 'monthly' or 'annual'
+        pricingToggleBtns.forEach(b => b.classList.toggle('active', b === btn));
+        pricingGrid.dataset.billing = mode;
+
+        pricingGrid.querySelectorAll('.pricing-card[data-monthly-whole]').forEach(card => {
+          const whole = card.dataset[mode + 'Whole'];
+          const cents = card.dataset[mode + 'Cents'];
+          const wholeEl = card.querySelector('.pricing-amount');
+          const centsEl = card.querySelector('.pricing-cents');
+          if (wholeEl) wholeEl.textContent = whole;
+          if (centsEl) centsEl.textContent = cents;
+        });
+      });
+    });
+  }
+
   // ===== Spotlight Interactive Cards =====
 
   // ---- 1. Schedule Card: Clickable Cells + Generate ----
@@ -998,8 +1020,19 @@ document.addEventListener('DOMContentLoaded', () => {
     container.style.opacity = phoneVisible ? '1' : '0';
 
     // Sync CSS3D object to match the phone group
-    // Offset scales proportionally with the phone so screen stays centered at any size
-    cssObject.position.set(phoneGroup.position.x - 3 * currentScale - (1 - currentScale) * 40, phoneGroup.position.y, PD / 2 + 12);
+    // Compute the screen position in the phone's local space, then transform to world space
+    // so the screen stays on the front surface of the phone as it rotates.
+    var localOffset = new THREE.Vector3(
+      -3 * currentScale - (1 - currentScale) * 40,
+      0,
+      PD / 2 + 12
+    );
+    localOffset.applyQuaternion(phoneGroup.quaternion);
+    cssObject.position.set(
+      phoneGroup.position.x + localOffset.x,
+      phoneGroup.position.y + localOffset.y,
+      phoneGroup.position.z + localOffset.z
+    );
     cssObject.rotation.copy(phoneGroup.rotation);
 
     // Hide screen when viewing the back (rotated past ~80 degrees)

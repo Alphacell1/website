@@ -37,11 +37,6 @@
       "price": "0",
       "priceCurrency": "EUR",
       "description": "Free tier available with up to 4 workers"
-    },
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "5",
-      "ratingCount": "1"
     }
   }
   </script>
@@ -76,10 +71,17 @@
   <link rel="icon" href="wrok_icon.png" type="image/png" sizes="any">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+  <!-- Reusable SVG symbols -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="icon-check" viewBox="0 0 20 20">
+      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+    </symbol>
+  </svg>
 
   <!-- ========== NAVBAR ========== -->
   <nav class="navbar" id="navbar">
@@ -113,12 +115,12 @@
     </div>
     <div class="hero-container">
       <div class="hero-content">
-        <div class="hero-badge">AI-Powered Shift Scheduling</div>
+        <div class="hero-badge">AI-Powered Shift Management</div>
         <h1 class="hero-title">
-          <span class="hero-title-line">AI-Powered</span>
-          <span class="hero-title-line hero-title-accent">Scheduling</span>
+          <span class="hero-title-line">Manage your team.</span>
+          <span class="hero-title-line hero-title-accent">Not spreadsheets.</span>
         </h1>
-        <p class="hero-subtitle">Our AI engine builds optimized, fair schedules in seconds &mdash; learning your team's constraints, preferences, and patterns to deliver smarter results every week.</p>
+        <p class="hero-subtitle">Scheduling, messaging, time off, attendance &mdash; everything your team needs, in one app. Let Wrok's AI handle the admin so you can focus on the business.</p>
         <div class="hero-actions">
           <a href="#download" class="btn btn-hero-primary">
             <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
@@ -131,7 +133,7 @@
         </div>
         <div class="hero-note">Available on Android &middot; iOS coming soon</div>
       </div>
-      <div id="phone3d-container" class="phone3d-container">
+      <div id="phone3d-container" class="phone3d-container" aria-hidden="true">
         <canvas id="phone3d-webgl"></canvas>
         <div id="phone3d-css"></div>
       </div>
@@ -933,9 +935,9 @@
           </div>
           <div class="pricing-card-body">
             <ul class="pricing-features">
-              <li><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>AI scheduling</li>
-              <li><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Team messaging</li>
-              <li><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Tasks &amp; shift swaps</li>
+              <li><svg class="icon-check" aria-hidden="true"><use href="#icon-check"/></svg>AI scheduling</li>
+              <li><svg class="icon-check" aria-hidden="true"><use href="#icon-check"/></svg>Team messaging</li>
+              <li><svg class="icon-check" aria-hidden="true"><use href="#icon-check"/></svg>Tasks &amp; shift swaps</li>
             </ul>
             <a href="#download" class="pricing-cta">Get Started Free</a>
           </div>
@@ -956,9 +958,9 @@
           </div>
           <div class="pricing-card-body">
             <ul class="pricing-features">
-              <li><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Everything in Free</li>
-              <li><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Analytics &amp; reports</li>
-              <li><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>PDF &amp; Excel export</li>
+              <li><svg class="icon-check" aria-hidden="true"><use href="#icon-check"/></svg>Everything in Free</li>
+              <li><svg class="icon-check" aria-hidden="true"><use href="#icon-check"/></svg>Analytics &amp; reports</li>
+              <li><svg class="icon-check" aria-hidden="true"><use href="#icon-check"/></svg>PDF &amp; Excel export</li>
             </ul>
             <a href="#download" class="pricing-cta">Get Started</a>
           </div>
@@ -980,9 +982,9 @@
           </div>
           <div class="pricing-card-body">
             <ul class="pricing-features">
-              <li><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Everything in Starter</li>
-              <li><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Shift managers</li>
-              <li><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Clock-in with GPS</li>
+              <li><svg class="icon-check" aria-hidden="true"><use href="#icon-check"/></svg>Everything in Starter</li>
+              <li><svg class="icon-check" aria-hidden="true"><use href="#icon-check"/></svg>Shift managers</li>
+              <li><svg class="icon-check" aria-hidden="true"><use href="#icon-check"/></svg>Clock-in with GPS</li>
             </ul>
             <a href="#download" class="pricing-cta">Get Started</a>
           </div>
@@ -1003,23 +1005,32 @@
           </div>
           <div class="pricing-card-body">
             <ul class="pricing-features">
-              <li><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Everything in Growth</li>
-              <li><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Priority support</li>
-              <li><svg viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>Advanced analytics</li>
+              <li><svg class="icon-check" aria-hidden="true"><use href="#icon-check"/></svg>Everything in Growth</li>
+              <li><svg class="icon-check" aria-hidden="true"><use href="#icon-check"/></svg>Priority support</li>
+              <li><svg class="icon-check" aria-hidden="true"><use href="#icon-check"/></svg>Advanced analytics</li>
             </ul>
             <a href="#download" class="pricing-cta">Get Started</a>
           </div>
         </div>
-      </div>
 
-      <!-- Enterprise / Custom -->
-      <div class="pricing-custom fade-in">
-        <div class="pricing-custom-inner">
-          <div class="pricing-custom-text">
-            <h3>Enterprise &mdash; 100+ workers, unlimited workplaces</h3>
-            <p>Custom pricing, API access, dedicated support, and custom integrations. Let's build a plan that fits your operation.</p>
+        <!-- Enterprise -->
+        <div class="pricing-card pricing-card-enterprise fade-in">
+          <div class="pricing-card-header">
+            <span class="pricing-tier-name">Enterprise</span>
+            <div class="pricing-price">
+              <span class="pricing-amount" style="font-size:2.4rem">Custom</span>
+            </div>
+            <span class="pricing-worker-count">100+ workers &middot; Unlimited workplaces</span>
           </div>
-          <a href="mailto:support@wrokapp.com" class="pricing-cta custom">Contact Us</a>
+          <div class="pricing-card-body">
+            <ul class="pricing-features">
+              <li><svg class="icon-check" aria-hidden="true"><use href="#icon-check"/></svg>Everything in Business</li>
+              <li><svg class="icon-check" aria-hidden="true"><use href="#icon-check"/></svg>API access</li>
+              <li><svg class="icon-check" aria-hidden="true"><use href="#icon-check"/></svg>Dedicated support</li>
+              <li><svg class="icon-check" aria-hidden="true"><use href="#icon-check"/></svg>Custom integrations</li>
+            </ul>
+            <a href="mailto:support@wrokapp.com" class="pricing-cta">Contact Us</a>
+          </div>
         </div>
       </div>
 
